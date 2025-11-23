@@ -2692,8 +2692,9 @@ printpdf(nbr) {
   console.log("pdf")
   var doc = new jsPDF();
   var img = new Image();
-  img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 170, 5, 30, 30);
+   img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
+    
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
       doc.text(this.domain.dom_name, 10, 10);
@@ -2741,7 +2742,7 @@ printpdf(nbr) {
     
     if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
+      doc.addImage(img, "png", 160, 5, 50, 30);
       doc.setFontSize(12);
       doc.text( 'Bon Livraison : ' + nbr  , 70, 40);
       doc.setFontSize(8);
@@ -2872,19 +2873,19 @@ doc.addPage();
  doc.setFontSize(10);
  
  doc.text('Total HT', 140 ,  i + 12 , { align: 'left' });
- doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
- doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
- doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+//  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+//  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+//  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
 
  
  doc.text(String(Number(controls.tht.value).toFixed(2)), 198 ,  i + 12 , { align: 'right' });
- doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
- doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
- doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+//  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
+//  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
+//  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
 
  doc.setFontSize(8);
     let mt = NumberToLetters(
-      Number(controls.ttc.value).toFixed(2),this.curr.cu_desc)
+      Number(controls.tht.value).toFixed(2),this.curr.cu_desc)
 
       if (mt.length > 95) {
         let mt1 = mt.substring(90)

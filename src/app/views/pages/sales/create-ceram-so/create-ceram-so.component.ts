@@ -6,7 +6,7 @@ import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, Gr
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
-import { round } from "lodash";
+import { add, round } from "lodash";
 
 // Layout
 import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
@@ -1087,7 +1087,7 @@ this.row_number = this.dataset.length;
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         console.log(this.dataset);
-        if (controls.print.value == true) {this.printpdf(so.so_nbr),this.printpdf2(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
+        if (controls.print.value == true) {this.printpdf(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
         this.router.navigateByUrl("/");
       }
     );
@@ -2853,6 +2853,7 @@ console.log(tht , tva , timbre,ttc)
   printpdf(nbr) {
     const controls = this.totForm.controls;
     const controlss = this.soForm.controls;
+    const controlsao = this.asForm.controls;
     console.log("pdf");
     var doc = new jsPDF();
 
@@ -2860,7 +2861,7 @@ console.log(tht , tva , timbre,ttc)
     var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
   doc.addImage(img, "png", 160, 5, 50, 30);
-  doc.setFontSize(9);
+  doc.setFontSize(12);
   if (this.domain.dom_name != null) {
     doc.text(this.domain.dom_name, 10, 10);
   }
@@ -2880,7 +2881,7 @@ console.log(tht , tva , timbre,ttc)
   doc.setFont("Times-Roman");
   doc.setFontSize(12);
   doc.text("Commande N° : " + nbr, 87, 60);
-  doc.setFontSize(10);
+  doc.setFontSize(12);
   //console.log(this.customer.address.ad_misc2_id);
   doc.text("Code        : " + this.customer.cm_addr, 20, 65);
   doc.text("Date        : " + this.soo.so_ord_date, 150, 65);
@@ -2927,14 +2928,14 @@ console.log(tht , tva , timbre,ttc)
   doc.text("THT", 183, 103.5);
   doc.line(205, 100, 205, 105);
     var i = 110;
-    doc.setFontSize(8);
+    doc.setFontSize(10);
     for (let j = 0; j < this.dataset.length; j++) {
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
         // img.src = "./assets/media/logos/companyentete.png";
         img.src = "./assets/media/logos/companylogo.png";
   doc.addImage(img, "png", 160, 5, 50, 30);
-  doc.setFontSize(9);
+  doc.setFontSize(12);
   if (this.domain.dom_name != null) {
     doc.text(this.domain.dom_name, 10, 10);
   }
@@ -2954,7 +2955,7 @@ console.log(tht , tva , timbre,ttc)
   doc.setFont("Times-Roman");
   doc.setFontSize(12);
   doc.text("Commande N° : " + nbr, 87, 60);
-  doc.setFontSize(10);
+  doc.setFontSize(12);
   //console.log(this.customer.address.ad_misc2_id);
   doc.text("Code        : " + this.customer.cm_addr, 20, 65);
   doc.text("Date        : " + this.soo.so_ord_date, 150, 65);
@@ -3000,7 +3001,7 @@ console.log(tht , tva , timbre,ttc)
   doc.text("THT", 183, 103.5);
   doc.line(205, 100, 205, 105);
         i = 110;
-        doc.setFontSize(8);
+        doc.setFontSize(10);
       }
 
       if (this.dataset[j].desc.length > 35) {
@@ -3084,19 +3085,22 @@ console.log(tht , tva , timbre,ttc)
     doc.line(130, i + 7, 130, i + 14);
     doc.line(160, i + 7, 160, i + 14);
     doc.line(205, i + 7, 205, i + 14);
-    doc.setFontSize(10);
+    doc.setFontSize(12);
 
     doc.text("Total ", 140, i + 12, { align: "left" });
+    doc.text("Versé ", 140, i + 19, { align: "left" });
     // doc.text("TVA", 140, i + 19, { align: "left" });
     // doc.text("Timbre", 140, i + 26, { align: "left" });
     // doc.text("Total TC", 140, i + 33, { align: "left" });
 
     doc.text(String(Number(controls.tht.value).toFixed(2)), 203, i + 12, { align: "right" });
+    doc.text(String(Number(controlsao.ao_amt.value).toFixed(2)), 203, i + 19, { align: "right" });
+    
     // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
     // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
     // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
 
-    doc.setFontSize(8);
+    doc.setFontSize(12);
     let mt = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
 
     if (mt.length > 95) {
@@ -3111,22 +3115,11 @@ console.log(tht , tva , timbre,ttc)
     } else {
       doc.text("Arretée la présente Commande a la somme de : " + mt, 20, i + 53);
     }
-    // window.open(doc.output('bloburl'), '_blank');
-    //window.open(doc.output('blobUrl'));  // will open a new tab
-    var blob = doc.output("blob");
-    window.open(URL.createObjectURL(blob));
-  }
-  printpdf2(nbr) {
-    const controls = this.totForm.controls;
-    const controlss = this.soForm.controls;
-    console.log("pdf");
-    var doc = new jsPDF();
-
-    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    doc.addPage()
     var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
   doc.addImage(img, "png", 160, 5, 50, 30);
-  doc.setFontSize(9);
+  doc.setFontSize(12);
   if (this.domain.dom_name != null) {
     doc.text(this.domain.dom_name, 10, 10);
   }
@@ -3146,13 +3139,19 @@ console.log(tht , tva , timbre,ttc)
   doc.setFont("Times-Roman");
   doc.setFontSize(12);
   doc.text("Commande Bureau N° : " + nbr, 87, 60);
-  doc.setFontSize(10);
+  doc.setFontSize(12);
   //console.log(this.customer.address.ad_misc2_id);
-  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
-  doc.text("Date : " + this.soo.so_ord_date, 150, 65);
-  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
-  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
-  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  doc.text("Code        : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 65);
+  doc.text("Nom         : " + this.customer.address.ad_name, 20, 70);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 20, 75); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 20, 80);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 20, 85);}
+  // if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -3165,36 +3164,36 @@ console.log(tht , tva , timbre,ttc)
   // if (this.customer.address.ad_misc1_id != null) {
   //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
   // }
-  doc.line(10, 100, 200, 100);
-  doc.line(10, 105, 200, 105);
+  doc.line(10, 100, 205, 100);
+  doc.line(10, 105, 205, 105);
   doc.line(10, 100, 10, 105);
   doc.text("LN", 12.5, 103.5);
   doc.line(20, 100, 20, 105);
-  doc.text("Code Article", 25, 103.5);
+  doc.text("Code Article", 22, 103.5);
   doc.line(45, 100, 45, 105);
   doc.text("Désignation", 67.5, 103.5);
   doc.line(100, 100, 100, 105);
-  doc.text("QTE", 107, 103.5);
+  doc.text("QTE Metre", 103, 103.5);
   doc.line(120, 100, 120, 105);
-  doc.text("UM", 123, 103.5);
-  doc.line(130, 100, 130, 105);
-  doc.text("PU", 138, 103.5);
-  doc.line(150, 100, 150, 105);
-  doc.text("TVA", 152, 103.5);
-  doc.line(160, 100, 160, 105);
-  doc.text("REM", 162, 103.5);
+  doc.text("Colis", 123, 103.5);
+  doc.line(135, 100, 135, 105);
+  doc.text("Piéce", 137, 103.5);
+  doc.line(148, 100, 148, 105);
+  doc.text("PU", 158, 103.5);
   doc.line(170, 100, 170, 105);
-  doc.text("THT", 181, 103.5);
-  doc.line(200, 100, 200, 105);
+  doc.text("REM", 172, 103.5);
+  doc.line(181, 100, 181, 105);
+  doc.text("THT", 183, 103.5);
+  doc.line(205, 100, 205, 105);
     var i = 110;
-    doc.setFontSize(6);
+    doc.setFontSize(10);
     for (let j = 0; j < this.dataset.length; j++) {
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
         // img.src = "./assets/media/logos/companyentete.png";
         img.src = "./assets/media/logos/companylogo.png";
   doc.addImage(img, "png", 160, 5, 50, 30);
-  doc.setFontSize(9);
+  doc.setFontSize(12);
   if (this.domain.dom_name != null) {
     doc.text(this.domain.dom_name, 10, 10);
   }
@@ -3214,13 +3213,18 @@ console.log(tht , tva , timbre,ttc)
   doc.setFont("Times-Roman");
   doc.setFontSize(12);
   doc.text("Commande Bureau N° : " + nbr, 87, 60);
-  doc.setFontSize(10);
+  doc.setFontSize(12);
   //console.log(this.customer.address.ad_misc2_id);
-  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
-  doc.text("Date : " + this.soo.so_ord_date, 150, 65);
-  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
-  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
-  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  doc.text("Code        : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 65);
+  doc.text("Nom         : " + this.customer.address.ad_name, 20, 70);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 20, 75); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 20, 80);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 20, 85);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -3238,24 +3242,24 @@ console.log(tht , tva , timbre,ttc)
   doc.line(10, 100, 10, 105);
   doc.text("LN", 12.5, 103.5);
   doc.line(20, 100, 20, 105);
-  doc.text("Code Article", 25, 103.5);
+  doc.text("Code Article", 22, 103.5);
   doc.line(45, 100, 45, 105);
   doc.text("Désignation", 67.5, 103.5);
   doc.line(100, 100, 100, 105);
-  doc.text("QTE", 107, 103.5);
+  doc.text("QTE Metre", 103, 103.5);
   doc.line(120, 100, 120, 105);
-  doc.text("UM", 123, 103.5);
-  doc.line(130, 100, 130, 105);
-  doc.text("PU", 138, 103.5);
-  doc.line(150, 100, 150, 105);
-  doc.text("TVA", 152, 103.5);
-  doc.line(160, 100, 160, 105);
-  doc.text("REM", 162, 103.5);
+  doc.text("Colis", 123, 103.5);
+  doc.line(135, 100, 135, 105);
+  doc.text("Piéce", 137, 103.5);
+  doc.line(148, 100, 148, 105);
+  doc.text("PU", 158, 103.5);
   doc.line(170, 100, 170, 105);
-  doc.text("THT", 181, 103.5);
-  doc.line(200, 100, 200, 105);
+  doc.text("REM", 172, 103.5);
+  doc.line(181, 100, 181, 105);
+  doc.text("THT", 183, 103.5);
+  doc.line(205, 100, 205, 105);
         i = 110;
-        doc.setFontSize(6);
+        doc.setFontSize(10);
       }
 
       if (this.dataset[j].desc.length > 35) {
@@ -3267,22 +3271,23 @@ console.log(tht , tva , timbre,ttc)
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].sod_part, 25, i - 1);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
         doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].sod_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
-        doc.line(150, i - 5, 150, i);
-        doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
-        doc.line(160, i - 5, 160, i);
-        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 133, i - 1, { align: "right" });
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 146, i - 1, { align: "right" });
+        doc.line(148, i - 5, 148, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 168, i - 1, { align: "right" });
+        
         doc.line(170, i - 5, 170, i);
-        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
-        doc.line(200, i - 5, 200, i);
+        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(181, i - 5, 181, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
         // doc.line(10, i, 200, i );
   
         i = i + 5;
@@ -3294,63 +3299,67 @@ console.log(tht , tva , timbre,ttc)
         doc.line(45, i - 5, 45, i);
         doc.line(100, i - 5, 100, i);
         doc.line(120, i - 5, 120, i);
-        doc.line(130, i - 5, 130, i);
-        doc.line(150, i - 5, 150, i);
-        doc.line(160, i - 5, 160, i);
+        doc.line(135, i - 5, 135, i);
+        doc.line(148, i - 5, 148, i);
         doc.line(170, i - 5, 170, i);
-        doc.line(200, i - 5, 200, i);
-        doc.line(10, i, 200, i);
+        doc.line(181, i - 5, 181, i);
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
   
         i = i + 5;
       } else {
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].sod_part, 25, i - 1);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(this.dataset[j].desc, 47, i - 1);
         doc.line(100, i - 5, 100, i);
         doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].sod_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
-        doc.line(150, i - 5, 150, i);
-        doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
-        doc.line(160, i - 5, 160, i);
-        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 133, i - 1, { align: "right" });
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 146, i - 1, { align: "right" });
+        doc.line(148, i - 5, 148, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 168, i - 1, { align: "right" });
+        
         doc.line(170, i - 5, 170, i);
-        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
-        doc.line(200, i - 5, 200, i);
-        doc.line(10, i, 200, i);
+        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(181, i - 5, 181, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
         i = i + 5;
       }
     }
 
     // doc.line(10, i - 5, 200, i - 5);
 
-    doc.line(130, i + 7, 200, i + 7);
-    doc.line(130, i + 14, 200, i + 14);
+    doc.line(130, i + 7, 205, i + 7);
+    doc.line(130, i + 14, 205, i + 14);
     // doc.line(130, i + 21, 200, i + 21);
     // doc.line(130, i + 28, 200, i + 28);
     // doc.line(130, i + 35, 200, i + 35);
-    doc.line(130, i + 7, 130, i + 35);
-    doc.line(160, i + 7, 160, i + 35);
-    doc.line(200, i + 7, 200, i + 35);
-    doc.setFontSize(10);
+    doc.line(130, i + 7, 130, i + 14);
+    doc.line(160, i + 7, 160, i + 14);
+    doc.line(205, i + 7, 205, i + 14);
+    doc.setFontSize(12);
 
     doc.text("Total ", 140, i + 12, { align: "left" });
+    doc.text("Versé ", 140, i + 19, { align: "left" });
     // doc.text("TVA", 140, i + 19, { align: "left" });
     // doc.text("Timbre", 140, i + 26, { align: "left" });
     // doc.text("Total TC", 140, i + 33, { align: "left" });
 
-    doc.text(String(Number(controls.tht.value).toFixed(2)), 198, i + 12, { align: "right" });
+    doc.text(String(Number(controls.tht.value).toFixed(2)), 203, i + 12, { align: "right" });
+    doc.text(String(Number(controlsao.ao_amt.value).toFixed(2)), 203, i + 19, { align: "right" });
+    
     // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
     // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
     // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
 
-    doc.setFontSize(8);
-    let mt = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
+    doc.setFontSize(12);
+    mt = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
 
     if (mt.length > 95) {
       let mt1 = mt.substring(90);
@@ -3363,7 +3372,19 @@ console.log(tht , tva , timbre,ttc)
       doc.text(mt2, 20, i + 60);
     } else {
       doc.text("Arretée la présente Commande a la somme de : " + mt, 20, i + 53);
-    }
+    }    // window.open(doc.output('bloburl'), '_blank');
+    //window.open(doc.output('blobUrl'));  // will open a new tab
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+  }
+  printpdf2(nbr) {
+    const controls = this.totForm.controls;
+    const controlss = this.soForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF();
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
     var blob = doc.output("blob");

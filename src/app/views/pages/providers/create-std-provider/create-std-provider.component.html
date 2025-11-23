@@ -96,12 +96,12 @@
                                         <label class="form-group">Sous-Famille*:</label>
                                         <div class="input-group input-group-sm">
                                             <input type="text" class="form-control form-control-sm form-control-solid"
-                                                formControlName="vd_sort">
+                                                formControlName="vd_remit">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" (click)="openAct(contentAct)">
                                                         <i class="text-dark-50 flaticon2-search"></i> </span>
                                                 </div>
-                                                <div *ngIf="providerForm.controls['vd_sort'].errors && (providerForm.controls['vd_sort'].dirty || providerForm.controls['vd_sort'].touched)"
+                                                <div *ngIf="providerForm.controls['vd_remit'].errors && (providerForm.controls['vd_sort'].dirty || providerForm.controls['vd_sort'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>   
                                         </div> 
                                     </div>
@@ -109,7 +109,7 @@
                                         <label class="form-group">Classe*:</label>
                                         <div class="input-group input-group-sm">
                                             <input type="text" class="form-control form-control-sm form-control-solid"
-                                                formControlName="vd_remit">
+                                                formControlName="vd_sort">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" (click)="openclas(contentclas)">
                                                         <i class="text-dark-50 flaticon2-search"></i> </span>

@@ -130,7 +130,8 @@ prepareGrid() {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('sod_qty_ord'),
-                new Aggregators.Sum('ao_applied')
+                new Aggregators.Sum('ao_applied'),
+                new Aggregators.Sum('ao_amt')
               ],
       }
     },
@@ -150,7 +151,29 @@ prepareGrid() {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('sod_qty_ord'),
-                new Aggregators.Sum('ao_applied')
+                new Aggregators.Sum('ao_applied'),
+                new Aggregators.Sum('ao_amt')
+              ],
+      }
+    },
+      {
+      id: "chr01",
+      name: "Nom",
+      field: "chr01",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      grouping: {
+        getter: 'chr01',
+        formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregateCollapsed: false,
+        collapsed: false,
+        aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('sod_qty_ord'),
+                new Aggregators.Sum('ao_applied'),
+                new Aggregators.Sum('ao_amt')
               ],
       }
     },
@@ -181,7 +204,8 @@ prepareGrid() {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('sod_qty_ord'),
-                new Aggregators.Sum('ao_applied')
+                new Aggregators.Sum('ao_applied'),
+                new Aggregators.Sum('ao_amt')
               ],
       }
     },
@@ -240,7 +264,8 @@ prepareGrid() {
          // new Aggregators.Avg('tr_qty_loc'),
           new Aggregators.Sum('sod_qty_ord'),
           new Aggregators.Sum('sod_qty_rcvd'),
-          new Aggregators.Sum('ao_applied')
+          new Aggregators.Sum('ao_applied'),
+                new Aggregators.Sum('ao_amt')
         ],
         aggregateCollapsed: true,
     
@@ -262,7 +287,8 @@ prepareGrid() {
          // new Aggregators.Avg('tr_qty_loc'),
           new Aggregators.Sum('sod_qty_ord'),
           new Aggregators.Sum('sod_qty_rcvd'),
-          new Aggregators.Sum('ao_applied')
+          new Aggregators.Sum('ao_applied'),
+                new Aggregators.Sum('ao_amt')
         ],
         aggregateCollapsed: true,
     

@@ -1414,7 +1414,7 @@ prepareGridclas() {
 
   // fill the dataset with your data
   this.codeService
-      .getBy({code_fldname:"pt_group"})
+      .getBy({code_fldname:"vd_remit"})
       .subscribe((response: any) => (this.dataclas = response.data))
 }
 openclas(content) {
