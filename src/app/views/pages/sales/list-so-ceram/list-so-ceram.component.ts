@@ -211,6 +211,22 @@ user
          type: FieldType.string,
        },
        {
+        id: "dec01",
+        name: "Montant Versé",
+        field: "so.dec01",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "dec02",
+        name: "Reste",
+        field: "so.dec02",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+       {
         id: "print",
         field: "print",
   
@@ -326,7 +342,7 @@ user
  
      // fill the dataset with your data
      this.dataset = [];
-     this.saleOrderService.getAll().subscribe(
+     this.saleOrderService.getAllCeram().subscribe(
        (response: any) => {this.dataset = response.data
          console.log(this.dataset)
        this.dataView.setItems(this.dataset)},

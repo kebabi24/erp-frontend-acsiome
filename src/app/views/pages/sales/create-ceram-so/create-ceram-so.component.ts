@@ -663,6 +663,8 @@ export class CreateCeramSoComponent implements OnInit {
       enableCellNavigation: true,
       enableRowSelection: true,
       autoCommitEdit:true,
+      autoEdit:true,
+
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -869,7 +871,7 @@ controls.qtyCart.setValue(qty)
   
       const controls = this.asForm.controls
     this.bankService
-    .getBy({bk_user1:this.user.usrd_code})
+    .getBankBYUser({user:this.user.usrd_code})
     .subscribe((response: any) => {
       console.log(response.data.bank)
   controls.ao_bank.setValue(response.data.bank.bk_code)});
@@ -957,7 +959,9 @@ this.row_number = this.dataset.length;
   reset() {
     this.saleOrder = new SaleOrder();
     this.createForm();
+    this.createPayForm()
     this.createtotForm();
+    this.dataset=[]
     this.hasFormErrors = false;
   }
   // save data
@@ -1088,7 +1092,8 @@ this.row_number = this.dataset.length;
         this.loadingSubject.next(false);
         console.log(this.dataset);
         if (controls.print.value == true) {this.printpdf(so.so_nbr),this.printpdf2(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
-        this.router.navigateByUrl("/");
+        this.reset()
+        // this.router.navigateByUrl("/");
       }
     );
   }
@@ -1297,29 +1302,29 @@ this.row_number = this.dataset.length;
 
   // add new Item to Datatable
   addNewItem() {
-    this.gridService.addItem(
-      {
-        id: this.dataset.length + 1,
-        sod_line: this.dataset.length + 1,
+    // this.gridService.addItem(
+    //   {
+    //     id: this.dataset.length + 1,
+    //     sod_line: this.dataset.length + 1,
 
-        sod_part: "",
-        cmvid: "",
-        desc: "",
-        sod_qty_ord: 0,
-        sod_um: "",
-        sod_price: 0,
-        sod_disc_pct: 0,
-        sod_site: "",
-        sod_loc: "",
-        sod_type: "",
-        sod_cc: "",
-        sod_taxable: true,
-        sod_tax_code: "",
-        sod_taxc: "",
-      },
-      { position: "bottom" }
-    );
-    this.row_number = this.dataset.length - 1;
+    //     sod_part: "",
+    //     cmvid: "",
+    //     desc: "",
+    //     sod_qty_ord: 0,
+    //     sod_um: "",
+    //     sod_price: 0,
+    //     sod_disc_pct: 0,
+    //     sod_site: "",
+    //     sod_loc: "",
+    //     sod_type: "",
+    //     sod_cc: "",
+    //     sod_taxable: true,
+    //     sod_tax_code: "",
+    //     sod_taxc: "",
+    //   },
+    //   { position: "bottom" }
+    // );
+    // this.row_number = this.dataset.length - 1;
     // this.row_number = args.row
     let element: HTMLElement = document.getElementById(
       "openItemsGrid"
@@ -1549,6 +1554,29 @@ this.row_number = this.dataset.length;
   }
 
   handleSelectedRowsChanged4(e, args) {
+    this.gridService.addItem(
+      {
+        id: this.dataset.length + 1,
+        sod_line: this.dataset.length + 1,
+
+        sod_part: "",
+        cmvid: "",
+        desc: "",
+        sod_qty_ord: 0,
+        sod_um: "",
+        sod_price: 0,
+        sod_disc_pct: 0,
+        sod_site: "",
+        sod_loc: "",
+        sod_type: "",
+        sod_cc: "",
+        sod_taxable: true,
+        sod_tax_code: "",
+        sod_taxc: "",
+      },
+      { position: "bottom" }
+    );
+    this.row_number = this.dataset.length - 1;
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
     const controls = this.soForm.controls;
 

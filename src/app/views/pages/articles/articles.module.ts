@@ -63,7 +63,8 @@ import {CodeService,
          CostSimulationService, 
          InventoryStatusService,
          TaxeService,
-         CustomerMobileService
+         CustomerMobileService,
+         ConfigService
         } from '../../../core/erp';
 import { EditCostComponent } from './edit-cost/edit-cost.component'
 import { ProductPageCreateComponent } from "./product-page-create/product-page-create.component";
@@ -328,6 +329,7 @@ const routes: Routes = [
         ItemService,
         MesureService,
         TaxeService,
+        ConfigService,
         InventoryStatusService,
         CostSimulationService,
         CustomerMobileService,
