@@ -22,9 +22,11 @@ export class ItemService {
     ) {}
 
     // CREATE
-    public add(item: Item) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, item, { headers: httpHeaders })
+    public add(data: any) {
+        // const httpHeaders = this.httpUtils.getHTTPHeaders()
+        // return this.http.post(API_URL, item, { headers: httpHeaders })
+        const headers = { "Content-Type": "multipart/form-data" }; // Set the Content-Type header to multipart/form-data
+        return this.http.post(API_URL, data);
     }
     public adddetail(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

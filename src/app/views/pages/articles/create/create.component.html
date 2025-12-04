@@ -33,8 +33,8 @@
                                     (close)="onAlertClose($event)">
                                     Ce Code existe deja
                                 </kt-alert>
-                                <div class="row">
-                            <div class="col-6">
+                                
+                            
                                 <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group">Code Article:</label>
@@ -49,7 +49,7 @@
                                         <label class="form-group">Description:</label>
                                         <input type="text"
                                             [className]="form1.controls['pt_desc1'].errors && (form1.controls['pt_desc1'].dirty || form1.controls['pt_desc1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                            formControlName="pt_desc1">
+                                           id="pt_desc1" formControlName="pt_desc1">
                                         <div *ngIf="form1.controls['pt_desc1'].errors && (form1.controls['pt_desc1'].dirty || form1.controls['pt_desc1'].touched)"
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
@@ -73,7 +73,7 @@
                                     </div>
                                 </div>
                            
-                                </div>
+                              
                                 <div class="row">
                                     <div class="form-group col-6">
                                         <label class="form-group">Description Interne:</label>
@@ -190,7 +190,7 @@
                                     </div>
 
 
-                                    <div class="form-group col-2">
+                                    <!--div class="form-group col-2">
                                         <label class="form-group ">Empl Plan:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_drwg_loc" id="exampleSelects5">
@@ -198,7 +198,7 @@
                                             <option *ngFor="let elem of pt_drwg_loc" [value]="elem.code_value">
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
-                                    </div>
+                                    </div-->
 
                                     <div class="form-group col-2">
                                         <label class="form-group ">Taille:</label>
@@ -209,9 +209,7 @@
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
-
+                              
                                     <div class="form-group col-2">
                                         <label class="form-group">Logo :</label>
                                         <select class="form-control form-control-sm form-control-solid"
@@ -221,24 +219,19 @@
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Categorie remise volume</label>
-
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_break_cat">
-                                    </div>
+                                    
 
 
                                 </div>
-                            </div>   
-                            <div class="col-6"> 
-                                <span class="font-weight-bolder text-dark">Image</span>
-                   
-                                <div class="row">
-                                    <img [src]="image"  (click)="selectImage.click()">
-                                    <input type="file" (change)="updateImage($event)" style="display: none" #selectImage>
+                         
+                            <div class="row">
+                                <div class="form-group col-4">
+                                  <label class="form-group"> Image attach: *</label>
+                                  <div class="input-group input-group-sm">
+                                    <input type="file" class="form-control form-control-solid" aria-describedby="basic-addon2" name="attach" (change)="uploadFile($event)" value="" />
+                                  </div>
                                 </div>
-                            </div>
+                              </div>
                                 <div class="row">
                                     <div class="form-group col-2"> </div>
                                 </div>
@@ -706,13 +699,7 @@
                                 </div>
                                 <div class="row">
                                     
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Couleur:</label>
-                    
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_break_cat">
-                    
-                                    </div>
+                                   
                                     <div class="form-group col-2">
                                         <label class="form-group ">Micronage</label>
                     

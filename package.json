@@ -121,6 +121,7 @@
     "@angular/material": "9.2.1",
     "@angular/material-moment-adapter": "9.2.1",
     "@ngrx/schematics": "9.1.0",
+    "@types/jquery": "3.5.1",
     "@types/blob-stream": "^0.1.33",
     "@types/chartist": "0.9.47",
     "@types/file-saver": "^2.0.7",

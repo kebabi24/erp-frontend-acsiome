@@ -156,6 +156,11 @@ useredit:any
   ad_tax_zone: any[] = []
   ad_tax_usage: any[] = []
   row_number;
+  selectedIndexes: any[];
+  selectedIndexes2: any[];
+  
+  user1: any;
+  user2: any;
   title: String = 'Modifier Fournisseur - '
   /**
     * Component constructor
@@ -1344,11 +1349,19 @@ prepareGriduser() {
           // for example, display the expand icon only on every 2nd row
           // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
-      multiSelect: false,
-      rowSelectionOptions: {
-          // True (Single Selection), False (Multiple Selections)
-          selectActiveRow: true,
-      },
+      multiSelect: true,
+          rowSelectionOptions: {
+              // True (Single Selection), False (Multiple Selections)
+              selectActiveRow: false,
+              
+          },
+          presets: {
+            rowSelection: {
+              // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+              gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+              //dataContextIds
+            },
+          },
   }
 
   // fill the dataset with your data
@@ -1360,16 +1373,44 @@ openuser(content) {
   this.prepareGriduser()
   this.modalService.open(content, { size: "lg" })
 }
-handleSelectedRowsChangeduser(e, args) {
-const controls = this.bankForm.controls
-if (Array.isArray(args.rows) && this.gridObjuser) {
-    args.rows.map((idx) => {
-        const item = this.gridObjuser.getDataItem(idx)
-          controls.bk_user1.setValue(item.usrd_code || "")
-          controls.user_name.setValue(item.usrd_name || "")
+// handleSelectedRowsChangeduser(e, args) {
+// const controls = this.bankForm.controls
+// if (Array.isArray(args.rows) && this.gridObjuser) {
+//     args.rows.map((idx) => {
+//         const item = this.gridObjuser.getDataItem(idx)
+//           controls.bk_user1.setValue(item.usrd_code || "")
+//           controls.user_name.setValue(item.usrd_name || "")
           
-        })
+//         })
+// }
+// }
+handleSelectedRowsChangeduser(e, args) {
+  this.selectedIndexes = [];
+  this.selectedIndexes = args.rows;
 }
+adduser() {
+  // this.itinerary.push({})
+  const controls = this.bankForm.controls;
+  var l: String;
+  var n: String
+  l = "";
+  n = ""
+  console.log(l.length);
+  this.selectedIndexes.forEach((index) => {
+    if (index == 0) {
+      l = this.users[index]["usrd_code"];
+      n = this.users[index]["usrd_name"];
+    } else {
+      l = l + "," + this.users[index]["usrd_code"];
+      n = n + "," + this.users[index]["usrd_name"];
+    }
+    //id: index,
+  });
+
+  console.log(l);
+  controls.bk_user1.setValue(l);
+  controls.user_name.setValue(n);
+  this.user1 = l;
 }
 
 angularGridReadyuser(angularGrid: AngularGridInstance) {

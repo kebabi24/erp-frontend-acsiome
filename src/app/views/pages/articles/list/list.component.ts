@@ -44,9 +44,11 @@ import {
   MessageType,
 } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
-
-import { Item, ItemService } from "../../../../core/erp";
-
+import { environment } from "../../../../../environments/environment"
+import { ItemService , ConfigService} from "../../../../core/erp";
+const myCustomimageFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) =>
+   `<img src=${value} alt="" width="80" height="80">` ;
+   const API_URL = environment.apiUrl + "/uploads/"
 @Component({
   selector: "kt-list",
   templateUrl: "./list.component.html",
@@ -64,18 +66,39 @@ export class ListComponent implements OnInit {
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   dataviewObj: any;
-
+ row : number
+ useimage: Boolean = false
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
+    private configService: ConfigService,
     private layoutUtilsService: LayoutUtilsService,
     private itemService: ItemService
   ) {
-    this.prepareGrid();
+   
+    
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.configService.getOne( 1 ).subscribe(
+      (resp: any) => {
+        console.log(resp.data)
+        if (resp.data.cfg_use_image) { 
+          console.log("her")
+          this.useimage = true
+          this.row = 100
+          console.log("rowh",this.row)
+         
+        }
+        else { 
+          this.row = 20
+        
+        }
+        
+      }) 
+      this.prepareGrid();
+  }
 
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -93,6 +116,15 @@ export class ListComponent implements OnInit {
         field: "id",
         sortable: true,
         minWidth: 50,
+      },
+      {
+        id: "image",
+        name: "Image",
+        field: "pt_drwg_loc",
+        sortable: true,
+        filterable: true,
+        formatter: myCustomimageFormatter,
+        minWidth: 100,
       },
       {
         id: "pt_part",
@@ -485,6 +517,8 @@ export class ListComponent implements OnInit {
           enableFiltering: true,
           enableSorting: true,
           enableAutoResize: true,
+          
+          rowHeight: 100,
           exportOptions: {
             sanitizeDataExport: true
           },
@@ -533,7 +567,11 @@ export class ListComponent implements OnInit {
     this.dataset = [];
     this.itemService.getAll().subscribe(
       (response: any) => {
+      
         this.dataset = response.data;
+        for(let data of this.dataset) {
+          data.pt_drwg_loc = API_URL + data.pt_drwg_loc
+        }
         this.dataView.setItems(this.dataset);
       },
 

@@ -51,6 +51,11 @@ export class BankService {
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
  
     }
+    public getBankBYUser(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbankuser`,data, { headers: httpHeaders })
+ 
+    }
     public getByAll(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findbyall`,data, { headers: httpHeaders })

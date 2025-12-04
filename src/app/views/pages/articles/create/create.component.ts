@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
   ChangeDetectorRef,
+  ViewChild, ElementRef
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
@@ -150,7 +151,7 @@ export class CreateComponent implements OnInit {
   pt_draw: any[] = [];
   pt_rev: any[] = [];
   pt_group: any[] = [];
-  pt_drwg_loc: any[] = [];
+  //pt_drwg_loc: any[] = [];
   pt_drwg_size: any[] = [];
   pt_abc: any[] = [];
   pt_loc_type: any[] = [];
@@ -214,7 +215,12 @@ export class CreateComponent implements OnInit {
  
   sctForm: FormGroup;
   sctForm1: FormGroup;
+  selectedFile: File;
+  FinalformData: FormData;
 
+  @ViewChild("fileInput") fileInputRef: ElementRef;
+  filePath: string;
+  // imageUrl = 'http://localhost:3001/api/v1/uploads/jsa.jpeg';
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -251,9 +257,9 @@ export class CreateComponent implements OnInit {
     this.codeService
       .getBy({ code_fldname: "pt_group" })
       .subscribe((response: any) => (this.pt_group = response.data));
-    this.codeService
-      .getBy({ code_fldname: "pt_drwg_loc" })
-      .subscribe((response: any) => (this.pt_drwg_loc = response.data));
+    // this.codeService
+    //   .getBy({ code_fldname: "pt_drwg_loc" })
+    //   .subscribe((response: any) => (this.pt_drwg_loc = response.data));
     this.codeService
       .getBy({ code_fldname: "pt_drwg_size" })
       .subscribe((response: any) => (this.pt_drwg_size = response.data));
@@ -295,24 +301,16 @@ export class CreateComponent implements OnInit {
     this.loadingSubject.next(false);
     this.createForm();
   }
-  image: string | SafeUrl =
-    "assets/media/users/"+ "1.jpg";
+  
+    uploadFile(event) {
+      if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        this.form1.get("attach").setValue(file);
+      console.log("file.name",file.name)
 
-  updateImage(ev) {
-    this.image = this.sanitizer.bypassSecurityTrustUrl(
-      window.URL.createObjectURL(ev.target.files[0])
-    );
-    console.log(this.image)
-    const fileContent = ev.target.result; // This holds the file's content
 
-      // Example: If it's a text file, you can log its content
-      console.log("File content:", fileContent);
-
-      // Example: If you want to upload it to a server
-      // uploadFileToServer(file); // Pass the original File object or its content
-
-}
-    
+      }
+    }
   
 
   prepareGrid() {
@@ -436,10 +434,10 @@ export class CreateComponent implements OnInit {
       pt_rev: [{ value: this.item.pt_rev, disabled: !this.isExist }],
       pt_dsgn_grp: [{ value: this.item.pt_dsgn_grp, disabled: !this.isExist }],
       pt_group: [{ value: this.item.pt_group, disabled: !this.isExist }],
-      pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
+     // pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
       pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
       pt_promo: [{ value: this.item.pt_promo, disabled: !this.isExist }],
-      pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
+      
       pt_abc: [{ value: this.item.pt_abc, disabled: !this.isExist },Validators.required],
       pt_avg_int: [{ value: this.item.pt_avg_int, disabled: !this.isExist }],
       pt_lot_ser: [{ value: this.item.pt_lot_ser, disabled: !this.isExist }],
@@ -457,6 +455,7 @@ export class CreateComponent implements OnInit {
       pt_rctwo_status: [{ value: this.item.pt_rctwo_status, disabled: !this.isExist }],
       pt_rctwo_active: [{ value: this.item.pt_rctwo_active, disabled: !this.isExist }],
       pt_article: [{ value: this.item.pt_article, disabled: !this.isExist }],
+      attach: [""],
     });
     this.form2 = this.formBuilder.group({
       pt_ship_wt: [{ value: this.item.pt_ship_wt, disabled: !this.isExist }],
@@ -466,6 +465,7 @@ export class CreateComponent implements OnInit {
       pt_fr_class: [{ value: this.item.pt_fr_class, disabled: !this.isExist }],
       pt_size: [{ value: this.item.pt_size, disabled: !this.isExist }],
       pt_size_um: [{ value: this.item.pt_size_um, disabled: !this.isExist }],
+      pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
     });
     this.form3 = this.formBuilder.group({
       pt_ms: [{ value: this.item.pt_ms, disabled: !this.isExist }],
@@ -519,7 +519,7 @@ export class CreateComponent implements OnInit {
      
       pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
       pt_model: [{ value: this.item.pt_model, disabled: !this.isExist }],
-      pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
+      
       int01: [{ value: this.item.int01, disabled: !this.isExist }],
       int02: [{ value: this.item.int02, disabled: !this.isExist }],
     });
@@ -582,7 +582,7 @@ export class CreateComponent implements OnInit {
                 this.isExist = true
                 console.log(response.data)
             } else {
-             
+              
               controls1.pt_desc1.enable()
               controls1.pt_um.enable()
               controls1.pt_desc2.enable()
@@ -593,10 +593,10 @@ export class CreateComponent implements OnInit {
               controls1.pt_rev.enable()
               controls1.pt_dsgn_grp.enable()
               controls1.pt_group.enable()
-              controls1.pt_drwg_loc.enable()
+             // controls1.pt_drwg_loc.enable()
               controls1.pt_drwg_size.enable()
               controls1.pt_promo.enable()
-              controls1.pt_break_cat.enable()
+              
               controls1.pt_abc.enable()
               controls1.pt_avg_int.enable()
               controls1.pt_lot_ser.enable()
@@ -621,6 +621,7 @@ export class CreateComponent implements OnInit {
               controls2.pt_fr_class.enable()
               controls2.pt_size.enable()
               controls2.pt_size_um.enable()
+              controls2.pt_break_cat.enable()
               controls3.pt_ms.enable()
               controls3.pt_buyer.enable()
               controls3.pt_phantom.enable()
@@ -667,7 +668,7 @@ export class CreateComponent implements OnInit {
               
               controls5.pt_drwg_size.enable()
               controls5.pt_model.enable()
-              controls5.pt_break_cat.enable()
+            
               controls5.int01.enable()
               controls5.int02.enable()
 
@@ -678,7 +679,7 @@ export class CreateComponent implements OnInit {
               controls6.pt_orderable.enable()
               controls6.pt_loadable.enable()
               controls6.pt_promotion.enable()
-        
+              document.getElementById("pt_desc1").focus();
 
             }
         })
@@ -791,10 +792,10 @@ export class CreateComponent implements OnInit {
     _item.pt_rev = controls1.pt_rev.value;
     _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
     _item.pt_group = controls1.pt_group.value;
-    _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
+   // _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
     _item.pt_drwg_size = controls1.pt_drwg_size.value;
     _item.pt_promo = controls1.pt_promo.value;
-    _item.pt_break_cat = controls1.pt_break_cat.value;
+    _item.pt_break_cat = controls2.pt_break_cat.value;
     _item.pt_abc = controls1.pt_abc.value;
     _item.pt_avg_int = controls1.pt_avg_int.value;
     _item.pt_lot_ser = controls1.pt_lot_ser.value;
@@ -869,7 +870,7 @@ export class CreateComponent implements OnInit {
     _item.pt_origin    = controls5.pt_origin.value;
     _item.pt_drwg_size = controls5.pt_drwg_size.value; 
     _item.pt_model     = controls5.pt_model.value;
-    _item.pt_break_cat = controls5.pt_break_cat.value;
+    
     _item.int01        = controls5.int01.value;
     _item.int02        = controls5.int02.value;
 
@@ -895,8 +896,14 @@ export class CreateComponent implements OnInit {
    * @param _item: ItemModel
    */
   addItem(item: Item, sct1: CostSimulation, sct2: CostSimulation) {
+    const controls = this.form1.controls
     this.loadingSubject.next(true);
-    this.itemService.add(item).subscribe(
+    const formData: FormData = new FormData();
+    console.log(controls.attach.value)
+   
+    formData.append("file", this.form1.get("attach").value);
+    formData.append("data", JSON.stringify(item));
+    this.itemService.add(formData).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(
@@ -944,7 +951,7 @@ export class CreateComponent implements OnInit {
                   true
                 );
                 this.loadingSubject.next(false);
-               // this.router.navigateByUrl("/articles/list");
+               this.router.navigateByUrl("/articles/list");
               }
             );
           }
