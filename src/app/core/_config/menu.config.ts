@@ -217,7 +217,7 @@ export class MenuConfig {
             },
             {
               title: "La liste des Fournisseurs",
-              page: "/providers/list-std-provider",
+              page: "/providers/list",
             },
             {
               title: "Ajouter Fournisseurs",
@@ -235,14 +235,7 @@ export class MenuConfig {
               title: "Liste Répertoire Fournisseurs",
               page: "/providers/list-rep",
             },
-            {
-              title: "Paramétrage Fournisseur",
-              page: "/providers/provider-settings",
-            },
-            {
-              title: "Liste Paramétrage Fournisseur",
-              page: "/providers/provider-settings-list",
-            },
+            
            
           ],
         },
@@ -254,8 +247,16 @@ export class MenuConfig {
           root: true,
           submenu: [
             {
+              title: "Paramétrage Fournisseur",
+              page: "/providers/provider-settings",
+            },
+            {
+              title: "Liste Paramétrage Fournisseur",
+              page: "/providers/provider-settings-list",
+            },
+            {
               title: "La liste des Fournisseurs STD",
-              page: "/providers/list",
+              page: "/providers/list-std-provider",
             },
             {
               title: "Ajouter Fournisseur STD",
@@ -584,6 +585,14 @@ export class MenuConfig {
           icon: "flaticon2-box-1",
           root: true,
           submenu: [
+            {
+              title: "Paramétrage articles",
+              page: "/articles/part-settings",
+            },
+            {
+              title: "Liste Paramétrage Articles",
+              page: "/articles/part-settings-list",
+            },
             {
               title: "La liste des articles",
               page: "/articles/list",
@@ -1045,6 +1054,10 @@ export class MenuConfig {
             {
               title: "Commande Clients Céramique",
               page: "/sales/create-ceram-so",
+            },
+            {
+              title: "Liste des Commandes Clients Céramique",
+              page: "/sales/list-so-ceram",
             },
             {
               title: "Fiche de Voeu",
