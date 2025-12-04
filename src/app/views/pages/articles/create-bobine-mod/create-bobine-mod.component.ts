@@ -220,6 +220,7 @@ pt_buyer:any;
   model : any
   docs: any[] = [];
   exist:any;
+  user : any;
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -256,6 +257,7 @@ pt_buyer:any;
 
   }
   ngOnInit(): void {
+     this.user = JSON.parse(localStorage.getItem("user"));
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.createForm();
@@ -1835,8 +1837,12 @@ printpdf() {
     doc.text(this.docs[0].date01, 180, 22);
     doc.text(this.docs[0].date02, 180, 27);
   }
-        
-          const date = new Date()
+   const tdate = new Date()
+      // doc.text("imprimé Le: " + tdate.toLocaleDateString() , 220, 45);
+      // doc.text("A: " + new Date().toLocaleTimeString(), 220, 50);
+      // doc.text("Edité par: " + this.user.usrd_code, 220, 55);
+                        
+         
           doc.setFontSize(14);
     
           

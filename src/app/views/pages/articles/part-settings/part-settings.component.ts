@@ -54,11 +54,11 @@ import { MatDialog } from "@angular/material/dialog"
 import { Code, CodeService } from "../../../../core/erp"
 
 @Component({
-  selector: 'kt-provider-settings', 
-  templateUrl: './provider-settings.component.html',
-  styleUrls: ['./provider-settings.component.scss']
+  selector: 'kt-part-settings', 
+  templateUrl: './part-settings.component.html',
+  styleUrls: ['./part-settings.component.scss']
 })
-export class ProviderSettingsComponent implements OnInit {
+export class PartSettingsComponent implements OnInit {
 
   code: Code
   codeForm: FormGroup
@@ -100,7 +100,7 @@ export class ProviderSettingsComponent implements OnInit {
   ) {
       config.autoClose = true
       this.codeService
-      .getBy({ code_fldname: "check_form" })
+      .getBy({ code_fldname: "liaison" })
       .subscribe((response: any) => (this.check_form = response.data))
   }
   ngOnInit(): void {
@@ -132,8 +132,8 @@ export class ProviderSettingsComponent implements OnInit {
               { value: this.code.code_cmmt, disabled: !this.isExist },
               Validators.required,
           ],
-          code_desc: [{ value: this.code.code_desc, disabled: !this.isTerms}],
-         dec01: [{ value: this.code.dec01, disabled: !this.isTerms }],
+          code_desc: [{ value: this.code.code_desc, }],
+         dec01: [{ value: this.code.dec01,  }],
           
       })
   }
@@ -322,8 +322,8 @@ prepareGrid() {
       filterable: true,
       type: FieldType.string,
       filter: {
-        collection: [ { value: 'vd_type', label: 'Type' }, { value: 'vd_shipvia', label: 'Mode Expédition' }, { value: 'vd_promo', label: 'Famille' },{ value: 'vd_lang', label: 'Langue' }, { value: 'check_form', label: 'Mode de Paiement' },{ value: 'vd_cr_terms', label: 'Délai de Paiement' },{ value: 'vd_sort', label: 'Classe' },{ value: 'bank', label: 'Banque' },{ value: 'vd_remit', label: 'Sous-Famille' },{ value: 'ad_country', label: 'Pays' },{ value: 'ad_state', label: 'Wilaya' },{ value: 'ad_city', label: 'Commune' } ],
-        model: Filters.multipleSelect,
+        // collection: [ { value: 'vd_type', label: 'Type' }, { value: 'vd_shipvia', label: 'Mode Expédition' }, { value: 'vd_promo', label: 'Famille' },{ value: 'vd_lang', label: 'Langue' }, { value: 'check_form', label: 'Mode de Paiement' },{ value: 'vd_cr_terms', label: 'Délai de Paiement' },{ value: 'vd_sort', label: 'Classe' },{ value: 'bank', label: 'Banque' },{ value: 'vd_remit', label: 'Sous-Famille' },{ value: 'ad_country', label: 'Pays' },{ value: 'ad_state', label: 'Wilaya' },{ value: 'ad_city', label: 'Commune' } ],
+        // model: Filters.multipleSelect,
  
         // you can add "multiple-select" plugin options like styling the first row
         // previously known as `filterOptions` for < 9.0

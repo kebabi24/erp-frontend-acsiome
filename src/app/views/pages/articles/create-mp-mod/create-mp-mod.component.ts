@@ -2026,7 +2026,11 @@ printpdf() {
     doc.text(this.docs[0].date02, 180, 27);
   }
         
-          const date = new Date()
+          const tdate = new Date()
+          
+      //     doc.text("imprimé Le: " + tdate.toLocaleDateString() , 160, 35);
+      // doc.text("A: " + new Date().toLocaleTimeString(), 220, 35);
+      // doc.text("Edité par: " + this.user.usrd_code, 220, 40);
           doc.setFontSize(14);
     
           

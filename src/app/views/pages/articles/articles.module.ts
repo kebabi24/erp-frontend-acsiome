@@ -95,7 +95,10 @@ import { CopieArticleComponent } from './copie-article/copie-article.component';
 import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
 import { UpdatePriceDdComponent } from './update-price-dd/update-price-dd.component';
 import { CreateEpiModComponent } from './create-epi-mod/create-epi-mod.component';
-import { UpdateEpiModComponent } from './update-epi-mod/update-epi-mod.component'
+import { UpdateEpiModComponent } from './update-epi-mod/update-epi-mod.component';
+import { PartSettingsComponent } from './part-settings/part-settings.component';
+import { PartSettingsEditComponent } from './part-settings-edit/part-settings-edit.component';
+import { PartSettingsListComponent } from './part-settings-list/part-settings-list.component'
 
 
 const routes: Routes = [
@@ -283,6 +286,9 @@ const routes: Routes = [
         UpdatePriceDdComponent,
         CreateEpiModComponent,
         UpdateEpiModComponent,
+        PartSettingsComponent,
+        PartSettingsEditComponent,
+        PartSettingsListComponent,
     ],
     imports: [
         CommonModule,

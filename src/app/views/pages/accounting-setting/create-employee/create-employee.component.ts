@@ -163,6 +163,7 @@ devise:any;
     angularGrid4: AngularGridInstance;
 nbr:any;
 distdays:any;
+user : any;
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -199,6 +200,7 @@ distdays:any;
   
   }
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem("user"));
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
     this.createForm()
@@ -2004,71 +2006,74 @@ printpdf() {
     doc.text(this.docs[0].date02, 180, 27);
   }
         
-          const date = new Date()
+          const tdate = new Date()
+          doc.text("imprimé Le: " + tdate.toLocaleDateString() , 160, 35);
+      doc.text("A: " + new Date().toLocaleTimeString(), 220, 35);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 40);
           doc.setFontSize(16);
     
           
           // doc.setFont("Times-Roman");
-          doc.line(35,35,150,35)
-          doc.text("Matricule : " + controls.emp_addr.value, 40, 40);
           doc.line(35,45,150,45)
+          doc.text("Matricule : " + controls.emp_addr.value, 40, 50);
+          doc.line(35,55,150,55)
           doc.setFontSize(12);
           
-          doc.text("Nom Employé: " + controls.emp_fname.value + ' ' + controls.emp_lname.value, 7, 50);
+          doc.text("Nom Employé: " + controls.emp_fname.value + ' ' + controls.emp_lname.value, 7, 60);
           
-          doc.line(5,60,200,60)
-          if(controls.emp_line1.value != null){doc.text("Addresse: " + controls.ad_line1.value, 7, 65);}
-          else{doc.text("Addresse: ", 7, 65);}
-          if(controls.emp_country.value != null){doc.text("Pays: " + controls.emp_country.value + ' ' + this.pays, 7, 70);}
-          else{doc.text("Pays: ", 7, 70);}
+          doc.line(5,65,200,65)
+          if(controls.emp_line1.value != null){doc.text("Addresse: " + controls.ad_line1.value, 7, 70);}
+          else{doc.text("Addresse: ", 7, 70);}
+          if(controls.emp_country.value != null){doc.text("Pays: " + controls.emp_country.value + ' ' + this.pays, 7, 80);}
+          else{doc.text("Pays: ", 7, 80);}
           // doc.line(5,75,200,75)
-          if(controls.emp_phone.value != null){doc.text("Tel: " + controls.emp_phone.value, 7, 80);}
-          else{doc.text("Tel: ", 7, 80);}  
-          if(controls.emp_mail.value != null){doc.text("Email: " + controls.emp_mail.value, 57, 80);}
-          else{doc.text("Email: ", 57, 80)}  
-          doc.line(5,85,200,85)
+          if(controls.emp_phone.value != null){doc.text("Tel: " + controls.emp_phone.value, 7, 85);}
+          else{doc.text("Tel: ", 7, 85);}  
+          if(controls.emp_mail.value != null){doc.text("Email: " + controls.emp_mail.value, 57, 90);}
+          else{doc.text("Email: ", 57, 90)}  
+          doc.line(5,95,200,95)
           if ( controls.emp_sex.value == 'M') {
-          doc.text("Genre: " + "MASCULIN", 7, 90); } else {
-            doc.text("Genre: " + "FEMININ", 7, 90);
+          doc.text("Genre: " + "MASCULIN", 7, 100); } else {
+            doc.text("Genre: " + "FEMININ", 7, 100);
           }
           if ( controls.emp_familysit.value == 'M') {
-          doc.text("Situation: " + "MARIE", 7, 90); } else {
-           if ( controls.emp_familysit.value == 'C') { doc.text("Situation: " + "CELIBATAIRE", 7, 90);}
-           else{ doc.text("Situation: " + "AUTRE", 7, 90);}
+          doc.text("Situation: " + "MARIE", 7, 105); } else {
+           if ( controls.emp_familysit.value == 'C') { doc.text("Situation: " + "CELIBATAIRE", 7, 105);}
+           else{ doc.text("Situation: " + "AUTRE", 7, 105);}
           }
           // doc.line(5,85,200,85)
           // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
           // doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 45);
-          if(controls.emp_child_nbr.value != null){doc.text("Nombre enfant: " + controls.emp_child_nbr.value, 7, 95);}
-          else{doc.text("Nombre enfant: 0", 7, 95)}
-          if(controls.emp_blood.value != null){doc.text("Groupe Sanguin: " + controls.emp_blood.value, 57, 95);}
-          else{doc.text("Groupe Sanguin: ", 57, 95)}
-          if(controls.emp_ss_id.value != null){doc.text("N°Sécurité sociale:: " + controls.emp_ss_id.value, 7, 100);}
-          else{doc.text("N°Sécurité sociale: " , 7, 100)}
-          if(controls.emp_dlicence.value != null){doc.text("N° Permis de conduire: " + controls.emp_dlicence.value, 57, 100);}
-          {doc.text("N° Permis de conduire: ", 57, 100)}
-          doc.line(5,105,200,105)
+          if(controls.emp_child_nbr.value != null){doc.text("Nombre enfant: " + controls.emp_child_nbr.value, 7, 110);}
+          else{doc.text("Nombre enfant: 0", 7, 110)}
+          if(controls.emp_blood.value != null){doc.text("Groupe Sanguin: " + controls.emp_blood.value, 57, 115);}
+          else{doc.text("Groupe Sanguin: ", 57, 115)}
+          if(controls.emp_ss_id.value != null){doc.text("N°Sécurité sociale:: " + controls.emp_ss_id.value, 7, 120);}
+          else{doc.text("N°Sécurité sociale: " , 7, 120)}
+          if(controls.emp_dlicence.value != null){doc.text("N° Permis de conduire: " + controls.emp_dlicence.value, 57, 125);}
+          {doc.text("N° Permis de conduire: ", 57, 125)}
+          doc.line(5,130,200,130)
           
-          if(controls.emp_upper.value != null){doc.text("Structure: " + controls.emp_upper.value , 7, 110);}
-          else{doc.text("Type: ", 7, 110)}
-          if(controls.emp_job.value!=null){doc.text("Service: " + controls.emp_job.value + ' - ' + this.seq, 7, 115);}
-          else{doc.text("Service: ", 7, 115)}
-          if(controls.emp_level.value!=null){doc.text("Poste: " + controls.emp_level.value + ' - ' + this.shipvia, 7, 120);}
-          else{doc.text("Poste: ", 7, 120)}
-          if(controls.emp_line2.value!=null){doc.text("Spécialité: " + controls.emp_line2.value , 55, 120);}
-          else{doc.text("Poste: ",55, 120)}
+          if(controls.emp_upper.value != null){doc.text("Structure: " + controls.emp_upper.value , 7, 135);}
+          else{doc.text("Structure: ", 7, 135)}
+          if(controls.emp_job.value!=null){doc.text("Service: " + controls.emp_job.value + ' - ' + this.seq, 7, 140);}
+          else{doc.text("Service: ", 7, 140)}
+          if(controls.emp_level.value!=null){doc.text("Poste: " + controls.emp_level.value + ' - ' + this.shipvia, 7, 145);}
+          else{doc.text("Poste: ", 7, 145)}
+          if(controls.emp_line2.value!=null){doc.text("Spécialité: " + controls.emp_line2.value , 55, 150);}
+          else{doc.text("Poste: ",55, 150)}
           
-          doc.line(5,125,200,125)
+          doc.line(5,155,200,155)
          
-          if(controls.emp_first_date.value!=null){doc.text("Embauché le: " + controls.emp_first_date.value , 7, 130);}
+          if(controls.emp_first_date.value!=null){doc.text("Embauché le: " + controls.emp_first_date.value , 7, 160);}
           
-          if(controls.emp_last_date.value!=null){doc.text("Fin de contrat: " + controls.emp_last_date.value , 7, 135);}
+          if(controls.emp_last_date.value!=null){doc.text("Fin de contrat: " + controls.emp_last_date.value , 7, 165);}
           
           // if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}
           // else{doc.text("RIB: ", 7, 150)}
           // if(controls.vd_debtor.value!=null){doc.text("Compte: " + controls.vd_debtor.value, 7, 155);}
           // else{doc.text("Compte: ", 7, 155)}
-          doc.line(5,145,200,145)
+          doc.line(5,170,200,170)
 
           
           

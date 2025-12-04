@@ -82,7 +82,7 @@ export class ListStdProviderComponent implements OnInit {
   // columnDefinitions: Column[];
   // gridOptions: GridOption;
   // dataset: any[];
-
+user:any;
 trdataset:any[]
   vdaddr : any 
   vdname : any
@@ -116,7 +116,7 @@ provider : any
   }
 
   ngOnInit(): void {
-   
+   this.user =  JSON.parse(localStorage.getItem('user'))
     this.mvangularGrid.resizerService.resizeColumnsByCellContent(true);
   
   }
@@ -738,59 +738,63 @@ doc.text(this.docs[0].date01, 180, 22);
 doc.text(this.docs[0].date02, 180, 27);
 }
 
-  const date = new Date()
+  const tdate = new Date()
+          
+          doc.text("imprimé Le: " + tdate.toLocaleDateString() , 160, 35);
+      doc.text("A: " + new Date().toLocaleTimeString(), 220, 35);
+      doc.text("Edité par: " + this.user.usrd_code, 220, 40);
   doc.setFontSize(16);
 
   
   doc.setFont("Times-Roman");
-  doc.line(35,35,150,35)
-  doc.text("Code Fournisseur : " + this.provider.address.ad_addr, 40, 40);
   doc.line(35,45,150,45)
+  doc.text("Code Fournisseur : " + this.provider.address.ad_addr, 40, 50);
+  doc.line(35,55,150,55)
   doc.setFontSize(12);
   
-  doc.text("Nom Fournisseur: " + this.provider.address.ad_name, 7, 50);
-  if(this.provider.vd_promo != null){doc.text("Famille: " + this.provider.vd_promo, 7, 55);}
-  else {doc.text("Famille: " , 7, 55);}
-  if(this.provider.vd_sort != null){doc.text("Sous-famille: " + this.provider.vd_sort, 57, 55);}
-  else {doc.text("Sous-famille: " , 57, 55);}
-  if(this.provider.vd_remit != null){doc.text("Classe: " + this.provider.vd_remit, 157, 55);}
-  else {doc.text("Classe: " , 157, 55);}
-  doc.line(5,60,200,60)
-  if(this.provider.address.ad_line1 != null){doc.text("Addresse: " + this.provider.address.ad_line1 + ' ' + this.provider.ad_city + ' ' + this.provider.ad_state, 7, 65);}
-  else{doc.text("Addresse: ", 7, 65);}
-  if(this.provider.address.ad_country != null){doc.text("Pays: " + this.provider.address.ad_country + ' ' + this.pays, 7, 70);}
-  else{doc.text("Pays: ", 7, 70);}
+  doc.text("Nom Fournisseur: " + this.provider.address.ad_name, 7, 60);
+  if(this.provider.vd_promo != null){doc.text("Famille: " + this.provider.vd_promo, 7, 65);}
+  else {doc.text("Famille: " , 7, 65);}
+  if(this.provider.vd_sort != null){doc.text("Classe: " + this.provider.vd_sort, 67, 65);}
+  else {doc.text("Sous-famille: " , 67, 65);}
+  if(this.provider.vd_remit != null){doc.text("Sous Famille: " + this.provider.vd_remit, 167, 65);}
+  else {doc.text("Classe: " , 167, 65);}
+  doc.line(5,70,200,70)
+  if(this.provider.address.ad_line1 != null){doc.text("Addresse: " + this.provider.address.ad_line1 + ' ' + this.provider.ad_city + ' ' + this.provider.ad_state, 7, 75);}
+  else{doc.text("Addresse: ", 7, 75);}
+  if(this.provider.address.ad_country != null){doc.text("Pays: " + this.provider.address.ad_country + ' ' + this.pays, 7, 80);}
+  else{doc.text("Pays: ", 7, 80);}
   // doc.line(5,75,200,75)
-  if(this.provider.address.ad_phone != null){doc.text("Tel: " + this.provider.address.ad_phone, 7, 80);}
-  else{doc.text("Tel: ", 7, 80);}  
-  if(this.provider.address.ad_ext != null){doc.text("Email: " + this.provider.address.ad_ext, 57, 80);}
-  else{doc.text("Email: ", 57, 80)}  
-  doc.line(5,85,200,85)
+  if(this.provider.address.ad_phone != null){doc.text("Tel: " + this.provider.address.ad_phone, 7, 90);}
+  else{doc.text("Tel: ", 7, 90);}  
+  if(this.provider.address.ad_ext != null){doc.text("Email: " + this.provider.address.ad_ext, 67, 90);}
+  else{doc.text("Email: ", 67, 90)}  
+  doc.line(5,95,200,95)
   if(this.provider.address.ad_taxable == true) {
-  doc.text("Taxable: " + "OUI", 7, 90);} else { 
-    doc.text("Taxable: " + "NON", 7, 90)
+  doc.text("Taxable: " + "OUI", 7, 100);} else { 
+    doc.text("Taxable: " + "NON", 7, 100)
   }
-  doc.text("Taux de taxe: " + this.provider.address.ad_taxc, 57, 90);
+  doc.text("Taux de taxe: " + this.provider.address.ad_taxc, 67, 100);
   // doc.line(5,85,200,85)
   // doc.text("DA Obligatoire: " + this.provider.pt_plan_ord, 5, initialY + 45);
   // doc.text("Achat: " + this.provider.pt_dea, 55, initialY + 45);
-  if(this.provider.address.ad_gst_id != null){doc.text("RC N°: " + this.provider.address.ad_gst_id, 7, 95);}
-  else{doc.text("RC N°: ", 7, 95)}
-  if(this.provider.address.ad_misc2_id != null){doc.text("NIF: " + this.provider.address.ad_misc2_id, 57, 95);}
-  else{doc.text("NIF: ", 57, 95)}
-  if(this.provider.address.ad_pst_id != null){doc.text("AI: " + this.provider.address.ad_pst_id, 7, 100);}
-  else{doc.text("AI: " , 7, 100)}
-  if(this.provider.address.ad_misc1_id != null){doc.text("NIS: " + this.provider.address.ad_misc1_id, 57, 100);}
-  {doc.text("NIS: ", 57, 100)}
-  doc.line(5,105,200,105)
+  if(this.provider.address.ad_gst_id != null){doc.text("RC N°: " + this.provider.address.ad_gst_id, 7, 105);}
+  else{doc.text("RC N°: ", 7, 105)}
+  if(this.provider.address.ad_misc2_id != null){doc.text("NIF: " + this.provider.address.ad_misc2_id, 67, 105);}
+  else{doc.text("NIF: ", 67, 105)}
+  if(this.provider.address.ad_pst_id != null){doc.text("AI: " + this.provider.address.ad_pst_id, 7, 110);}
+  else{doc.text("AI: " , 7, 110)}
+  if(this.provider.address.ad_misc1_id != null){doc.text("NIS: " + this.provider.address.ad_misc1_id, 67, 110);}
+  {doc.text("NIS: ", 67, 110)}
+  doc.line(5,115,200,115)
   
-  if(this.provider.vd_type != null){doc.text("Type: " + this.provider.vd_type + ' - ' , 7, 110);}
-  else{doc.text("Type: ", 7, 110)}
+  if(this.provider.vd_type != null){doc.text("Type: " + this.provider.vd_type + ' - ' , 7, 120);}
+  else{doc.text("Type: ", 7, 120)}
   // if(this.provider.vd_seq!=null){doc.text("Séquence: " + this.provider.vd_seq + ' - ' + this.seq, 7, 115);}
   // else{doc.text("Séquence: ", 7, 115)}
-  if(this.provider.vd_shipvia!=null){doc.text("Incoterme: " + this.provider.vd_shipvia + ' - ' + this.shipvia, 7, 115);}
-  else{doc.text("Incoterme: ", 7, 115)}
-  doc.line(5,125,200,125)
+  if(this.provider.vd_shipvia!=null){doc.text("Incoterme: " + this.provider.vd_shipvia + ' - ' + this.shipvia, 7, 125);}
+  else{doc.text("Incoterme: ", 7, 125)}
+  // doc.line(5,125,200,125)
   // if(this.provider.vd_bank!=null){doc.text("Banque: " + this.provider.vd_bank + ' - ' + this.banque, 7, 130);}
   // else{doc.text("Banque: ", 7, 130)}
   if(this.provider.vd_ckfrm!=null){doc.text("Méthode de paiement: " + this.provider.vd_ckfrm + ' - ' + this.ckfrm, 7, 130);}

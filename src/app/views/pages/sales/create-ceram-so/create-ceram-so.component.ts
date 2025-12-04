@@ -2863,7 +2863,7 @@ console.log(tht , tva , timbre,ttc)
   doc.addImage(img, "png", 160, 5, 50, 30);
   doc.setFontSize(12);
   if (this.domain.dom_name != null) {
-    doc.text(this.domain.dom_name, 10, 10);
+    doc.text(this.domain.dom_name, 10, 10); 
   }
   if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
   if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);

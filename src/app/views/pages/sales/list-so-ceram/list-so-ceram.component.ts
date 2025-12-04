@@ -197,7 +197,7 @@ user
        {
          id: "chr02",
          name: "Tel",
-         field: "so.chr01",
+         field: "so.chr02",
          sortable: true,
          filterable: true,
          type: FieldType.string,
