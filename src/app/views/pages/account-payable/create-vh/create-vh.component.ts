@@ -205,6 +205,7 @@ entity;
   total: Number;
   compta: Boolean = false;
   declared: Boolean = false;
+  isexist: Boolean = false;
   constructor(
     config: NgbDropdownConfig,
     private ihFB: FormBuilder,
@@ -805,7 +806,7 @@ var prod = args.dataContext.product;
           day: date.getDate()
         }],
         
-        vh_taxable: [this.voucherOrder.vh_taxable],
+        vh_taxable: [{value:this.voucherOrder.vh_taxable,disabled:this.isexist}],
        
         //vh_rmks: [this.voucherOrder.vh_po],
         vh_rmks: [this.voucherOrder.vh_rmks],
@@ -840,7 +841,7 @@ var prod = args.dataContext.product;
       controls.name.setValue(null);
       controls.vh_curr.setValue(null);
       controls.vh_cr_terms.setValue(null);
-      controls.vh_taxable.setValue(false);
+      // controls.vh_taxable.setValue(false);
     
        
       const   en_entity = controls.vh_entity.value;
@@ -1172,6 +1173,11 @@ if (!data) {
           controls.vh_vend.setValue(null)
           document.getElementById("vend").focus();
         } else {
+          if(res.data.vd_type == 'ND' || res.data.address.ad_misc2_id == null || res.data.address.ad_misc1_id == null || res.data.address.ad_pst_id == null || res.data.address.ad_gst_id == null){alert("ce Fournisseur ne peut pas facturer!");
+          this.error = true;
+          controls.vh_vend.setValue(null)
+          document.getElementById("vend").focus();}
+          else{
           this.error = false;
           this.provider = res.data; 
           controls.vh_vend.setValue(data.vd_addr || "");
@@ -1179,6 +1185,8 @@ if (!data) {
           controls.vh_cr_terms.setValue(data.vd_cr_terms || "");
           controls.vh_curr.setValue(data.vd_curr || "");
           controls.vh_taxable.setValue(data.address.ad_taxable || "");
+            if(data.vd_type == 'C'){console.log(data.vd_type),this.isexist = false, controls.vh_taxable.enable() }
+                    else{this.isexist = true, controls.vh_taxable.disable()} 
          
             this.deviseService.getBy({ cu_curr: data.vd_curr }).subscribe(
               (res: any) => {
@@ -1206,7 +1214,7 @@ if (!data) {
                 }
             
 
-        }
+         } }
          
       
 
@@ -1860,12 +1868,19 @@ handleSelectedRowsChanged2(e, args) {
     if (!data) { 
     
       this.provider = item;
+      if(item.vd_type == 'ND' || item.address.ad_misc2_id == null || item.address.ad_misc1_id == null || item.address.ad_pst_id == null || item.address.ad_gst_id == null){
+      alert("ce Fournisseur ne peut pa facturer");
+          this.error = true;
+          controls.vh_vend.setValue(null)
+          document.getElementById("vend").focus();
+          } else{    
       controls.vh_vend.setValue(item.vd_addr || "");
       controls.name.setValue(item.address.ad_name || "");
       controls.vh_curr.setValue(item.vd_curr || "");
       controls.vh_cr_terms.setValue(item.vd_cr_terms || "");
       controls.vh_taxable.setValue(item.address.ad_taxable || "");
-    
+    if(item.vd_type == 'C'){console.log(item.vd_type),this.isexist = false, controls.vh_taxable.enable() }
+                    else{this.isexist = true, controls.vh_taxable.disable()}
       
      
         
@@ -1941,14 +1956,16 @@ handleSelectedRowsChanged2(e, args) {
           })
         } 
         });
-        } else {
+        } 
+      }
+        else {
 
           alert (" Facture existe deja pour ce fournisseur")
           controls.vh_po.setValue(null);
           controls.vh_vend.setValue(null);
           document.getElementById("vh_po").focus();
         }
-      })
+     })
     
 
       });
@@ -2348,7 +2365,7 @@ handleSelectedRowsChangedentity(e, args) {
       controls.name.setValue(null);
       controls.vh_curr.setValue(null);
       controls.vh_cr_terms.setValue(null);
-      controls.vh_taxable.setValue(false);
+      // controls.vh_taxable.setValue(false);
     
  
   if (Array.isArray(args.rows) && this.gridObjentity) {

@@ -697,6 +697,18 @@ export class MenuConfig {
           icon: "flaticon2-delivery-package",
           submenu: [
             {
+              title: "Liste des Produits",
+              page: "/articles/list",
+            },
+            {
+              title: "Modification des Produits",
+              page: "/articles/list-std-update",
+            },
+            {
+              title: "Ajouter un Produit",
+              page: "/articles/create-std-item",
+            },
+            {
               title: "Chargement Des Vans",
               page: "/inventory-management/loading-vans",
             },

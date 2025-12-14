@@ -707,14 +707,7 @@ export class ExWoPrintComponent implements OnInit {
            
           },
     
-          {
-            id: "tr_line",
-            name: "Ligne",
-            field: "tr_line",
-            minWidth: 50,
-            maxWidth: 50,
-            selectable: true,
-          },
+         
           {
             id: "tr_lot",
             name: "N° BON",
@@ -723,10 +716,19 @@ export class ExWoPrintComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
           },
+ {
+            id: "tr_type",
+            name: "Mouvement",
+            field: "tr_type",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          
           {
-            id: "tr_site",
-            name: "Site ",
-            field: "tr_site",
+            id: "tr_nbr",
+            name: "N° OF ",
+            field: "tr_nbr",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -765,16 +767,6 @@ export class ExWoPrintComponent implements OnInit {
           
          
           {
-              id: "tr_lot",
-              name: "N° BON",
-              field: "tr_lot",
-              sortable: true,
-              width: 80,
-              filterable: false,
-              type: FieldType.float,
-              
-          },
-          {
               id: "tr_qty_loc",
               name: "QTE",
               field: "tr_qty_loc",
@@ -796,6 +788,14 @@ export class ExWoPrintComponent implements OnInit {
          
             
         },
+         {
+            id: "tr_effdate",
+            name: "Date",
+            field: "tr_effdate",
+            minWidth: 100,
+            maxWidth: 100,
+            selectable: true,
+          },
         {
           id: "tr_program",
           name: "Heure",
@@ -1866,8 +1866,28 @@ onactive(){
     const time2 = controls.end_time.value
   this.inventoryTransactionService.getByExs({ date1,date2,time1,time2 }).subscribe(
     (res: any) => {
+      console.log(res.data)
       this.dataset = res.data
       this.dataView.setItems(this.dataset)
+      // this.gridService.addItem(
+      //     {
+      //       id: this.dataset.length + 1,
+      //       tr_line: res.data.tr_line,
+      //       tr_lot:res.data.tr_lot,
+      //       tr_nbr:res.data.tr_nbr,
+      //       tr_part: res.data.tr_part,
+      //       cmvid: "",
+      //       desc: res.data.tr_desc,
+      //       tr_qty_loc: res.data.tr_qty_loc,
+      //       tr_um: res.data.tr_um,
+      //       tr_price: 0,
+      //       cmvids: "",
+      //       tr_serial: res.data.tr_serial,
+      //       tr_status: res.data.tr_status,
+      //       tr_expire: res.data.tr_expire,
+      //     },
+      //     { position: "bottom" }
+      //   );
    
     },
     (error) => {

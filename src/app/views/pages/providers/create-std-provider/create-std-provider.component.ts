@@ -2189,10 +2189,10 @@ printpdf() {
   }
         
           const tdate = new Date()
-          
+          doc.setFontSize(10)
           doc.text("imprimé Le: " + tdate.toLocaleDateString() , 160, 35);
-      doc.text("A: " + new Date().toLocaleTimeString(), 220, 35);
-      doc.text("Edité par: " + this.user.usrd_code, 220, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 40);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 45);
           doc.setFontSize(16);
     
           
@@ -2211,7 +2211,7 @@ printpdf() {
           if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_sort.value, 167, 65);}
           else {doc.text("Classe: " , 167, 65);}
           doc.line(5,70,200,70)
-          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value + ' ' + controlsa.ad_city.value + ' ' + controlsa.ad_state.value, 7, 75);}
+          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value , 7, 75);}
           else{doc.text("Addresse: ", 7, 75);}
           if(controlsa.ad_country.value != null){doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 7, 80);}
           else{doc.text("Pays: ", 7, 80);}
