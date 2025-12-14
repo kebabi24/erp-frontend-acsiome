@@ -109,7 +109,11 @@ export class QualityControlService {
         return this.http.get(`${API_URL}/getAllGammes/`, { headers: httpHeaders })
     }
     
-
+    public getBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+ 
+    }
     
     
     

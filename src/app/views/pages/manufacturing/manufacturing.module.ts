@@ -75,7 +75,7 @@ import { RpBroyageComponent } from './rp-broyage/rp-broyage.component';
 
 
 
-import { DomainService,BomService, PsService, ItemService, SiteService, WorkOrderService, SequenceService, LocationService, MesureService, LocationDetailService, WorkOrderDetailService, CostSimulationService, RequisitionService, AddressService, InventoryTransactionService, InventoryStatusService, ReasonService, WorkCenterService, WorkRoutingService, OperationHistoryService, WoroutingService, BomPartService, CodeService, LabelService, SaleOrderService, EmployeService, UsersService, PrintersService, CustomerService, ProviderService } from "../../../core/erp";
+import { DomainService,BomService, PsService, ItemService, SiteService, WorkOrderService, SequenceService, LocationService, MesureService, LocationDetailService, WorkOrderDetailService, CostSimulationService, RequisitionService, AddressService, InventoryTransactionService, InventoryStatusService, ReasonService, WorkCenterService, WorkRoutingService, OperationHistoryService, WoroutingService, BomPartService, CodeService, LabelService, SaleOrderService, EmployeService, UsersService, PrintersService, CustomerService, ProviderService, QualityControlService } from "../../../core/erp";
 import { ReleaseWoComponent } from './release-wo/release-wo.component';
 import { LabelAllocationComponent } from './label-allocation/label-allocation.component';
 import { RecapBroyageComponent } from './recap-broyage/recap-broyage.component';
@@ -369,6 +369,7 @@ const routes: Routes = [
     DomainService,
     CustomerService,
     ProviderService,
+    QualityControlService,
   ],
 
   entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],
