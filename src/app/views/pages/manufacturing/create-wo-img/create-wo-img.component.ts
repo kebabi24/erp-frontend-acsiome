@@ -179,6 +179,13 @@ export class CreateWoImgComponent implements OnInit {
   selectedIndexes: any[];
   docs_codess: any[];
   specifications: any[];
+
+  columnDefinitionscode: Column[] = [];
+  gridOptionscode: GridOption = {};
+  gridObjcode: any;
+  dataViewcode: any;
+  angularGridcode: AngularGridInstance;
+  codes: any[];
   constructor(
     private http: HttpClient,
     private httpUtils: HttpUtilsService,
@@ -328,14 +335,25 @@ export class CreateWoImgComponent implements OnInit {
       sortable: true,
       width: 80,
       filterable: false,
-      editor: {
-        model: Editors.text,
-        required: true,
-       
-
-      },
+     
      
     },
+    {
+      id: "formvid",
+      field: "formvid",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.infoIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        this.row_number = args.row;
+        let element: HTMLElement = document.getElementById(
+          "openCodesGrid"
+        ) as HTMLElement;
+        element.click();
+      },
+    },
+    
       {
         id: "wo_part",
         name: "Article",
@@ -2427,6 +2445,108 @@ open3(content,field) {
   this.modalService.open(content, { size: "lg" });
 }
 
+
+
+
+
+handleSelectedRowsChangedcode(e, args) {
+  
+  let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  if (Array.isArray(args.rows) && this.gridObjcode) {
+    args.rows.map((idx) => {
+      const item = this.gridObjcode.getDataItem(idx);
+      
+   
+      updateItem.wo_form = item.code_value;
+    
+      this.gridService.updateItem(updateItem);
+   
+     
+   
+    });
+  }
+}
+
+angularGridReadycode(angularGrid: AngularGridInstance) {
+  this.angularGridcode = angularGrid;
+  this.gridObjcode = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridcode() {
+  this.columnDefinitionscode = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromColumnPicker: true,
+      excludeFromGridMenu: true,
+      excludeFromHeaderMenu: true,
+
+      minWidth: 50,
+      maxWidth: 50,
+    },
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "code_fldname",
+      name: "Champs",
+      field: "code_fldname",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "code_value",
+      name: "Code",
+      field: "code_value",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "code_cmmt",
+      name: "Description",
+      field: "code_cmmt",
+      sortable: true,
+      width: 200,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionscode = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {},
+    multiSelect: false,
+    rowSelectionOptions: {
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.codeService
+    .getBy({ code_fldname: 'pt_dsgn_grp' })
+    .subscribe((response: any) => (this.codes= response.data));
+}
+opencode(content) {
+ 
+  this.prepareGridcode();
+  this.modalService.open(content, { size: "lg" });
+}
 printpdf(nbr) {
   // const controls = this.totForm.controls
   const controlss = this.woForm.controls;
