@@ -53,7 +53,7 @@ export class NotificationComponent {
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
       observer.next("");
-    }, 5000);
+    }, 900000);
   });
 
   constructor(
@@ -64,7 +64,7 @@ export class NotificationComponent {
     private authService : AuthService,
     private layoutUtilsService: LayoutUtilsService,
   ) {
-      setInterval(()=> { this.updateNotifications() }, 20000);
+      setInterval(()=> { this.updateNotifications() }, 900000);
     }
 
     ngOnInit(): void {

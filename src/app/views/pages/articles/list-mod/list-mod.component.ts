@@ -230,7 +230,21 @@ export class ListModComponent implements OnInit {
           collapsed: false,
         }
       },
-      
+      {
+        id: "mod_buyer",
+        name: "Séquence Achat",
+        field: "mod_buyer",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.text,
+        minWidth: 80,
+        grouping: {
+          getter: 'mod_buyer',
+          formatter: (g) => `Séquence: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+      },
       
       {
         id: "created_by",

@@ -8,7 +8,7 @@ export const environment = {
   // apiUrl: "http://192.168.1.154:3001/api/v1",
   // apiUrl: "http://10.10.3.6:4141/api/v1",
   
-  //  apiUrl: "http://10.10.130.9:3002/api/v1",
+  //  apiUrl: "http://10.10.130.9:3001/api/v1",
   // apiUrl: "http://192.168.60.52:3001/api/v1",
   //  apiUrl: "http://192.168.1.252:3001/api/v1",
   //  apiUrl: "http://192.168.2.1:3001/api/v1",

@@ -44,6 +44,7 @@ import {
   ProductOnServerCreated,
   ProductUpdated,
   ProductsService,
+  
 } from "../../../../core/e-commerce";
 
 // Angular slickgrid
@@ -65,7 +66,7 @@ import {
   LocationService,
   SiteService,
   ProductLineService,
-  
+  SequenceService,
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
 
@@ -94,7 +95,7 @@ const myCustomCheckmarkFormatter: Formatter = (
 	`;
 };
 @Component({
-  selector: 'kt-edit-mod',
+  selector: 'kt-edit-mod', 
   templateUrl: './edit-mod.component.html',
   styleUrls: ['./edit-mod.component.scss']
 })
@@ -138,6 +139,7 @@ export class EditModComponent implements OnInit {
   mod_origin: any[] = [];
   mod_drwg_loc: any[] = [];
   
+  
   row_number;
   error = false;
   msg: String;
@@ -156,7 +158,12 @@ export class EditModComponent implements OnInit {
 
   itemModelEdit: any
   title: String = 'Modifier Modele - '
-
+sequences: [];
+  columnDefinitionsseq: Column[] = [];
+  gridOptionsseq: GridOption = {};
+  gridObjseq: any;
+  angularGridseq: AngularGridInstance;
+  
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -170,7 +177,7 @@ export class EditModComponent implements OnInit {
     private locationService: LocationService,
     private itemModelService: ItemModelService,
     private productLineService: ProductLineService,
-   
+    private sequenceService: SequenceService,
   ) {
     config.autoClose = true;
     
@@ -257,6 +264,7 @@ export class EditModComponent implements OnInit {
       mod_origin: [this.itemModelEdit.mod_origin, Validators.required],
       mod_drwg_loc: [this.itemModelEdit.mod_drwg_loc, Validators.required],
       mod_status: [this.itemModelEdit.mod_status, Validators.required],
+      mod_buyer: [this.itemModelEdit.mod_buyer, Validators.required],
       mod_abc: [this.itemModelEdit.mod_abc, Validators.required],
       mod_site: [this.itemModelEdit.mod_site, Validators.required],
       mod_loc: [this.itemModelEdit.mod_loc, Validators.required],
@@ -328,6 +336,7 @@ export class EditModComponent implements OnInit {
     _itemModel.mod_origin = controls1.mod_origin.value;
     _itemModel.mod_drwg_loc = controls1.mod_drwg_loc.value;
     _itemModel.mod_status = controls1.mod_status.value;
+    _itemModel.mod_buyer = controls1.mod_buyer.value;
     _itemModel.mod_abc = controls1.mod_abc.value;
     _itemModel.mod_site = controls1.mod_site.value;
     _itemModel.mod_loc = controls1.mod_loc.value;
@@ -846,5 +855,129 @@ export class EditModComponent implements OnInit {
   openpl(contentpl) {
     this.prepareGridpl();
     this.modalService.open(contentpl, { size: "lg" });
+  }
+  handleSelectedRowsChangedseq(e, args) {
+    const controls = this.form1.controls;
+    if (Array.isArray(args.rows) && this.gridObjseq) {
+      args.rows.map((idx) => {
+        const item = this.gridObjseq.getDataItem(idx);
+        controls.mod_buyer.setValue(item.seq_seq || "");
+      });
+    }
+  }
+
+  angularGridReadyseq(angularGrid: AngularGridInstance) {
+    this.angularGridseq = angularGrid;
+    this.gridObjseq = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridseq() {
+    this.columnDefinitionsseq = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "seq_seq",
+        name: "Code Sequence",
+        field: "seq_seq",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_desc",
+        name: "Description",
+        field: "seq_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_appr1",
+        name: "Approbateur 1",
+        field: "seq_appr1",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_appr2",
+        name: "Approbateur 2",
+        field: "seq_appr2",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_appr3",
+        name: "Approbateur 3",
+        field: "seq_appr3",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsseq = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.sequenceService
+      .getBy({seq_type:"RQ"})
+      .subscribe((response: any) => (this.sequences = response.data));
+  }
+  openseq(content) {
+    this.prepareGridseq();
+    this.modalService.open(content, { size: "lg" });
+  }
+  changeSeq() {
+    const controls = this.form1.controls; // chof le champs hada wesh men form rah
+    const seq_seq = controls.mod_buyer.value;
+    this.sequenceService.getBy({ seq_seq }).subscribe(
+      (res: any) => {
+        console.log(res.data)
+        const { data } = res;
+        if (res.data.length == 0) {
+          controls.mod_buyer.setValue(null);
+          document.getElementById("mod_buyer").focus();
+         alert("Cette Sequence n'existe pas")
+          this.error = true;
+        } else {
+          this.error = false;
+        }
+      },
+      (error) => console.log(error)
+    );
   }
 }

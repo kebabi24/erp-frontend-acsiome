@@ -243,14 +243,16 @@ field:any
                   name: "Lié à",
                   field: "chr01",
                   sortable: true,
+                  
                   editor: {
-                    model: Editors.text,
-                  },
+                           model: Editors.singleSelect,
+                           // enableRenderHtml: true,
+                           collectionAsync:this.codeService.getByField({code_fldname: this.field,code_desc:"EPI"})
+                          },
                   minWidth: 100,
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
-                  formatter:myCustomStringFormatter,
                   onCellChange: (e: Event, args: OnEventArgs) => {
                     if(args.dataContext.etat_service != true){
                       this.addToUpdatedIds(args.dataContext.id)
@@ -430,6 +432,7 @@ angularGridReady(angularGrid: AngularGridInstance) {
 // }
 
 addNewItemF() {
+  this.field = "pt_prod_line"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -457,6 +460,7 @@ addNewItemF() {
   );
 }
 addNewItemS() {
+  this.field = "pt_part_type"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -484,6 +488,7 @@ addNewItemS() {
   );
 }
 addNewItemG() {
+  this.field = "pt_group"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -511,6 +516,7 @@ addNewItemG() {
   );
 }
 addNewItemA() {
+  this.field = "pt_draw"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -538,6 +544,7 @@ addNewItemA() {
   );
 }
 addNewItemM() {
+  this.field = "pt_model"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -565,6 +572,7 @@ addNewItemM() {
   );
 }
 addNewItemT() {
+  this.field = "pt_rev"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -592,6 +600,7 @@ addNewItemT() {
   );
 }
 addNewItemC() {
+  this.field = "pt_break_cat"
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {

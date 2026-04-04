@@ -61,11 +61,11 @@ import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
 @Component({
-  selector: 'kt-edit-so',
-  templateUrl: './edit-so.component.html',
-  styleUrls: ['./edit-so.component.scss']
+  selector: 'kt-edit-so-immobilier',
+  templateUrl: './edit-so-immobilier.component.html',
+  styleUrls: ['./edit-so-immobilier.component.scss']
 })
-export class EditSoComponent implements OnInit {
+export class EditSoImmobilierComponent implements OnInit {
   saleOrder: SaleOrder;
   soForm: FormGroup;
   totForm: FormGroup;

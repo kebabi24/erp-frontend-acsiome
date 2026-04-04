@@ -133,6 +133,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -153,6 +155,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -174,6 +178,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -196,6 +202,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -218,6 +226,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -241,6 +251,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -266,6 +278,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -291,6 +305,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('ld_qty_oh'),
                 
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -314,6 +330,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -338,6 +356,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -360,6 +380,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -370,6 +392,30 @@ export class InventoryListComponent implements OnInit {
             id: "ld_qty_oh",
             name: "Quantite",
             field: "ld_qty_oh",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          },
+          {
+            id: "dec01",
+            name: "Pump",
+            field: "dec01",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          },
+          {
+            id: "dec02",
+            name: "Valeur",
+            field: "dec02",
             sortable: true,
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
@@ -392,6 +438,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
@@ -412,6 +460,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
                 new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,

@@ -342,7 +342,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: false,
-        type: FieldType.string,
+        type: FieldType.string, 
         formatter: myCustomCheckboxFormatter,
         editor: {
           model: Editors.singleSelect,

@@ -10,10 +10,28 @@ import { AngularGridInstance, Column, FieldType, GridOption, OnEventArgs,Formatt
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
 import {   CodeService} from "../../../../core/erp"
+import { HttpUtilsService } from "../../../../core/_base/crud"
+import { HttpClient } from "@angular/common/http"
+import { environment } from "../../../../../environments/environment"
+const API_URL = environment.apiUrl + "/codes"
 const myCustomStringFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
   if (value!= null){
     return `<div class="text"  aria-hidden="${value}" style="font-size:14px; font-weight: bold;" >${value}</div>`
   }
+}
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value=="BIGBAG"){
+    return `<div class="text"  aria-hidden="BIGBAG">BIGBAG</div>`
+  }
+  if (value=="CARTON"){
+    return `<div class="text"  aria-hidden="CARTON">CARTON</div>`
+  }
+  if (value=="AUCUN"){
+    return `<div class="text"  aria-hidden="AUCUN">AUCUN</div>`
+  }
+  
+
+
 }
 @Component({  
   selector: 'kt-epi-create-organigramme',
@@ -58,13 +76,17 @@ export class EpiCreateOrganigrammeComponent implements OnInit {
   gridtr: any
   dataViewtr: any
 code:any
-
+param:any
   public nodes = [];
   confirmDelete: boolean;
   alertWarning: string;
 indexd:any
-field:any
+field:string
+httpOptions = this.httpUtils.getHTTPHeaders()
   constructor(
+    private http: HttpClient,
+    private httpUtils: HttpUtilsService,
+  
     config: NgbDropdownConfig,
         private serviceF : FormBuilder,
         private activatedRoute: ActivatedRoute,
@@ -157,7 +179,7 @@ field:any
                     {code_fldname:args.dataContext.code_fldname,chr01: args.dataContext.code_value},
                     ).subscribe(
                     (response: any) => {
-                      console.log(response.data)
+                      
                      if(response.data != null) {
                       alert("Rubriques existent pour ce code")
                      }
@@ -165,7 +187,6 @@ field:any
 
                         this.indexd = args.dataContext.id
                         this.field = args.dataContext.code_fldname
-                        console.log(this.dataView.getIdxById(args.dataContext.id))
                         let element: HTMLElement = document.getElementById("openDeletesGrid") as HTMLElement;
                         element.click();
                       }
@@ -213,6 +234,14 @@ field:any
                     if(args.dataContext.etat_service != true){
                        this.addToUpdatedIds(args.dataContext.id)
                     }
+                    const chr1 = this.columnDefinitions.find(c => c.id === 'chr01');
+                    this.codeService.getByField({code_fldname:this.field}).subscribe(
+                      newData => {
+                                  if (chr1 && chr1.editor) {
+                                    (chr1.editor as any).collection = newData;
+                                  }
+                                }
+                    );
                     //  this.dataView.getItemById(args.dataContext.id)
                     // console.log(Object.keys(this.dataView))
                   },
@@ -243,14 +272,16 @@ field:any
                   name: "Lié à",
                   field: "chr01",
                   sortable: true,
-                  editor: {
-                    model: Editors.text,
-                  },
                   minWidth: 100,
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
-                  formatter:myCustomStringFormatter,
+                  formatter: myCustomCheckboxFormatter,
+                  editor: {
+                    model: Editors.singleSelect,
+                    // enableRenderHtml: true,
+                    collectionAsync:this.codeService.getByField({code_fldname: this.field})
+                  },
                   onCellChange: (e: Event, args: OnEventArgs) => {
                     if(args.dataContext.etat_service != true){
                       this.addToUpdatedIds(args.dataContext.id)
@@ -297,12 +328,7 @@ field:any
     this.codeService.getBy({code_desc:"EMP"}).subscribe(
       (response: any) => {
         this.dataset = response.data
-          console.log(this.dataset)
-       // this.dataset.push();
-        // this.grid.invalidate();
-        // this.grid.render();
-        // this.dataView.refresh()
-        //this.dataView.setItems(this.dataset)
+        
       },
       (error) => {
         this.dataset = []
@@ -455,10 +481,13 @@ addNewItemS() {
     },
     { position: "top" }
   );
+  this.field = 'emp_upper'
+  
 }
 addNewItemD() {
   var maxObj = null;
       var iddd = 0;
+  this.field = 'emp_upper'    
   if (this.dataset.length > 0) {
     maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -482,10 +511,12 @@ addNewItemD() {
     },
     { position: "top" }
   );
+  
 }
 addNewItemP() {
   var maxObj = null;
       var iddd = 0;
+      this.field = 'emp_job'
   if (this.dataset.length > 0) {
     maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -509,10 +540,12 @@ addNewItemP() {
     },
     { position: "top" }
   );
+  
 }
 addNewItemN() {
   var maxObj = null;
       var iddd = 0;
+      this.field = 'emp_level'
   if (this.dataset.length > 0) {
     maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -536,6 +569,7 @@ addNewItemN() {
     },
     { position: "top" }
   );
+  
 }
 
 openDelete(content) {
@@ -593,14 +627,14 @@ onSelectedRowsChanged(e,args) {
 this.updateData()
 }
 updateData(){
-console.log("hereeeeeeeeeeeeeeeeee")
+
   this.codeService.getBy(
     {chr01: this.code,code_desc:'EMP'},
     ).subscribe(
     (response: any) => {
-      console.log(response.data)
+      
       this.datasettr = response.data
-      console.log(this.datasettr)
+      
       
     
       this.dataViewtr.setItems(this.datasettr)

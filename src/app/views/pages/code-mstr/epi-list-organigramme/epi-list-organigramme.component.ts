@@ -169,14 +169,14 @@ export class EpiListOrganigrammeComponent implements OnInit {
           //   }
           // }, 
           {
-            id: "code_value",
-            name: "Poste",
-            field: "code_value",
+            id: "str",
+            name: "Structure",
+            field: "str",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
-                getter: 'code_value',
+                getter: 'str',
                 formatter: (g) => `Valeur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
                 aggregators: [new Aggregators.Sum('dec01')],
                 aggregateCollapsed: true,
@@ -185,16 +185,16 @@ export class EpiListOrganigrammeComponent implements OnInit {
               }
         },
         {
-            id: "code_cmmt",
-            name: "Designation",
-            field: "code_cmmt",
+            id: "job",
+            name: "Service",
+            field: "job",
             sortable: true,
             width: 200,
             filterable: true,
             type: FieldType.string,
             grouping: {
-                getter: 'code_cmmt',
-                formatter: (g) => `Titre: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                getter: 'job',
+                formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
                 aggregators: [new Aggregators.Sum('dec01')],
                 aggregateCollapsed: true,
                 
@@ -202,16 +202,16 @@ export class EpiListOrganigrammeComponent implements OnInit {
               }
         },
         {
-            id: "chr01",
-            name: "Parent",
-            field: "chr01",
+            id: "level",
+            name: "Poste",
+            field: "level",
             sortable: true,
             width: 200,
             filterable: true,
             type: FieldType.string,
             grouping: {
-                getter: 'chr01',
-                formatter: (g) => `Liaison: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                getter: 'level',
+                formatter: (g) => `Poste: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
                 aggregators: [new Aggregators.Sum('dec01')],
                 aggregateCollapsed: true,
                 
@@ -228,16 +228,16 @@ export class EpiListOrganigrammeComponent implements OnInit {
         //     type: FieldType.string,
         // },
         {
-            id: "chr02",
-            name: "Type",
-            field: "chr02",
+            id: "spec",
+            name: "Spécification",
+            field: "spec",
             sortable: true,
             width: 80,
             filterable: true,
             type: FieldType.string,
             grouping: {
-                getter: 'chr02',
-                formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                getter: 'spec',
+                formatter: (g) => `Specification: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
                 aggregators: [new Aggregators.Sum('dec01')],
                 aggregateCollapsed: true,
                 
@@ -335,7 +335,7 @@ export class EpiListOrganigrammeComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.codeService.getBy({code_desc:'EMP'}).subscribe(
+      this.codeService.getOrganigramme({code_desc:'EMP'}).subscribe(
           (response: any) => {
               this.dataset = response.data
               this.dataviewObj.setItems(this.dataset)

@@ -92,7 +92,7 @@ export function getHighlightLanguages() {
 }
 
 @NgModule({
-  declarations: [AppComponent, MobileMenuComponent],
+  declarations: [AppComponent, MobileMenuComponent, ],
   imports: [
     BrowserAnimationsModule,
     CommonModule,
