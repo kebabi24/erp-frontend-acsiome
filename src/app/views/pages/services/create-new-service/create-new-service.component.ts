@@ -43,6 +43,9 @@ export class CreateNewServiceComponent implements OnInit {
   user_mobile_code: any
   site: any
   role: any
+  
+  
+  
   constructor(
     config: NgbDropdownConfig,
     private serviceF: FormBuilder,
@@ -57,15 +60,23 @@ export class CreateNewServiceComponent implements OnInit {
     private modalService: NgbModal
   ) {
     config.autoClose = true;
-    this.prepareGrid();
+   // this.prepareGrid();
   }
 
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     // this.createForm()
+    this.prepareGrid()
+   // this.prepareDataset();
   }
-
+  mvGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.dataView = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid;
+    this.gridService = angularGrid.gridService;
+  }
+ 
   open(content) {
     this.prepareItinirary(this.role)
     this.modalService.open(content, { size: "lg" });
@@ -221,7 +232,66 @@ export class CreateNewServiceComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset = [];
-    this.dataset = this.prepareDataset();
+    this.mobileService.getAllService().subscribe(
+      (response: any) => {
+        this.data = response.data;
+         //console.log(this.data);
+        this.dataset = this.data.map((item) => {
+          this.services.push(item);
+          // console.log(item);
+          const itineraries = item.role_itineraries;
+          // console.log(itineraries);
+          const tab = [];
+          tab.push(itineraries);
+          // console.log(tab)
+          const itn = itineraries.filter((item_itinerary) => item.service != null && item_itinerary.itinerary.itinerary_code === item.service.itinerary_code);
+          console.log(itn);
+          // console.log(itineraries)
+          if (item.service == null) {
+            const node: any = {
+              id: Math.random() * 100,
+              role_code: item.role_code,
+              role_name: item.role_name,
+              user_mobile_code: item.user_mobile_code,
+              username: item.userMobile.username,
+              profile_code: item.userMobile.profileMobile.profile_code,
+              profile_name: item.userMobile.profileMobile.profile_name,
+              code_service: null,
+              etat_service: null,
+              service_period_activate_date: null,
+              itinerary_code: null,
+              itinerary_name: null,
+              role_site: item.role_site
+            };
+            return node;
+          } else {
+            const node: any = {
+              id: Math.random() * 100,
+              role_code: item.role_code,
+              role_name: item.role_name,
+              user_mobile_code: item.user_mobile_code,
+              username: item.userMobile.username,
+              profile_code: item.userMobile.profileMobile.profile_code,
+              profile_name: item.userMobile.profileMobile.profile_name,
+              code_service: item.service.service_code,
+              etat_service: "Oui",
+              service_period_activate_date: item.service.service_period_activate_date,
+              itinerary_code: item.service.itinerary_code,
+              itinerary_name: (itn.length != 0) ? itn[0].itinerary.itinerary_name : null,
+              role_site: item.role_site
+            };
+            return node;
+          }
+        })
+        this.dataView.setItems(this.dataset);
+        // console.log(this.dataset);
+      },
+      (error) => {
+        this.dataset = [];
+      },
+      () => {}
+    );
+  //  this.dataView.setItems(this.dataset);
     // console.log(this.dataset);
   }
 
@@ -285,7 +355,8 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
             };
             return node;
           }
-        });
+        })
+        this.dataView.setItems(this.dataset);
         // console.log(this.dataset);
       },
       (error) => {
@@ -294,7 +365,7 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
       () => {}
     );
     // console.log(this.services);
-    return this.dataset;
+  //  return this.dataset;
   }
 
   // onChangeCode() {
@@ -358,7 +429,7 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-        this.dataset = this.prepareDataset();
+        this.prepareDataset();
         this.router.navigateByUrl("/services/create-new-service");
       }
     );
@@ -421,7 +492,7 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
       () => {
         this.layoutUtilsService.showActionNotification("Fermeture avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-        this.dataset = this.prepareDataset();
+        this.prepareDataset();
         this.router.navigateByUrl("/services/create-new-service");
       }
     );
@@ -498,6 +569,8 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
 
+   
+    this.gridService = angularGrid.gridService;
     // if you want to change background color of Duration over 50 right after page load,
     // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
     this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);

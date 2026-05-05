@@ -452,7 +452,9 @@ export class EditJournalComponent implements OnInit {
             alert("client n'existe pas  ")
             controls.cust.setValue(null);
             document.getElementById("cust").focus();
-          } 
+          }  else {
+            this.name = res.data.address.ad_name
+          }
           
       
       });

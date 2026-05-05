@@ -72,6 +72,7 @@ import { BankJournalComponent } from './bank-journal/bank-journal.component';
 import { ListGlobalVendorPaymentComponent } from './list-global-vendor-payment/list-global-vendor-payment.component';
 import { CreateCautionCustComponent } from './create-caution-cust/create-caution-cust.component';
 import { ListCautionCustComponent } from './list-caution-cust/list-caution-cust.component';
+import { EditSoldeEquipementComponent } from './edit-solde-equipement/edit-solde-equipement.component';
 
   const routes: Routes = [
     {
@@ -165,12 +166,16 @@ import { ListCautionCustComponent } from './list-caution-cust/list-caution-cust.
                 path: "list-caution-cust",
                 component: ListCautionCustComponent,
               },
+              {
+                path: "edit-solde-equipement",
+                component: EditSoldeEquipementComponent,
+              },
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent, ListGlobalVendorPaymentComponent, CreateCautionCustComponent, ListCautionCustComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent, ListGlobalVendorPaymentComponent, CreateCautionCustComponent, ListCautionCustComponent, EditSoldeEquipementComponent],
   imports: [
     CommonModule,
     HttpClientModule,

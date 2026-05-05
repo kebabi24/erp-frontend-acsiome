@@ -1,0 +1,266 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Exportation des Facture" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+       
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="soForm">
+                
+              
+                    <div class="row">
+                        <div class="form-group col-1" >
+                            <label class="form-group">Role: *</label>
+                        
+                            <div class="input-group input-group-sm">
+    
+                                <input type="text" formControlName="role"  id="role"
+                                    [className]="soForm.controls['role'].errors && (soForm.controls['role'].dirty || soForm.controls['role'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openrole(contentrole)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                                <div *ngIf="soForm.controls['role'].errors && (soForm.controls['role'].dirty || soForm.controls['role'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="form-group">Nom :</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="name" disabled
+                                    aria-describedby="basic-addon2">
+                                
+                            </div>
+
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Date: *</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" 
+                                     placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f
+                                    #calc_date="ngbDatepicker"   >
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" (click)="calc_date.toggle()"  type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+    
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">A: *</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date1" 
+                                     placeholder="jj-mm-aaaa" name="calc_date1" ngbDatepicker f
+                                    #calc_date1="ngbDatepicker"   >
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" (click)="calc_date1.toggle()"  type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+    
+                        </div>
+                   
+                        
+                        <div class="form-group col-4">
+                            <label class="form-group">Valider: *</label>
+                            <div class="input-group input-group-sm">
+    
+                            <button type="button"  (click)="solist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
+                            </div>
+                        </div>
+                           
+                    </div> 
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid"  
+                          [columnDefinitions]="mvcolumnDefinitions"
+                          (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
+                          (onAngularGridCreated)="mvGridReady($event)">
+                    </angular-slickgrid>
+                </div>
+               
+               
+            </form>
+           
+        </div>
+
+       
+
+        <div>
+            <ng-template #contentrole let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Role </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
+                            [columnDefinitions]="columnDefinitionsrole"
+                            (onAngularGridCreated)="angularGridReadyrole($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedrole($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsrole" [dataset]="datarole">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openSitesGrid" class="btn btn-primary" (click)="openrole(contentrole)">Launch demo
+                modal</button>
+        </div>
+        
+        <div>
+            <ng-template #contentdet let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Détail Facture </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                <form class="form" [formGroup]="sodForm">
+                    <div class="row">
+                        <div class="form-group col-3">
+                            <label class="form-group">SEQUENCE :</label>
+                            <select [className]="sodForm.controls['so_category'].errors && (sodForm.controls['so_category'].dirty || sodForm.controls['so_category'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="so_category" id="SEQUENCE"  (change)="onChangeSeq()" >
+                              <option value=""></option>
+                              <option *ngFor="let elem of so_categorys" [value]="elem.seq_seq">{{ elem.seq_seq }} {{ elem.seq_desc }}</option>
+                            </select>
+                            <div *ngIf="sodForm.controls['so_category'].errors && (sodForm.controls['so_category'].dirty || sodForm.controls['so_category'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+                          </div>
+                         
+                       
+                        <div class="form-group col-2">
+                          <label class="form-group">Client :</label>
+                          <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid" formControlName="so_cust" disabled aria-describedby="basic-addon2" />
+                           
+                          </div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Nom: </label>
+                                <div class="input-group input-group-sm">
+                
+                                    <input type="text" class="form-control form-control-solid" formControlName="name" disabled
+                                        aria-describedby="basic-addon2">
+                                    
+                                </div>
+                          </div>
+                        <div class="form-group col-2">
+                          <label class="form-group">Date de creation:</label>
+                          <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid" formControlName="so_ord_date" placeholder="jj-mm-aaaa" name="so_ord_date" ngbDatepicker f #so_ord_date="ngbDatepicker"  />
+                            <div class="input-group-append">
+                              <button class="btn btn-primary" (click)="so_ord_date.toggle()" type="button">
+                                <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group col-2">
+                          <label class="form-group">Date échéance:</label>
+                          <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid" formControlName="so_due_date" placeholder="jj-mm-aaaa" name="dp1" ngbDatepicker #d1="ngbDatepicker" />
+                            <div class="input-group-append">
+                              <button class="btn btn-primary" (click)="d1.toggle()" type="button">
+                                <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-2">
+                          <label class="form-group">Devise:</label>
+                          <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid" formControlName="so_curr" (change)="changeCurr()" aria-describedby="basic-addon2" />
+                           
+                          </div>
+                        </div>
+                       
+                        <div class="form-group col-3">
+                          <label class="form-group">Condition de règlement :</label>
+                          <select [className]="sodForm.controls['so_cr_terms'].errors && (sodForm.controls['so_cr_terms'].dirty || sodForm.controls['so_cr_terms'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="so_cr_terms" id="exampleSelects2" (change)="calculatetot()">
+                            <option value=""></option>
+                            <option *ngFor="let elem of so_cr_terms" [value]="elem.code_value">{{ elem.code_value }} {{ elem.code_cmmt }}</option>
+                          </select>
+                          <div *ngIf="sodForm.controls['so_cr_terms'].errors && (sodForm.controls['so_cr_terms'].dirty || sodForm.controls['so_cr_terms'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                       
+                        <div class="form-group col-2">
+                          <label class="form-group">Taxable:</label>
+                          <div class="input-group input-group-sm">
+                            <span class="switch switch-icon">
+                              <label>
+                                <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="so_taxable"  />
+                                <span></span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">N° Fact:</label>
+                            <div class="input-group input-group-sm">
+                              <input type="text" class="form-control form-control-solid" formControlName="so_po" aria-describedby="basic-addon2" />
+                             
+                            </div>
+                        </div>
+
+                       
+                      </div>
+                       <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">THT:</label>
+                            <div class="input-group input-group-sm">
+                              <input type="number" class="form-control form-control-solid" formControlName="so_amt" aria-describedby="basic-addon2" />
+                             
+                            </div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">TVA:</label>
+                            <div class="input-group input-group-sm">
+                              <input type="number" class="form-control form-control-solid" formControlName="so_tax_amt" aria-describedby="basic-addon2" />
+                             
+                            </div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Timbre:</label>
+                            <div class="input-group input-group-sm">
+                              <input type="number" class="form-control form-control-solid" formControlName="so_trl1_amt" aria-describedby="basic-addon2" />
+                             
+                            </div>
+                        </div>
+                       </div>
+                    <div class="row">
+                        <angular-slickgrid class="col-12"  gridId="plageGrid"  
+                              [columnDefinitions]="columnDefinitions"
+                              [gridOptions]="gridOptions" [dataset]="dataset" 
+                              (onAngularGridCreated)="GridReady($event)">
+                        </angular-slickgrid>
+                    </div>
+                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="onsave()">Valider</button>
+                </div>
+            </ng-template>
+            <button hidden id="openInvsGrid" class="btn btn-primary" (click)="openInv(contentdet)">Launch demo
+                modal</button>
+        </div>
+        
+    </kt-portlet-body>
+</kt-portlet>
+
+

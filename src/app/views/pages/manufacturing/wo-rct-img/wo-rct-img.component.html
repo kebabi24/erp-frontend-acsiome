@@ -8,10 +8,11 @@
     </kt-portlet-header>
     <kt-portlet-body>
       <div class="example-preview">
-        <form class="form" [formGroup]="woForm">
+        <form class="form row" [formGroup]="woForm">
           <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="2000" (close)="onAlertClose($event)">
             {{ message }}
           </kt-alert>
+        <div class="col-9">  
           <div class="row">
             <div class="form-group col-2">
               <label class="form-group">Date de creation:</label>
@@ -47,15 +48,17 @@
               </div>   
             </div>    
             <div class="form-group col-2">
-              <label class="form-group">Employés:</label> 
+              <label class="form-group">Equipe:</label> 
               <div class="input-group input-group-sm">
-                <input type="text" id="emp" [className]="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_user1" aria-describedby="basic-addon2" disabled />
-                <div class="input-group-append">
-                  <span class="input-group-text" (click)="openemp(contentemp)"> <i class="text-dark-50 flaticon2-search"></i> </span>
-                </div>
-  
-                <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
-              </div>
+
+                <select class="form-control form-control-sm form-control-solid" formControlName="wo_user1" id="wo_user1" >
+                
+                  <option *ngFor="let elem of emp_shift" [value]="elem.code_value">
+                    {{ elem.code_value }} {{ elem.code_cmmt }}
+                  </option>
+                </select>
+            </div>
+            
             </div> 
             <!--div class="form-group col-2">
               <label class="form-group">Remplacer:</label>
@@ -92,7 +95,7 @@
 
             </div>
             
-            <!-- <div class="form-group col-2">
+             <div class="form-group col-2">
                 <label class="form-group">N° OF:</label>
                 <div class="input-group input-group-sm">
 
@@ -101,7 +104,7 @@
                     
                 </div>
 
-            </div> -->
+            </div>
             <div class="form-group col-2">
               <label class="form-group">Pour client:</label>
               <div class="input-group input-group-sm">
@@ -113,7 +116,7 @@
 
           </div>
             <div class="form-group col-1">
-              <label class="form-group">Qte Commandée:</label>
+              <label class="form-group">QTE CMD:</label>
               <div class="input-group input-group-sm">
 
                   <input type="text" class="form-control form-control-solid"  formControlName="wo_qty_ord" disabled
@@ -124,7 +127,7 @@
             </div>
             
             <div class="form-group col-1">
-            <label class="form-group">Quantité Réalisée:</label>
+            <label class="form-group">QTE Réalisée:</label>
             <div class="input-group input-group-sm">
 
                 <input type="text" class="form-control form-control-solid"  formControlName="total_bobine" disabled
@@ -142,7 +145,7 @@
                   
               </div>
             </div>
-            <div class="form-group col-1">
+            <!--div class="form-group col-1">
               <label class="form-group">Quantité Squelette:</label>
               <div class="input-group input-group-sm">
   
@@ -151,7 +154,13 @@
                   
               </div>
 
-            </div>
+            </div-->
+            <div class="form-group col-1">
+              <label class="form-group"> LANCER OF </label>
+              <div class="input-group input-group-sm">
+                <button type="button" id="lanch" (click)="onLanch()" class="btn btn-success btn-sm mr-2">Lancer</button>
+              </div>
+             </div>
           
         </div>
         
@@ -159,6 +168,13 @@
           <!-- SEARCH PRODUCT START  -->
           
           <div class="row">
+            <div class="form-group col-2">
+              <label class="form-group">Code: </label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_part" />
+              </div>
+            </div>
+
             <div class="form-group col-4">
               <label class="form-group">Description: </label>
               <div class="input-group input-group-sm">
@@ -167,11 +183,7 @@
             </div>
 
 
-            <div class="form-group col-4">
-              <label class="form-group">Image: </label>
-             
-              <img src="imageUrl" width="80" height="80" alt="Description of the image" id="myImage" >
-            </div>
+           
             <!--div class="form-group col-2">
               <label class="form-group">MANDRIN:</label>
               <select class="form-control form-control-sm form-control-solid" formControlName="MANDRIN" id="id_MANDRIN" >
@@ -233,13 +245,23 @@
               </div>
             </div>
           </div> -->
+        </div>
+        <div class="col-3">
+          <div class="form-group col-6">
+            <label class="form-group">Image: </label>
+           
+            <img src="imageUrl" width="150" height="150" alt="Description of the image" id="myImage" >
+          </div>
+
+        </div>
+        <div class="col-12">
           <div class="row">
-            <div class="form-group col-1">
-              <label class="form-group"> CARTON   </label>
-              <button type="button" (click)="onChangePal()" class="btn btn-success btn-sm mr-2">CARTON</button>
+            <div class="form-group col-2">
+              <label class="form-group"> CARTON  :  </label>
+              <button type="button" (click)="onChangePal()" class="btn btn-success btn-sm mr-2">CARTON </button>
 
              </div>
-            <div class="form-group col-1">
+            <!--div class="form-group col-1">
              <label class="form-group">Poids Bobine: </label>
              <div class="input-group input-group-sm">
               <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_comp"  (change)="onChangePal()" aria-describedby="basic-addon2"/>
@@ -251,7 +273,7 @@
                 <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_bo_chg"  aria-describedby="basic-addon2" disabled/>
               
               </div>
-             </div>
+             </div-->
              <div class="form-group col-1">
               <label class="form-group"> Palette N°  </label>
               <div class="input-group input-group-sm">
@@ -288,14 +310,15 @@
                <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_rjct" (change)="onChangeSq()" aria-describedby="basic-addon2"/>
               </div>
             </div>
-            <div class="form-group col-2">
+            <!--div class="form-group col-2">
               <label class="form-group">Autorisation: </label>
                <div class="input-group input-group-sm">
                 <input type="password" class="form-control form-control-sm form-control-solid" formControlName="autorisation"  (change)="authorised()" aria-describedby="basic-addon2"/>
                </div>
-             </div>
+             </div-->
           </div>
-          
+        </div>
+        <div class="col-12"> 
           <!--div class="row">
                           <div class="form-group col-6">
                               <label class="form-group">Remarque: </label>
@@ -325,6 +348,7 @@
               (onAngularGridCreated)="gridReadysq($event)"> 
             </angular-slickgrid>
           </div>
+        </div>
           <!-- <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Quantite: </label>
@@ -539,6 +563,31 @@
           modal</button>
 
       </div>
+
+
+      <div>
+        <ng-template #contentprint let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Impression Etiquette</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                  <iframe id="pdfViewer" src="" frameborder="0" width="100%" height="500px"></iframe>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+        <button hidden id="openCartonGrid" class="btn btn-primary" (click)="opencarton(contentprint)">Launch demo
+            modal</button>
+  
+        </div>
     </kt-portlet-body>
   </kt-portlet> 
   

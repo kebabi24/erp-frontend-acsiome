@@ -400,8 +400,8 @@ export class CustomerListComponent implements OnInit {
     // fill the dataset with your data
     this.dataset = [];
     this.user =  JSON.parse(localStorage.getItem('user'))
-    if(this.user.usrd_site == '*')
-    {this.customerService.getAll().subscribe(
+    // if(this.user.usrd_site == '*') {}
+    this.customerService.getAll().subscribe(
       (response: any) => {
         this.dataset = response.data;
         this.dataview.setItems(this.dataset);
@@ -410,20 +410,21 @@ export class CustomerListComponent implements OnInit {
         this.dataset = [];
       },
       () => {}
-    );}
-    else{
-      console.log(this.user.usrd_site)
-      this.customerService.getByAll({cm_site:this.user.usrd_site}).subscribe(
-        (response: any) => {
-          this.dataset = response.data;
-          this.dataview.setItems(this.dataset);
-        },
-        (error) => {
-          this.dataset = [];
-        },
-        () => {}
-      );
-    }
+    );
+  // }
+  //   else{
+  //     console.log(this.user.usrd_site)
+  //     this.customerService.getByAll({cm_site:this.user.usrd_site}).subscribe(
+  //       (response: any) => {
+  //         this.dataset = response.data;
+  //         this.dataview.setItems(this.dataset);
+  //       },
+  //       (error) => {
+  //         this.dataset = [];
+  //       },
+  //       () => {}
+  //     );
+  //   }
     
   }
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {

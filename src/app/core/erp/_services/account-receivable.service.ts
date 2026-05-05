@@ -75,5 +75,9 @@ export class AccountReceivableService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getallpaymentby/`, data,{ headers: httpHeaders })
     }
+     public   getAllInvoicesBy(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getallinvoicesby/`, data,{ headers: httpHeaders })
+    }
     // DELETE
 }

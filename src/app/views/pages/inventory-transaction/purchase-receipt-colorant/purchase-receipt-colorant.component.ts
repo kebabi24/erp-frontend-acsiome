@@ -1093,7 +1093,7 @@ export class PurchaseReceiptColorantComponent implements OnInit {
             return;
           }
           );
-          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+          this.trlot = `${this.seq.seq_prefix}${Number(this.seq.seq_curr_val) + 1}`;
         
         }
         this.addIt(this.data, tr, this.trlot,lb,lab);

@@ -64,6 +64,7 @@ import {
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
 
+import { replaceAll } from "chartist";
 
 @Component({
   selector: 'kt-print-invoice',
@@ -146,7 +147,9 @@ solde:any;
   detail: any;
   curr: any;  
   user;
+  domain;
   pshnbr: String;
+  iharray = [] ;
   constructor(
     config: NgbDropdownConfig,
     private ihFB: FormBuilder,
@@ -342,6 +345,7 @@ solde:any;
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain")); 
     this.createForm();
     this.createtotForm();
   }
@@ -516,20 +520,21 @@ solde:any;
       _ih.ith_amt = controlstot.tht.value;
       _ih.ith_tax_amt = controlstot.tva.value;
       _ih.ith_trl1_amt = controlstot.timbre.value;
-    this.sequenceService.getBy({ seq_type: "IV", seq_profile: this.user.usrd_profile }).subscribe(
-      (response: any) => {
-    this.seq = response.data[0]
+      _ih.ith_tot_amt = controlstot.ttc.value;
+    // this.sequenceService.getBy({ seq_type: "IV", seq_profile: this.user.usrd_profile }).subscribe(
+    //   (response: any) => {
+    // this.seq = response.data[0]
     
-    if (this.seq) {
-      this.pshnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
-      console.log(this.seq.seq_prefix)
-      console.log(this.seq.seq_curr_val)
-      _ih.ith_inv_nbr = this.pshnbr;
+    // if (this.seq) {
+    //   this.pshnbr = `${this.seq.seq_prefix}${Number(this.seq.seq_curr_val)+1}`
+    //   console.log(this.seq.seq_prefix)
+    //   console.log(this.seq.seq_curr_val)
+    //   _ih.ith_inv_nbr = this.pshnbr;
       
       
   
-    }
-      })
+    // }
+    //   })
     
     return _ih;
   
@@ -540,8 +545,6 @@ solde:any;
    * @param _ih: ih
    */
   addIh(_ih: any, detail: any) {
-    var array = []
-    var iharray = []
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -549,10 +552,11 @@ solde:any;
     }
     this.loadingSubject.next(true);
     let ih = null;
+    var array = []
+    this.iharray = []
     const controls = this.ihForm.controls;
-
     this.invoiceOrderService
-      .add({ invoiceOrder: _ih, invoiceOrderDetail: detail })
+      .add({ invoiceOrderTemp: _ih, invoiceOrderTempDetail: detail })
       .subscribe(
         (reponse: any) => (ih = reponse.data),
         (error) => {
@@ -575,54 +579,74 @@ solde:any;
           );
           this.loadingSubject.next(false);
           console.log(this.dataset);
-        
-          array = this.ihdataset;        
-          var result = [];
-  array.reduce(function(res, value) {
-    //console.log('aaa',res[value.itdh_part])
-    if (!res[value.itdh_part]) {
-      res[value.itdh_part] = { itdh_part: value.itdh_part,  itdh_qty_inv: 0 };
-      result.push(res[value.itdh_part])
+
+
+        //  array = this.ihdataset;  
+          for(let det of this.ihdataset) {
+            array.push({Id:det.itdh_part, qty : det.itdh_qty_inv})
+          }
+          console.log('array', array)      
+        //  var result = [];
+  // array.reduce(function(res, value) {
+  //   //console.log('aaa',res[value.itdh_part])
+  //   if (!res[value.itdh_part]) {
+  //     res[value.itdh_part] = { itdh_part: value.itdh_part,  itdh_qty_inv: 0 };
+                                                                                                                                             
       
-    }
-    res[value.itdh_part].itdh_qty_inv += value.itdh_qty_inv; 
-    return res;
-  }, {});
+  //   } else {
+  //   res[value.itdh_part].itdh_qty_inv += value.itdh_qty_inv;}
+  //   result.push(res[value.itdh_part])      
+  //   return res;
+  // }, {});
+  var result = [];
+array.reduce(function(res, value) {
+  if (!res[value.Id]) {
+    res[value.Id] = { Id: value.Id, qty: 0 };
+    result.push(res[value.Id])
+  }
+  res[value.Id].qty += Number(value.qty);
+  return res;
+}, {});
+
+console.log(result)
   
+  // const arr = array.reduce((accumulator ,item) => {
+  //   return accumulator += item.itdh_qty_inv;
+  // }, 0)
+  console.log('aaa',array)
   console.log('bbb',result)
   var bool = false
-  for (var obj = 0; obj < result.length; obj++) {
-    const det = result[obj];
-    
-iharray.push(det)
-bool = false
-var j = 0
-   
-    do {
-  if (this.ihdataset[j].itdh_part = det.itdh_part ) {
-    iharray[obj].itdh_line = obj + 1
-    iharray[obj].desc =  this.ihdataset[j].desc
-    iharray[obj].itdh_price =  this.ihdataset[j].itdh_price
-    iharray[obj].itdh_taxable = this.ihdataset[j].itdh_taxable
-    iharray[obj].itdh_tax_code = this.ihdataset[j].itdh_tax_code
-    iharray[obj].itdh_taxc = this.ihdataset[j].itdh_taxc
-    iharray[obj].itdh_disc_pct = this.ihdataset[j].itdh_disc_pct
-    iharray[obj].itdh_um = this.ihdataset[j].itdh_um
-    
-    
-  bool = true   
-  }
-  j++
-  }while ( j < this.ihdataset.length || bool == false);
+let ind =  1
+  for(let det of result) {
+    const index = this.ihdataset.findIndex(element =>{
+      return element.itdh_part == det.Id
+    })
+ if(index >=0) {
+    this.iharray.push({
+
+      itdh_line :ind,
+    itdh_part: det.Id,
+    itdh_qty_inv: det.qty,  
+    desc :  this.ihdataset[index].desc,
+    itdh_price :  this.ihdataset[index].itdh_price,
+    itdh_taxable : this.ihdataset[index].itdh_taxable,
+    itdh_tax_code : this.ihdataset[index].itdh_tax_code,
+    itdh_taxc : this.ihdataset[index].itdh_taxc,
+    itdh_disc_pct : this.ihdataset[index].itdh_disc_pct,
+    itdh_um : this.ihdataset[index].itdh_um,
 
 
-                         
+    })
+    ind = ind + 1
   }
-  console.log("hnahna", iharray)
+
+
+  }
+  console.log("hnahna", this.iharray)
   
 
-          //  if(controls.print.value == true) printIH(this.customer, iharray, _ih,this.curr);
-          this.printdecision()
+            if(controls.print.value == true)  this.printpdf(ih) //printIH(this.customer, this.iharray, _ih,this.curr);
+          // this.printdecision()
           this.reset()
           this.router.navigateByUrl("/sales/print-invoice");
           this.reset()
@@ -946,12 +970,12 @@ handleSelectedRowsChanged5(e, args) {
             controls.ith_cr_terms.setValue(this.soServer.so_cr_terms|| "");
             const ad_addr = this.soServer.so_cust;
             this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
-                    
+                    console.log("clien",response.data)
                     
               //this.customer = response.data
     
-            controls.name.setValue(response.data.ad_name);
-          this.nom = response.data.ad_name
+            controls.name.setValue(response.data[0].ad_name);
+          this.nom = response.data[0].ad_name
             })
             this.customersService.getBy({cm_addr: this.soServer.so_bill}).subscribe((response: any)=>{
                     
@@ -1236,4 +1260,282 @@ printdecision() {
           
     });
 }
+printpdf(nbr) {
+  const controls = this.totForm.controls 
+  const controlss = this.ihForm.controls 
+  const index = this.ith_cr_terms.findIndex(element =>{
+    return element.code_value == controlss.ith_cr_terms.value
+  })
+  console.log(index)
+  let terms = ""
+  if(index >= 0) { terms = this.ith_cr_terms[index].code_cmmt}
+  console.log("pdf")
+  var doc = new jsPDF();
+ const dateinv =  controlss.ith_inv_date.value
+ ? `${controlss.ith_inv_date.value.day}/${controlss.ith_inv_date.value.month}/${controlss.ith_inv_date.value.year}`
+ : " ";
+ // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+  var img = new Image()
+  img.src = "./assets/media/logos/company.png";
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.setFontSize(12);
+  doc.text( 'Facture N°: ' + nbr  , 70, 45);
+  doc.setFontSize(8);
+  
+  doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
+  doc.text('Date : ' + dateinv, 150 , 50 )
+  // doc.text('Mode Paiement : ' + terms, 150 , 55 )
+  
+  doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
+  doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
+  if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
+      if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 70)}
+      if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 75)}
+      if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 80)}
+    
+  doc.line(10, 85, 200, 85);
+  doc.line(10, 90, 200, 90);
+  doc.line(10, 85, 10, 90);
+  doc.text('LN', 12.5 , 88.5);
+  doc.line(20, 85, 20, 90);
+  doc.text('Code Article', 25 , 88.5);
+  doc.line(45, 85, 45, 90);
+  doc.text('Désignation', 67.5 , 88.5);
+  doc.line(100, 85, 100, 90);
+  doc.text('QTE', 107 , 88.5);
+  doc.line(120, 85, 120, 90);
+  doc.text('UM', 123 , 88.5);
+  doc.line(130, 85, 130, 90);
+  doc.text('PU', 138 , 88.5);
+  doc.line(150, 85, 150, 90);
+  doc.text('TVA', 152 , 88.5);
+  doc.line(160, 85, 160, 90);
+  doc.text('REM', 162 , 88.5);
+  doc.line(170, 85, 170, 90);
+  doc.text('THT', 181 , 88.5);
+  doc.line(200, 85, 200, 90);
+  var i = 95;
+  doc.setFontSize(6);
+  for (let j = 0; j < this.iharray.length  ; j++) {
+    
+    if ((j % 30 == 0) && (j != 0) ) {
+doc.addPage();
+img.src = "./assets/media/logos/companylogo.png";
+doc.addImage(img, "png", 160, 5, 50, 30);
+doc.setFontSize(9);
+if (this.domain.dom_name != null) {
+  doc.text(this.domain.dom_name, 10, 10);
+}
+if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.line(10, 32, 200, 32);
+    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+    doc.line(10, 40, 200, 40);
+      doc.setFontSize(12);
+      doc.text( 'N° Facture : ' + nbr  , 70, 45);
+      doc.setFontSize(8);
+     // console.log(this.customer.address.ad_misc2_id)
+      doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
+      doc.text('Date : ' + dateinv, 150 , 50 )
+      // doc.text('Mode Paiement : ' + terms, 150 , 55 )
+      doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
+      doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
+      if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
+      if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 70)}
+      if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 75)}
+      if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 80)}
+    
+      doc.line(10, 85, 200, 85);
+      doc.line(10, 90, 200, 90);
+      doc.line(10, 85, 10, 90);
+      doc.text('LN', 12.5 , 88.5);
+      doc.line(20, 85, 20, 90);
+      doc.text('Code Article', 25 , 88.5);
+      doc.line(45, 85, 45, 90);
+      doc.text('Désignation', 67.5 , 88.5);
+      doc.line(100, 85, 100, 90);
+      doc.text('QTE', 107 , 88.5);
+      doc.line(120, 85, 120, 90);
+      doc.text('UM', 123 , 88.5);
+      doc.line(130, 85, 130, 90);
+      doc.text('PU', 138 , 88.5);
+      doc.line(150, 85, 150, 90);
+      doc.text('TVA', 152 , 88.5);
+      doc.line(160, 85, 160, 90);
+      doc.text('REM', 162 , 88.5);
+      doc.line(170, 85, 170, 90);
+      doc.text('THT', 181 , 88.5);
+      doc.line(200, 85, 200, 90);
+      i = 95;
+      doc.setFontSize(6);
+
+    }
+
+
+console.log("this.iharray[j].desc",this.iharray)
+    if (this.iharray[j].desc.length > 35) {
+      let desc1 = this.iharray[j].desc.substring(35)
+      let ind = desc1.indexOf(' ')
+      desc1 = this.iharray[j].desc.substring(0, 35  + ind)
+      let desc2 = this.iharray[j].desc.substring(35+ind)
+
+      doc.line(10, i - 5, 10, i );
+      doc.text(String(("000"+ this.iharray[j].itdh_line)).slice(-3), 12.5 , i  - 1);
+      doc.line(20, i - 5, 20, i);
+      doc.text(this.iharray[j].itdh_part, 25 , i  - 1);
+      doc.line(45, i - 5 , 45, i );
+      doc.text(desc1, 47 , i  - 1);
+      doc.line(100, i - 5, 100, i );
+      doc.text( String(Number(this.iharray[j].itdh_qty_inv).toFixed(2)), 118 , i  - 1 , { align: 'right' });
+      doc.line(120, i - 5 , 120, i );
+      doc.text(this.iharray[j].itdh_um, 123 , i  - 1);
+      doc.line(130, i - 5, 130, i );
+      doc.text( String(Number(this.iharray[j].itdh_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
+      doc.line(150, i - 5, 150, i );
+      doc.text(String(this.iharray[j].itdh_taxc) + "%" , 153 , i  - 1);
+      doc.line(160, i - 5 , 160, i );
+      doc.text(String(Number(this.iharray[j].itdh_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
+      doc.line(170, i - 5 , 170, i );
+      doc.text(String((this.iharray[j].itdh_price *
+              ((100 - this.iharray[j].itdh_disc_pct) / 100) *
+              this.iharray[j].itdh_qty_inv).toFixed(2)), 198 , i  - 1,{ align: 'right' });
+      doc.line(200, i-5 , 200, i );
+     // doc.line(10, i, 200, i );
+
+      i = i + 5;
+
+      doc.text(desc2, 47 , i  - 1);
+      
+      doc.line(10, i - 5, 10, i );
+      doc.line(20, i - 5, 20, i);
+      doc.line(45, i - 5 , 45, i );
+      doc.line(100, i - 5, 100, i );
+      doc.line(120, i - 5 , 120, i );
+      doc.line(130, i - 5, 130, i );
+      doc.line(150, i - 5, 150, i );
+      doc.line(160, i - 5 , 160, i );
+      doc.line(170, i - 5 , 170, i );
+      doc.line(200, i-5 , 200, i );
+      doc.line(10, i, 200, i );
+
+      i = i + 5 ;
+      
+    } else {
+
+
+    
+    doc.line(10, i - 5, 10, i );
+    doc.text(String(("000"+ this.iharray[j].itdh_line)).slice(-3), 12.5 , i  - 1);
+    doc.line(20, i - 5, 20, i);
+    doc.text(this.iharray[j].itdh_part, 25 , i  - 1);
+    doc.line(45, i - 5 , 45, i );
+    doc.text(this.iharray[j].desc, 47 , i  - 1);
+    doc.line(100, i - 5, 100, i );
+    doc.text( String(Number(this.iharray[j].itdh_qty_inv).toFixed(2)), 118 , i  - 1 , { align: 'right' });
+    doc.line(120, i - 5 , 120, i );
+    doc.text(this.iharray[j].itdh_um, 123 , i  - 1);
+    doc.line(130, i - 5, 130, i );
+    doc.text( String(Number(this.iharray[j].itdh_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
+    doc.line(150, i - 5, 150, i );
+    doc.text(String(this.iharray[j].itdh_taxc) + "%" , 153 , i  - 1);
+    doc.line(160, i - 5 , 160, i );
+    doc.text(String(Number(this.iharray[j].itdh_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
+    doc.line(170, i - 5 , 170, i );
+    doc.text(String((this.iharray[j].itdh_price *
+      ((100 - this.iharray[j].itdh_disc_pct) / 100) *
+      this.iharray[j].itdh_qty_inv).toFixed(2)), 198 , i  - 1,{ align: 'right' });
+    doc.line(200, i-5 , 200, i );
+    doc.line(10, i, 200, i );
+    i = i + 5;
+    }
+  }
+  
+ // doc.line(10, i - 5, 200, i - 5);
+
+ doc.line(130, i + 7,  200, i + 7  );
+ doc.line(130, i + 14, 200, i + 14 );
+ doc.line(130, i + 21, 200, i + 21 );
+ doc.line(130, i + 28, 200, i + 28 );
+ doc.line(130, i + 35, 200, i + 35 );
+ doc.line(130, i + 7,  130, i + 35  );
+ doc.line(160, i + 7,  160, i + 35  );
+ doc.line(200, i + 7,  200, i + 35  );
+ doc.setFontSize(10);
+ 
+ let thtax =  String(  Number(controls.tht.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let tht = replaceAll(thtax,","," ")
+
+let ttva =  String(  Number(controls.tva.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let tva = replaceAll(ttva,","," ")
+
+let ttimbre =  String(  Number(controls.timbre.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let timbre = replaceAll(ttimbre,","," ")
+
+let tttc =  String(  Number(controls.ttc.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let ttc = replaceAll(tttc,","," ")
+ doc.text('Total HT', 140 ,  i + 12 , { align: 'left' });
+ doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+ doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+ doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+
+
+ 
+ doc.text(tht, 198 ,  i + 12 , { align: 'right' });
+ doc.text(tva, 198 ,  i + 19 , { align: 'right' });
+ doc.text(timbre, 198 ,  i + 26 , { align: 'right' });
+ doc.text(ttc, 198 ,  i + 33 , { align: 'right' });
+
+ doc.setFontSize(8);
+    let mt = NumberToLetters(
+      Number(controls.ttc.value).toFixed(2),this.curr.cu_desc)
+
+      if (mt.length > 95) {
+        let mt1 = mt.substring(90)
+        let ind = mt1.indexOf(' ')
+       
+        mt1 = mt.substring(0, 90  + ind)
+        let mt2 = mt.substring(90+ind)
+   
+        doc.text( "Arretée la présente facture a la somme de :" + mt1  , 20, i + 53)
+        doc.text(  mt2  , 20, i + 60)
+      } else {
+        doc.text( "Arretée la présente facture a la somme de :" + mt  , 20, i + 53)
+
+      }
+      doc.text('Mode Paiement : ' + terms, 20 , i+60 )
+    // window.open(doc.output('bloburl'), '_blank');
+    //window.open(doc.output('blobUrl'));  // will open a new tab
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+
+  }
+
 }

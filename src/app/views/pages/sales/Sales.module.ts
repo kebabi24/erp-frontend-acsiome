@@ -121,6 +121,13 @@ import { ListSoDetComponent } from './list-so-det/list-so-det.component';
 
 import { RowDetailViewComponent } from "./rowDetails/rowdetail-view.component";
 import { RowDetailPreloadComponent } from "./rowDetails/row-details-preload.component";
+import { ExportInvoiceIhComponent } from './export-invoice-ih/export-invoice-ih.component';
+import { CreateInvoiceIhComponent } from './create-invoice-ih/create-invoice-ih.component';
+import { AffectEquipGrosComponent } from './affect-equip-gros/affect-equip-gros.component';
+import { CreateDirectSoSeqComponent } from './create-direct-so-seq/create-direct-so-seq.component';
+import { PrintInvoiceSeqComponent } from './print-invoice-seq/print-invoice-seq.component';
+import { EditSoPlqComponent } from './edit-so-plq/edit-so-plq.component';
+import { ListSalesInvComponent } from './list-sales-inv/list-sales-inv.component';
 const routes: Routes = [
     {
         path: "",
@@ -374,7 +381,35 @@ component: AttestationReservationComponent,
           {
             path: "list-so-det",
             component: ListSoDetComponent,
-          }
+          },
+          {
+            path: "export-invoice-ih",
+            component: ExportInvoiceIhComponent,
+          },
+          {
+            path: "create-invoice-ih",
+            component: CreateInvoiceIhComponent,
+          },
+          {
+            path: "affect-equip-gros",
+            component: AffectEquipGrosComponent,
+          },
+          {
+            path: "create-direct-so-seq",
+          component: CreateDirectSoSeqComponent,
+        },
+        {
+          path: "print-invoice-seq",
+        component: PrintInvoiceSeqComponent,
+      },
+      {
+        path: "edit-so-plq/:id",
+        component: EditSoPlqComponent,
+      },
+      {
+        path: "list-sales-inv",
+        component: ListSalesInvComponent,
+      },
         ],
     },
 ]
@@ -383,7 +418,14 @@ component: AttestationReservationComponent,
     declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent,
        CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ReqListComponent, PaymentPshEmployeComponent
      ,ListCaDdComponent, PaymentSoComponent, ListInvoicesDetailComponent, PshListComponent, CreateSoImmobilierComponent, CreatePvReceptionComponent, CreateSatisfactionComponent, RemiseDesClesComponent, ControleActeComponent, DecisionAffectationComponent, ClotureSoldeComponent, AttestationReservationComponent,ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent, CreateAccountingInvComponent, ListInvoiceAccComponent, ListSalesAccComponent, ListCreditRoleComponent, ListCreditDdComponent, AffectEquipementComponent, ListAffectEquipementComponent, UndoInvoiceComponent, ListCaTypeComponent, ListSoCeramComponent, ListSoDetComponent,    RowDetailPreloadComponent,
-     RowDetailViewComponent,],
+     RowDetailViewComponent,
+     ExportInvoiceIhComponent,
+     CreateInvoiceIhComponent,
+     AffectEquipGrosComponent,
+     CreateDirectSoSeqComponent,
+     PrintInvoiceSeqComponent,
+     EditSoPlqComponent,
+     ListSalesInvComponent,],
     imports: [
         CommonModule,
         HttpClientModule,

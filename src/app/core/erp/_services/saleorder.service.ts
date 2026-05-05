@@ -29,6 +29,10 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/direct', data, { headers: httpHeaders })
     }
+    public addMobile(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/mobile', data, { headers: httpHeaders })
+    }
     public addceram(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/ceram', data, { headers: httpHeaders })
@@ -61,6 +65,10 @@ export class SaleOrderService {
     public getAllwithDetail() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/allwithdetail', { headers: httpHeaders })
+    }
+    public getAllwithDetailObj(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/allwithdetailobj/`, data,{ headers: httpHeaders })
     }
     public getAllwithDetailCeram() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

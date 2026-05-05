@@ -5,6 +5,8 @@ import {
     GridOption,
     Formatter,
     Formatters,
+    AngularGridInstance,
+    GridService,
     Editor,
     Editors,
     FieldType,
@@ -38,7 +40,18 @@ export class ProfilesListComponent implements OnInit {
   // slick grid
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
+  
   dataset: any[] = []
+  draggableGroupingPlugin: any;
+  angularGrid: AngularGridInstance;
+
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+  gridObj: any;
+  dataviewObj: any;
+
+  
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -55,6 +68,16 @@ export class ProfilesListComponent implements OnInit {
   createCode() {
       this.router.navigateByUrl("profiles/create-profile")
   }
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.gridObj = angularGrid.slickGrid; // grid object
+    this.dataviewObj = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
+      this.grid = angularGrid.slickGrid; // grid object
+      this.dataview = angularGrid.dataView;
+    
+  }
+
   prepareGrid() {
       this.columnDefinitions = [
           {
@@ -157,7 +180,10 @@ export class ProfilesListComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       this.usersService.getAllProfiles().subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {
+            this.dataset = response.data
+            this.dataviewObj.setItems(this.dataset)
+        },
           (error) => {
               this.dataset = []
           },

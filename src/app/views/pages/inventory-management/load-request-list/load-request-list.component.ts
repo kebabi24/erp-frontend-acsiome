@@ -77,7 +77,7 @@ export class LoadRequestListComponent implements OnInit {
   dataviewObj2: any;
   columnDefinitions2: Column[] = []
   gridOptions2: GridOption = {}
-
+  
   angularGrid3: AngularGridInstance;
   grid3: any;
   gridService3: GridService;
@@ -126,7 +126,7 @@ export class LoadRequestListComponent implements OnInit {
       private fb: FormBuilder,
      
   ) {
-      
+    
   }
 
   ngOnInit(): void {
@@ -307,7 +307,7 @@ export class LoadRequestListComponent implements OnInit {
           autoHeight:true,
           enableColumnPicker: true,
           enableCellNavigation: true,
-          // enableRowSelection: true,
+          enableRowSelection: true,
           enableCheckboxSelector: true,
           // rowSelectionOptions: {
           //   selectActiveRow: false
@@ -352,6 +352,8 @@ export class LoadRequestListComponent implements OnInit {
         this.user_mobile = response.data
       },)
     this.updateData()
+  
+    console.log("this.loadRequestLines",this.loadRequestLines)
    
   }
 
@@ -472,10 +474,9 @@ prepareGrid2() {
 
       this.gridOptions2 = {
         enableAutoResize:true,
+        // autoHeight:true,
         enableColumnPicker: true,
         enableCellNavigation: true,
-        enableAutoResizeColumnsByCellContent:true,
-        enableAutoSizeColumns:true,
         dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
           var val = undefined;
           try {
@@ -499,6 +500,15 @@ angularGridReady2(angularGrid: AngularGridInstance) {
   this.grid2 = angularGrid.slickGrid;
   this.gridService2 = angularGrid.gridService;
 }
+// angularGridReady(angularGrid: AngularGridInstance) {
+//   this.angularGrid = angularGrid;
+//   this.gridObj = angularGrid.slickGrid; // grid object
+//   this.dataviewObj = angularGrid.dataView;
+//   this.gridService = angularGrid.gridService;
+//     this.grid = angularGrid.slickGrid; // grid object
+//     this.dataview = angularGrid.dataView;
+  
+// }
 
 prepareGrid3() {
   this.columnDefinitions3 = [
@@ -641,7 +651,8 @@ updateDates(){
   const date2 = controls.end_date.value
   const startDate = date.year+'-'+date.month+'-'+date.day
   const endDate = date2.year+'-'+date2.month+'-'+date2.day
-
+this.loadRequestDetails= []
+this.loadRequestLines=[]
   console.log(startDate)
   console.log(endDate)
   this.loadRequestService.getLoadRequestsBetweenDates(startDate,endDate).subscribe(

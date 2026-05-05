@@ -848,7 +848,10 @@ export class CreateSoBcComponent implements OnInit {
         console.log(this.dataset);
         if (controls.print.value == true) this.printpdf(so.so_nbr); //printSO(this.customer, this.dataset, so);
         this.reset()
-        this.router.navigateByUrl("/sales/create-so-bc");
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigateByUrl("/sales/create-so-bc");
+        });
+       
       }
     );
   }
@@ -1066,7 +1069,7 @@ export class CreateSoBcComponent implements OnInit {
         sod_disc_pct: 0,
         sod_site: "",
         sod_loc: "",
-        sod_type: "",
+        sod_type: null,
         sod_cc: "",
         sod_taxable: true,
         sod_tax_code: "",
@@ -1414,7 +1417,7 @@ export class CreateSoBcComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.itemsService.getStk({}).subscribe((response: any) => (this.items = response.data));
+    this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {
     this.prepareGrid4();
@@ -2451,7 +2454,8 @@ export class CreateSoBcComponent implements OnInit {
 
          timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
          console.log("timbre",timbre)
-         if (timbre < 5) { timbre = 5}            
+         if (timbre < 5 && timbre >0) { timbre = 5}            
+         if (timbre > -5 && timbre < 0) { timbre = -5}            
         }else { timbre = 0}
 
         ttc = round(tht + tva + timbre,2)

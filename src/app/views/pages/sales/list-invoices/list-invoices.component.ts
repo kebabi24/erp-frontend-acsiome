@@ -51,7 +51,8 @@ import { jsPDF } from "jspdf";
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
-import { L } from "@angular/cdk/keycodes"
+
+import { replaceAll } from "chartist"
 
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
@@ -74,18 +75,24 @@ export class ListInvoicesComponent implements OnInit {
 
   grid: any;
   gridService: GridService;
-  dataview: any;
- 
+  
+  dataView: any;
   domain    : any;
   user
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   dataviewObj: any;
-
+  soForm: FormGroup;
+  
+  hasFormErrors = false;
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  error = false;
   
   constructor(
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
+      private soFB: FormBuilder,
       private activatedRoute: ActivatedRoute,
       private router: Router,
       public dialog: MatDialog,
@@ -94,19 +101,60 @@ export class ListInvoicesComponent implements OnInit {
       private accountreceivableService: AccountReceivableService,
       private locationDetailService: LocationDetailService,
   ) {
-      this.prepareGrid()
+      
   }
 
   ngOnInit(): void {
+    this.loading$ = this.loadingSubject.asObservable();
+    this.loadingSubject.next(false);
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    // this.prepareRoles();
+    console.log(this.user)
+    this.createForm();
+    this.prepareGrid()
+    //this.initGrid();
+    this.solist();
+   
     this.user = JSON.parse(localStorage.getItem("user"));
     
     this.domain = JSON.parse(localStorage.getItem("domain"));
   }
+  createForm() {
+    this.loadingSubject.next(false);
+    const date = new Date;
+    
+    this.soForm = this.soFB.group({
+     // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
+     
+      calc_date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      calc_date1: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: date.getDate()
+      }],
+    });
 
+    const controls = this.soForm.controls
+   /* this.sequenceService.getBy({ seq_type: "PO", seq_profile: this.user.usrd_profile }).subscribe(
+      (res: any) => {
+        this.seq = res.data[0].seq_seq
+        console.log(this.seq)
+        controls.po_category.setValue(this.seq);
+    
+    })
+    */
+
+  }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
-    this.grid = angularGrid.slickGrid; // grid object
-    this.dataview = angularGrid.dataView;
+    this.dataView = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
   }
   
@@ -127,7 +175,7 @@ export class ListInvoicesComponent implements OnInit {
           // },
           {
             id: "ar_nbr",
-            name: "Document",
+            name: "N° Facture",
             field: "ar_nbr",
             sortable: true,
             filterable: true,
@@ -138,13 +186,44 @@ export class ListInvoicesComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
+               new Aggregators.Sum('ar_base_applied'),
+               new Aggregators.Sum('ar_base_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
+          {
+            id: "ar_effdate",
+            name: "Date effet",
+            field: "ar_effdate",
+            sortable: true,
+            filterable: true,
+            type: FieldType.date,
+            formatter: Formatters.dateIso ,
+            minWidth: 75,
+            width: 120,
+            exportWithFormatter: true,
+            filter: {
+              model: Filters.dateRange,
+              operator: 'RangeInclusive',
+              // override any of the Flatpickr options through "filterOptions"
+              //editorOptions: { minDate: 'today' } as FlatpickrOption
+            },
+            grouping: {
+              getter: 'ar_effdate',
+              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+               new Aggregators.Sum('ar_base_applied'),
+               new Aggregators.Sum('ar_base_amt')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+          },
           // {
           //   id: "ar_ship",
           //   name: "Facture N°",
@@ -165,26 +244,26 @@ export class ListInvoicesComponent implements OnInit {
           //     collapsed: true,
           //   }
           // }, 
-          {
-            id: "ar_type",
-            name: "type",
-            field: "ar_type",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'ar_type',
-              formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
-              ],
-              aggregateCollapsed: true,
-              collapsed: true,
-            }
-          }, 
+          // {
+          //   id: "ar_type",
+          //   name: "type",
+          //   field: "ar_type",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
+          //   grouping: {
+          //     getter: 'ar_type',
+          //     formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('ld_qty_oh'),
+          //       new Aggregators.Sum('ar_applied'),
+          //       new Aggregators.Sum('ar_amt')
+          //     ],
+          //     aggregateCollapsed: true,
+          //     collapsed: true,
+          //   }
+          // }, 
           {
             id: "ar_cust",
             name: "Client",
@@ -198,13 +277,14 @@ export class ListInvoicesComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
+               new Aggregators.Sum('ar_base_applied'),
+               new Aggregators.Sum('ar_base_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           },
+
           {
             id: "ar_bill",
             name: "Facturé a",
@@ -218,35 +298,43 @@ export class ListInvoicesComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
+               new Aggregators.Sum('ar_base_applied'),
+               new Aggregators.Sum('ar_base_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
           {
-            id: "ar_bank",
-            name: "Banque",
-            field: "ar_bank",
+            id: "cm_sort",
+            name: "Nom",
+            field: "customer.cm_sort",
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-            grouping: {
-              getter: 'ar_bank',
-              formatter: (g) => `Banque: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
-              ],
-              aggregateCollapsed: true,
-              collapsed: true,
-              lazyTotalsCalculation:true,
-            }
-          }, 
+          },
+          // {
+          //   id: "ar_bank",
+          //   name: "Banque",
+          //   field: "ar_bank",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
+          //   filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+          //   grouping: {
+          //     getter: 'ar_bank',
+          //     formatter: (g) => `Banque: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('ld_qty_oh'),
+          //       new Aggregators.Sum('ar_applied'),
+          //       new Aggregators.Sum('ar_amt')
+          //     ],
+          //     aggregateCollapsed: true,
+          //     collapsed: true,
+          //     lazyTotalsCalculation:true,
+          //   }
+          // }, 
           {
             id: "ar_curr",
             name: "devise",
@@ -261,8 +349,8 @@ export class ListInvoicesComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
+                new Aggregators.Sum('ar_base_applied'),
+                new Aggregators.Sum('ar_base_amt')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -273,9 +361,9 @@ export class ListInvoicesComponent implements OnInit {
          
           
           {
-            id: "ar_amt",
+            id: "ar_base_amt",
             name: "Montant",
-            field: "ar_amt",
+            field: "ar_base_amt",
             sortable: true,
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
@@ -286,9 +374,9 @@ export class ListInvoicesComponent implements OnInit {
           },
          
           {
-            id: "ar_applied",
+            id: "ar_base_applied",
             name: "Montant payé",
-            field: "ar_applied",
+            field: "ar_base_applied",
             sortable: true,
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
@@ -353,45 +441,15 @@ export class ListInvoicesComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
+               new Aggregators.Sum('ar_base_applied'),
+               new Aggregators.Sum('ar_base_amt')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
               collapsed:true
             }
           },
-          {
-            id: "ar_effdate",
-            name: "Date effet",
-            field: "ar_effdate",
-            sortable: true,
-            filterable: true,
-            type: FieldType.date,
-            formatter: Formatters.dateIso ,
-            minWidth: 75,
-            width: 120,
-            exportWithFormatter: true,
-            filter: {
-              model: Filters.dateRange,
-              operator: 'RangeInclusive',
-              // override any of the Flatpickr options through "filterOptions"
-              //editorOptions: { minDate: 'today' } as FlatpickrOption
-            },
-            grouping: {
-              getter: 'ar_effdate',
-              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ar_applied'),
-                new Aggregators.Sum('ar_amt')
-              ],
-              aggregateCollapsed: true,
-              lazyTotalsCalculation:true,
-              collapsed:true
-            }
-          },
+
           
           
 
@@ -446,23 +504,23 @@ export class ListInvoicesComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       
-        this.accountreceivableService
-      .getBy({ ar_type:'I'})
-      .subscribe(
+      //   this.accountreceivableService
+      // .getBy({ ar_type:'I'})
+      // .subscribe(
         
-          (response: any) => {this.dataset = response.data
-            console.log(this.dataset)
-            this.dataview.setItems(this.dataset)},
+      //     (response: any) => {this.dataset = response.data
+      //       console.log(this.dataset)
+      //       this.dataView.setItems(this.dataset)},
           
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
+      //     (error) => {
+      //         this.dataset = []
+      //     },
+      //     () => {}
           
-      )
+      // )
       
       
-      console.log(this.dataset)
+      // console.log(this.dataset)
   }
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
@@ -493,73 +551,125 @@ export class ListInvoicesComponent implements OnInit {
       }
       this.gridObj.invalidate(); // invalidate all rows and re-render
     }
-
-    printpdf(nbr) {
-      // const controls = this.totForm.controls
+   
+     goback() {
+    
       
+      const url = `/sales/list-invoices`;
+      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+    
+    }
+    reset() {
+    
+      this.dataset = []
+      this.reset()
+    }
+    solist() {
+      this.dataset = []
+     
+      const controls = this.soForm.controls
+      const date = controls.calc_date.value
+      ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+      : null;
+    
+      const date1 = controls.calc_date1.value
+      ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
+      : null;
+     
+      
+      let obj= {date,date1}
+      this.accountreceivableService.getAllInvoicesBy(obj).subscribe(
+        (response: any) => {   
+          this.dataset = response.data
+          console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+        
+       
+          
+           },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+    )
+    }
+
+    printpdf() {
+
+      console.log(this.dataView.getFilteredItems())
+      const data = this.dataView.getFilteredItems()
+      const controls = this.soForm.controls;
+      
+      const date = controls.calc_date.value
+        ? `${String("0" + controls.calc_date.value.day).slice(-2)}-${String("0" + controls.calc_date.value.month).slice(-2)}-${controls.calc_date.value.year}`
+        : null;
+       const date1 = controls.calc_date1.value
+        ? `${String("0" + controls.calc_date1.value.day).slice(-2)}-${String("0" + controls.calc_date1.value.month).slice(-2)}-${controls.calc_date1.value.year}`
+        : null;
       console.log("pdf");
-      var doc = new jsPDF("l");
-      let date = new Date()
-     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-      var img = new Image()
-      img.src = "./assets/media/logos/companyentete.png";
-      doc.addImage(img, 'png', 150, 5, 50, 30)
+      var doc = new jsPDF({orientation:'p'});
+  
+      // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+      var img = new Image();
+      img.src = "./assets/media/logos/companylogo.png";
+      doc.addImage(img, "png", 160, 2, 50, 30);
       doc.setFontSize(9);
       if (this.domain.dom_name != null) {
         doc.text(this.domain.dom_name, 10, 10);
       }
+
+      // fill the dataset with your data
+    
       if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
       if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
       if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
       doc.setFontSize(14);
-    
-      doc.line(10, 35, 300, 35);
+      doc.text("Liste des Factures    " , 80, 40);
       doc.setFontSize(12);
-      doc.text("Etat des Stocks Du: " + nbr, 100, 45);
-      //doc.text("Date: " + this.dataset[0].tr_effdate, 160, 45);
-      doc.text("imprimé Le: " + date.toLocaleDateString() , 220, 45);
-      doc.text("A: " + new Date().toLocaleTimeString(), 220, 50);
-      doc.text("Edité par: " + this.user.usrd_code, 220, 55);
       
-      
-      doc.setFontSize(8);
-      //console.log(this.provider.ad_misc2_id)
+      doc.text("Date Début : " + date, 40, 50);
+      doc.text("Date Fin      : " + date1, 110, 50);
+  
+      doc.setFontSize(10);
+      doc.line(5, 55, 205, 55);
+      doc.line(5, 55, 205, 55);
+      doc.line(5, 55, 205, 55);
+      doc.line(5, 60, 205, 60);
+      doc.line(5, 55, 5, 60);
+      doc.text("Code Cient", 7.5, 58.5);
+      doc.line(27, 55, 27, 60);
+      doc.text("Nom Client", 40, 58.5);
+      doc.line(80, 55, 80, 60);
+      doc.text("Date", 82, 58.5);
+      doc.line(102, 55, 102, 60);
+      doc.text("N° Facture", 104, 58.5);
+      doc.line(130, 55, 130, 60);
+      doc.text("Devise", 132, 58.5);
+      doc.line(145, 55, 145, 60);
+      doc.text("Montant", 160, 58.5);
+      doc.line(205, 55, 205, 60);
+         
      
-    
-      doc.line(10, 85, 300, 85);
-      doc.line(10, 90, 300, 90);
-      doc.line(10, 85, 10, 90);
-      doc.text("LN", 12.5, 88.5);
-      doc.line(20, 85, 20, 90);
-      doc.text("Code Article", 25, 88.5);
-      doc.line(65, 85, 65, 90);
-      doc.text("Désignation", 67.5, 88.5);
-      doc.line(130, 85, 130, 90);
-      doc.text("QTE", 133, 88.5);
-      doc.line(140, 85, 140, 90);
-      doc.text("ORIGINE", 143, 88.5);
-      doc.line(170, 85, 170, 90);
-      doc.text("PAR", 173, 88.5);
-      doc.line(185, 85, 185, 90);
-      doc.text("Lot/Série", 188, 88.5);
-      doc.line(205, 85, 205, 90);
-      doc.text("N PAL", 207, 88.5);
-      doc.line(220, 85, 220, 90);
-      doc.text("DATE", 223, 88.5);
-      doc.line(235, 85, 235, 90);
-      doc.text("SITE", 238, 88.5);
-      doc.line(245, 85, 245, 90);
-      var i = 95;
-      doc.setFontSize(6);
+      var i = 65;
+      doc.setFontSize(10);
       let total = 0
-      for (let j = 0; j < this.dataset.length  ; j++) {
-        total = total - Number(this.dataset[j].ld_qty_oh)
+      let encaisse = 0
+      let credits = 0
+      for (let j = 0; j < data.length; j++) {
+        let mts =  String(  Number(data[j].ar_base_amt).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+     //   console.log(mts)
+        let mnt = replaceAll(mts,","," ")
         
-        if ((j % 20 == 0) && (j != 0) ) {
+  
+       // console.log(mnsolde)
+        if (j % 44 == 0 && j != 0) {
           doc.addPage();
-          img.src = "./assets/media/logos/companyentete.png";
-          doc.addImage(img, 'png', 150, 5, 50, 30)
-          doc.setFontSize(9);
+          // img.src = "./assets/media/logos/companylogo.png";
+          doc.addImage(img, "png", 160, 2, 50, 30);
+          doc.setFontSize(10);
           if (this.domain.dom_name != null) {
             doc.text(this.domain.dom_name, 10, 10);
           }
@@ -567,175 +677,78 @@ export class ListInvoicesComponent implements OnInit {
           if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
           if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
           doc.setFontSize(14);
-          doc.line(10, 35, 300, 35);
-    
+          doc.text("Liste des Crédits    " , 80, 40);
           doc.setFontSize(12);
-          doc.text("Etat des Stocks Du: " + nbr, 100, 45);
-          //doc.text("Date: " + this.dataset[0].tr_effdate, 160, 45);
-          doc.text("imprimé Le: " + date.toLocaleDateString() , 220, 45);
-          doc.text("A: " + new Date().toLocaleTimeString(), 220, 50);
-          doc.text("Edité par: " + this.user.usrd_code, 220, 55);
-         
-      
-          doc.setFontSize(8);
           
-    
+          doc.text("Date Début : " + date, 40, 50);
+          doc.text("Date Fin      : " + date1, 110, 50);
+        
           
-      doc.line(10, 85, 300, 85);
-      doc.line(10, 90, 300, 90);
-      doc.line(10, 85, 10, 90);
-      doc.text("LN", 12.5, 88.5);
-      doc.line(20, 85, 20, 90);
-      doc.text("Code Article", 25, 88.5);
-      doc.line(65, 85, 65, 90);
-      doc.text("Désignation", 67.5, 88.5);
-      doc.line(130, 85, 130, 90);
-      doc.text("QTE", 133, 88.5);
-      doc.line(140, 85, 140, 90);
-      doc.text("ORIGINE", 143, 88.5);
-      doc.line(170, 85, 170, 90);
-      doc.text("PAR", 173, 88.5);
-      doc.line(185, 85, 185, 90);
-      doc.text("Lot/Série", 188, 88.5);
-      doc.line(205, 85, 205, 90);
-      doc.text("N PAL", 207, 88.5);
-      doc.line(220, 85, 220, 90);
-      doc.text("DATE", 223, 88.5);
-      doc.line(235, 85, 235, 90);
-      doc.text("SITE", 238, 88.5);
-      doc.line(245, 85, 245, 90);
-          i = 95;
-          doc.setFontSize(6);
+          doc.setFontSize(10);
+          doc.line(5, 55, 205, 55);
+          doc.line(5, 55, 205, 55);
+          doc.line(5, 55, 205, 55);
+          doc.line(5, 60, 205, 60);
+          doc.line(5, 55, 5, 60);
+          doc.text("Code Cient", 7.5, 58.5);
+          doc.line(27, 55, 27, 60);
+          doc.text("Nom Client", 40, 58.5);
+          doc.line(80, 55, 80, 60);
+          doc.text("Date", 82, 58.5);
+          doc.line(102, 55, 102, 60);
+          doc.text("N° Facture", 104, 58.5);
+          doc.line(130, 55, 130, 60);
+          doc.text("Devise", 132, 58.5);
+          doc.line(145, 55, 145, 60);
+          doc.text("Montant", 160, 58.5);
+          doc.line(205, 55, 205, 60);
+                     
+          i = 65;
+          doc.setFontSize(10);
         }
-    
-        
-          doc.line(10, i - 5, 10, i);
-          doc.text(String("0000" + Number(j+1)).slice(-4), 12.5, i - 1);
-          doc.line(20, i - 5, 20, i);
-          doc.text(this.dataset[j].ld_part, 25, i - 1);
-          doc.line(65, i - 5, 65, i);
-          doc.text(this.dataset[j].chr01 + ' ' + this.dataset[j].chr02 + ' ' + this.dataset[j].chr03, 67.5, i - 1);
+  
+       
+          doc.line(5, i - 5, 5, i);
+          doc.text(data[j].ar_bill, 7, i - 1);
+          doc.line(27, i - 5, 27, i);
+          doc.text(data[j].customer.cm_sort, 29, i - 1);
+          doc.line(80, i - 5, 80, i);
+          doc.text(data[j].ar_effdate, 82, i - 1);
+          doc.line(102, i - 5, 102, i);
+          doc.text(data[j].ar_nbr, 104, i - 1);
           doc.line(130, i - 5, 130, i);
-          doc.text(String(Number(this.dataset[j].ld_qty_oh) ), 137, i - 1, { align: "right" });
-          doc.line(140, i - 5, 140, i);
-          doc.text(String(this.dataset[j].chr04), 143, i - 1);
-          doc.line(170, i - 5, 170, i);
-          doc.text(String(this.dataset[j].created_by), 173, i - 1, );
-          doc.line(185, i - 5, 185, i);
-          doc.text(String(this.dataset[j].ld_lot), 188, i - 1, );
+          doc.text(data[j].ar_curr, 132, i - 1);
+          doc.line(145, i - 5, 145, i);
+          doc.text(mnt, 203, i - 1,{ align: "right" });
           doc.line(205, i - 5, 205, i);
-          doc.text(String(this.dataset[j].ld_ref), 207, i - 1, );
-          doc.line(220, i - 5, 220, i);
-          doc.text(String((this.dataset[j].ld_date)) , 223, i - 1, );
-          doc.line(235, i - 5, 235, i);
-          doc.text(String((this.dataset[j].ld_site)) , 238, i - 1, );
-          doc.line(245, i - 5, 245, i);
-          doc.line(10, i, 245, i);
+          
           i = i + 5;
-        
-      }
-    
-      // doc.line(10, i - 5, 200, i - 5);
-    
-      // doc.line(130, i + 7, 205, i + 7);
-      // doc.line(130, i + 14, 205, i + 14);
-      // //  doc.line(130, i + 21, 200, i + 21 );
-      // //  doc.line(130, i + 28, 200, i + 28 );
-      // //  doc.line(130, i + 35, 200, i + 35 );
-      // doc.line(130, i + 7, 130, i + 14);
-      // doc.line(160, i + 7, 160, i + 14);
-      // doc.line(205, i + 7, 205, i + 14);
-      // doc.setFontSize(10);
-    
-      doc.text("NOMBRE DE BIG BAG   " + String(this.dataset.length) + "  , Total POIDS:  " + String(Number(total)), 40, i + 12, { align: "left" });
-      //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
-      //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
-      //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
-    
-      // doc.text(String(Number(total)), 198, i + 12, { align: "right" });
-      //  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
-      //  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
-      //  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
-    
-      doc.setFontSize(8);
-      // let mt = NumberToLetters(Number(total), "Dinars Algerien");
-    
-      // if (mt.length > 95) {
-      //   let mt1 = mt.substring(90);
-      //   let ind = mt1.indexOf(" ");
-    
-      //   mt1 = mt.substring(0, 90 + ind);
-      //   let mt2 = mt.substring(90 + ind);
-    
-      //   doc.text("Arretée la présente Commande a la somme de :" + mt1, 20, i + 53);
-      //   doc.text(mt2, 20, i + 60);
-      // } else {
-      //   doc.text("Arretée la présente Commande a la somme de :" + mt, 20, i + 53);
-      // }
-      // window.open(doc.output('bloburl'), '_blank');
-      //window.open(doc.output('blobUrl'));  // will open a new tab
-      doc.save('ES-' + nbr + '.pdf')
+          total = total + Number(data[j].ar_base_amt)
+         }
+                 doc.line(5, i - 5, 205, i - 5);
+  
+        //  doc.line(30, i-5, 110, i-5);
+  
+         let tt =  String(  Number(total).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        let ttc = replaceAll(tt,","," ")
+  
+         
+         doc.line(130, i - 5, 130, i);
+         
+          // doc.line(40, i - 5, 40, i);
+          doc.text("Totaux", 143, i - 1,{ align: "right" });
+          doc.line(145, i - 5, 145, i);
+          doc.text(ttc, 203, i - 1,{ align: "right" });
+          doc.line(205, i - 5, 205, i);
+          doc.line(130, i, 205, i);
+          i = i + 5;
+  
+  
       var blob = doc.output("blob");
       window.open(URL.createObjectURL(blob));
     }
-    onSubmit() {
-      const url = `/sales/payment-psh`;
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
-    
-      // this.printpdf(new Date().toLocaleDateString()); 
-     
-      // tslint:disable-next-line:prefer-const
-    
-    }
-    oncreate() {
-      const url = `/sales/create-direct-invoice`;
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
-    
-      // this.printpdf(new Date().toLocaleDateString()); 
-     
-      // tslint:disable-next-line:prefer-const
-    
-    }
-    onprint() {
-      const url = `/sales/print-invoice`;
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
-    
-      // this.printpdf(new Date().toLocaleDateString()); 
-     
-      // tslint:disable-next-line:prefer-const
-    
-    }
-    onimput() {
-      const url = `/sales/input-invoice`;
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
-    
-      // this.printpdf(new Date().toLocaleDateString()); 
-     
-      // tslint:disable-next-line:prefer-const
-    
-    }
-    goback() {
-    
-      
-      const url = `/customers/customer-list`;
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
-    
-    }
-    reset() {
-    
-      this.dataset = []
-      this.accountreceivableService.getAll().subscribe( 
-        
-          (response: any) => {this.dataset = response.data
-            console.log(this.dataset)
-            this.dataview.setItems(this.dataset)},
-          
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-          
-      )
-    
-    }
+  
 }

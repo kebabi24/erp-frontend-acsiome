@@ -553,6 +553,10 @@ export class CreateInvoiceComponent implements OnInit {
   }
   // save data
   onSubmit() {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+
+
+    input?.setAttribute('disabled', '');
     this.hasFormErrors = false;
     const controls = this.ihForm.controls;
     /** check form */
@@ -1266,9 +1270,12 @@ calculatetot(){
     //  console.log(response.data.value)
      if(response.data != null) {
 
-      timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+      timbre = Math.trunc((tht + tva) * Number(response.data.value)/ 100)   
       console.log("timbre",timbre)
-      if (timbre < 5) { timbre = 5}            
+      if (timbre < 5 && timbre > 0) {
+        timbre = 5;
+      } 
+     if(timbre <0 && timbre > -5) {timbre = -5}      
      }else { timbre = 0}
 
      ttc = round(tht + tva + timbre,2)
@@ -1725,6 +1732,12 @@ openbill(content) {
 printpdf(nbr) {
   const controls = this.totForm.controls 
   const controlss = this.ihForm.controls 
+  const index = this.ith_cr_terms.findIndex(element =>{
+    return element.code_value == controlss.ith_cr_terms.value
+  })
+  console.log(index)
+  let terms = ""
+  if(index >= 0) { terms = this.ith_cr_terms[index].code_cmmt}
   console.log("pdf")
   var doc = new jsPDF();
  const dateinv =  controlss.ith_inv_date.value
@@ -1751,6 +1764,8 @@ printpdf(nbr) {
   
   doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
   doc.text('Date : ' + dateinv, 150 , 50 )
+  doc.text('Mode Paiement : ' + terms, 150 , 55 )
+  
   doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
   doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
   if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
@@ -1803,6 +1818,7 @@ if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 3
      // console.log(this.customer.address.ad_misc2_id)
       doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
       doc.text('Date : ' + dateinv, 150 , 50 )
+      doc.text('Mode Paiement : ' + terms, 150 , 55 )
       doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
       doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
       if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}

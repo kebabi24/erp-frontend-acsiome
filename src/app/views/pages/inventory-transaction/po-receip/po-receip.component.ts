@@ -698,7 +698,7 @@ export class PoReceipComponent implements OnInit {
     this.seq = response.data
     console.log(this.seq)   
         if (this.seq) {
-         this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+         this.prhnbr = `${this.seq.seq_prefix}${Number(this.seq.seq_curr_val)+1}`
          console.log(this.seq.seq_prefix)
          console.log(this.seq.seq_curr_val)
          

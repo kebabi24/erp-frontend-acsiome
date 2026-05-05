@@ -525,7 +525,7 @@ selectedField = ""
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           
-          if (args.dataContext.psh_qty_ship * args.dataContext.psh_um_conv   > args.dataContext.qty_oh) {
+          if (args.dataContext.psh_type != 'M' && args.dataContext.psh_qty_ship * args.dataContext.psh_um_conv   > args.dataContext.qty_oh) {
              
            alert ("Qte Manquante")
            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , psh_qty_ship: null })
@@ -779,6 +779,10 @@ selectedField = ""
   }
   // save data
   onSubmit() {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+
+
+    input?.setAttribute('disabled', '');
     this.hasFormErrors = false;
     const controls = this.pshForm.controls;
     /** check form */
@@ -849,12 +853,12 @@ if(somme == 0){
   this.hasFormErrors = true;
   return;
 }
-    this.sequenceService.getByOne({ seq_type: "BL", seq_profile: this.user.usrd_profile }).subscribe(
+    this.sequenceService.getByOne({ seq_type: "BL" , seq_profile: this.user.usrd_profile }).subscribe(
       (response: any) => {
     this.seq = response.data
     console.log(this.seq)   
         if (this.seq) {
-         this.pshnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+         this.pshnbr = `${this.seq.seq_prefix}${Number(this.seq.seq_curr_val)+1}`
          console.log(this.seq.seq_prefix)
          console.log(this.seq.seq_curr_val)
          
@@ -1421,6 +1425,7 @@ if(somme == 0){
                   if (this.lddet == null) { 
                  
                       this.qty = 0.
+                      this.stat = 'CONFORME'
                   } else { this.qty = responseld.data.locationDetails.ld_qty_oh
                   if (this.status == null) { 
                     this.stat = this.lddet.ld_status 
@@ -1454,7 +1459,7 @@ if(somme == 0){
                           psh_taxc: detail.sod_taxc,                      
                           psh_site: detail.sod_site,
                           psh_loc: detail.sod_loc,
-                          psh_serial: null,
+                          psh_serial: detail.sod_serial,
                           qty_oh: this.qty,
                           psh_status: this.stat,
                           psh_expire: this.expire,
@@ -2422,9 +2427,11 @@ onChangeEXP() {
   if (exp == true) {
     for (var i = 0; i < this.dataset.length; i++) {
       let updateItem = this.gridService.getDataItemByRowIndex(i);
-      console.log(this.dataset[i].qty_oh)
-      if (this.dataset[i].qty_oh == 0) {updateItem.psh_qty_ship = 0 }
+      console.log(this.dataset[i].psh_type , this.dataset[i].qty_oh)
+      if (this.dataset[i].qty_oh == 0 && this.dataset[i].psh_type != 'M') {updateItem.psh_qty_ship = 0 
+        console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")}
              else {
+              console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
           updateItem.psh_qty_ship = this.dataset[i].psh_qty_toship ;
         }
           this.gridService.updateItem(updateItem);
@@ -2471,7 +2478,7 @@ calculatetot(){
     
      this.timbreService.getTimbreValue({ code: controlsso.psh_cr_terms.value, amt: round(tht + tva )}).subscribe(
       (response: any) => {
-      //  console.log(response.data.value)
+      
        if(response.data != null) {
   
         timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
@@ -2692,8 +2699,11 @@ printpdf(nbr) {
   console.log("pdf")
   var doc = new jsPDF();
   var img = new Image();
-  img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 170, 5, 30, 30);
+  const due =  Number(controlss.psh_ship_date.value.day).toString().padStart(2, '0') + "/" + Number(controlss.psh_ship_date.value.month).toString().padStart(2, '0')+ "/" + (controlss.psh_ship_date.value.year);  
+  console.log(due, controlss.psh_ship_date.value)
+  
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
       doc.text(this.domain.dom_name, 10, 10);
@@ -2701,14 +2711,18 @@ printpdf(nbr) {
     if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
     if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.line(10, 32, 200, 32);
+    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+    doc.line(10, 40, 200, 40);
   
   doc.setFontSize(12);
-  doc.text( 'Bon Livraison N° : ' + nbr  , 70, 40);
+  doc.text( 'Bon Livraison N° : ' + nbr  , 70, 50);
   doc.setFontSize(8);
   //console.log(this.customer.address.ad_misc2_id)
-  doc.text('Code Client : ' + this.customer.ad_addr, 20 , 50 )
-  doc.text('Nom             : ' + this.customer.ad_name, 20 , 55)
-  if (this.customer.ad_line1 != null) {doc.text('Adresse       : ' + this.customer.ad_line1, 20 , 60)}
+  doc.text('Code Client : ' + this.customer.ad_addr, 20 , 55 )
+  doc.text('Nom             : ' + this.customer.ad_name, 20 , 60)
+  doc.text("Date : " + due, 150, 55);
+  if (this.customer.ad_line1 != null) {doc.text('Adresse       : ' + this.customer.ad_line1, 20 , 65)}
   // if (this.customer.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.ad_misc2_id, 20 , 65)}
   //     if (this.customer.ad_gst_id != null) {doc.text('RC          : ' + this.customer.ad_gst_id, 20 , 70)}
   //     if (this.customer.ad_pst_id) {doc.text('AI            : ' + this.customer.ad_pst_id, 20 , 75)}
@@ -2741,14 +2755,26 @@ printpdf(nbr) {
     
     if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
-      doc.setFontSize(12);
-      doc.text( 'Bon Livraison : ' + nbr  , 70, 40);
-      doc.setFontSize(8);
-      console.log(this.customer.ad_misc2_id)
-      doc.text('Code Client : ' + this.customer.ad_addr, 20 , 50 )
-      doc.text('Nom             : ' + this.customer.ad_name, 20 , 55)
-      if (this.customer.ad_line1 != null) { doc.text('Adresse       : ' + this.customer.ad_line1, 20 , 60)}
+img.src = "./assets/media/logos/companylogo.png";
+doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.setFontSize(12);
+  doc.text( 'Bon Livraison N° : ' + nbr  , 70, 50);
+  doc.setFontSize(8);
+  //console.log(this.customer.address.ad_misc2_id)
+  doc.text('Code Client : ' + this.customer.ad_addr, 20 , 55 )
+  doc.text('Nom             : ' + this.customer.ad_name, 20 , 60)
+  doc.text("Date : " + due, 150, 55);
+  if (this.customer.ad_line1 != null) {doc.text('Adresse       : ' + this.customer.ad_line1, 20 , 65)}
       // if (this.customer.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.ad_misc2_id, 20 , 65)}
       // if (this.customer.ad_gst_id != null) {doc.text('RC          : ' + this.customer.ad_gst_id, 20 , 70)}
       // if (this.customer.ad_pst_id) {doc.text('AI            : ' + this.customer.ad_pst_id, 20 , 75)}

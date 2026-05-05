@@ -90,6 +90,11 @@ export class WorkOrderService {
         return this.http.post(`${API_URL}/findOne`,data, { headers: httpHeaders })
    
     }
+    public getWoRo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findrowo`,data, { headers: httpHeaders })
+   
+    }
     // UPDATE
     public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

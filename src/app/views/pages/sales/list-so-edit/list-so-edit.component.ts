@@ -14,6 +14,7 @@ import {
   Filters,
   Formatters,
   FlatpickrOption,
+  GridService,
   GridOption,
   Grouping,
   GroupingGetterFunction,
@@ -49,7 +50,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { SaleOrderService, CustomerService, DeviseService, PsService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
-
+import { replaceAll } from "chartist"
 
 const defaultPageSize = 100;
 @Component({
@@ -62,19 +63,30 @@ export class ListSoEditComponent implements OnInit {
  
 // slick grid
 selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
-gridObj: any;
-dataviewObj: any;
+
+columnDefinitions: Column[] = []
+gridOptions: GridOption = {}
+dataset: any[] = []
+draggableGroupingPlugin: any;
 angularGrid: AngularGridInstance;
-draggableGroupingPlugin: any;    
-columnDefinitions: Column[] = [];
-gridOptions: GridOption = {};
-dataset: any[] = [];
+
+grid: any;
+gridService: GridService;
+
+dataView: any;
+//dataset: any[] = [];
 customer: any;
 so: any;
 sodataset: any[] = [];
 curr : any;
 domain
 user
+hasFormErrors = false;
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  error = false;
+  soForm: FormGroup;
+  dataviewObj: any;
 constructor(
   private activatedRoute: ActivatedRoute,
   private router: Router,
@@ -84,19 +96,76 @@ constructor(
   private customersService: CustomerService,
   private deviseService: DeviseService,
   private psService: PsService,
+  private soFB: FormBuilder,
 ) {
-  this.prepareGrid();
+  // this.prepareGrid();
+}
+solist() {
+  this.dataset = []
+ 
+  const controls = this.soForm.controls
+  const date = controls.calc_date.value
+  ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+  : null;
+
+  const date1 = controls.calc_date1.value
+  ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
+  : null;
+ 
+  
+  let obj= {date,date1}
+  this.soService.getAllwithDetailObj(obj).subscribe(
+    (response: any) => {   
+      this.dataset = response.data
+      // console.log(this.dataset)
+       this.dataView.setItems(this.dataset);
+    
+       },
+    (error) => {
+        this.dataset = []
+    },
+    () => {}
+)
 }
 
 ngOnInit(): void {
-
+  this.loading$ = this.loadingSubject.asObservable();
+    this.loadingSubject.next(false);
   this.user =  JSON.parse(localStorage.getItem('user'))
       this.domain =  JSON.parse(localStorage.getItem('domain'))
+      this.createForm();
+      this.prepareGrid()
+      //this.initGrid();
+      this.solist();
+     
+    }
+createForm() {
+  this.loadingSubject.next(false);
+  const date = new Date;
+  
+  this.soForm = this.soFB.group({
+   // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
+   
+    calc_date: [{
+      year:date.getFullYear(),
+      month: date.getMonth()+1,
+      day: 1
+    }],
+    calc_date1: [{
+      year:date.getFullYear(),
+      month: date.getMonth()+1,
+      day: date.getDate()
+    }],
+  });
+
+
+
 }
 angularGridReady(angularGrid: AngularGridInstance) {
   this.angularGrid = angularGrid;
-  this.gridObj = angularGrid.slickGrid; // grid object
-  this.dataviewObj = angularGrid.dataView;
+  this.dataView = angularGrid.dataView;
+  this.grid = angularGrid.slickGrid;
+  this.gridService = angularGrid.gridService;
 }
 
 prepareGrid() {
@@ -120,9 +189,9 @@ prepareGrid() {
       maxWidth: 50,
       // use onCellClick OR grid.onClick.subscribe which you can see down below
       onCellClick: (e: Event, args: OnEventArgs) => {
-          const id = args.dataContext.iid
+          const id = args.dataContext.id
           if(args.dataContext.so_stat == null) {
-          this.router.navigateByUrl(`/sales/edit-so/${id}`)
+          this.router.navigateByUrl(`/sales/edit-so-plq/${id}`)
           } else 
           {
             alert("Modification Impossible de cette commande")
@@ -139,17 +208,8 @@ prepareGrid() {
       maxWidth: 50
     },
     {
-      id: "iid",
-      name: "iid",
-      field: "iid",
-      resizable: false,
-      sortable: false,
-      minWidth: 50,
-      maxWidth: 50
-    },
-    {
       id: "so_nbr",
-      name: "Code",
+      name: "Code CMD",
       field: "so_nbr",
       minWidth: 100,
       maxWidth: 120,
@@ -157,7 +217,7 @@ prepareGrid() {
       filterable: true,
       grouping: {
         getter: 'so_nbr',
-        formatter: (g) => `N BC: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `N CC: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregateCollapsed: false,
         collapsed: false,
       }
@@ -176,10 +236,9 @@ prepareGrid() {
         collapsed: false,
       }
     },
-
     {
       id: "so_ord_date",
-      name: "Date de creation",
+      name: "Date de création",
       field: "so_ord_date",
       sortable: true,
       width: 50,
@@ -195,7 +254,7 @@ prepareGrid() {
     },
     {
       id: "so_due_date",
-      name: "Date d echeance",
+      name: "Date d écheance",
       field: "so_due_date",
       sortable: true,
       width: 50,
@@ -204,7 +263,7 @@ prepareGrid() {
       type: FieldType.dateIso,
       grouping: {
         getter: 'so_due_date',
-        formatter: (g) => `Date echeance: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Date écheance: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregateCollapsed: false,
         collapsed: false,
       }
@@ -217,91 +276,82 @@ prepareGrid() {
       width: 50,
       filterable: true,
       type: FieldType.string,
-    },
+    },   
+   
+    // {
+    //   id: "sod_part",
+    //   name: "Article",
+    //   field: "sod_part",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   grouping: {
+    //     getter: 'sod_part',
+    //     formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+    //     aggregators: [
+    //       // (required), what aggregators (accumulator) to use and on which field to do so
+    //      // new Aggregators.Avg('tr_qty_loc'),
+    //       new Aggregators.Sum('sod_qty_ord'),
+    //       new Aggregators.Sum('sod_qty_rcvd')
+    //     ],
+    //     aggregateCollapsed: true,
     
-    {
-      id: "so_po",
-      name: "N° Projet ",
-      field: "so_po",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "so_channel",
-      name: "Lsite Frais ",
-      field: "so_channel",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "sod_part",
-      name: "Article",
-      field: "sod_part",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      grouping: {
-        getter: 'sod_part',
-        formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-        aggregators: [
-          // (required), what aggregators (accumulator) to use and on which field to do so
-         // new Aggregators.Avg('tr_qty_loc'),
-          new Aggregators.Sum('sod_qty_ord'),
-          new Aggregators.Sum('sod_qty_rcvd')
-        ],
-        aggregateCollapsed: true,
+    //     collapsed: false,
+    //   }
+    // },
+    // {
+    //   id: "pt_desc1",
+    //   name: "Designation",
+    //   field: "pt_desc1",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    // },
+    // {
+    //   id: "sod_um",
+    //   name: "UM",
+    //   field: "sod_um",
+    //   sortable: true,
+    //   width: 30,
+    //   filterable: true,
+    // },
     
-        collapsed: false,
-      }
-    },
-    {
-      id: "pt_desc1",
-      name: "Designation",
-      field: "pt_desc1",
-      sortable: true,
-      width: 50,
-      filterable: true,
-    },
-    {
-      id: "sod_um",
-      name: "UM",
-      field: "sod_um",
-      sortable: true,
-      width: 30,
-      filterable: true,
-    },
-    
-    {
-      id: "sod_qty_ord",
-      name: "Quantite",
-      field: "sod_qty_ord",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-      type: FieldType.float,
+    // {
+    //   id: "sod_qty_ord",
+    //   name: "Quantite",
+    //   field: "sod_qty_ord",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+    //   type: FieldType.float,
 
-    },
-    {
-      id: "sod_qty_ship",
-      name: "Quantite Livree",
-      field: "sod_qty_ship",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-      type: FieldType.float,
+    // },
+    // {
+    //   id: "sod_qty_ship",
+    //   name: "Quantite Livree",
+    //   field: "sod_qty_ship",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+    //   type: FieldType.float,
 
-    },
+    // },
     
-    {
-      id: "sod_price",
-      name: "Prix",
-      field: "sod_price",
+    // {
+    //   id: "sod_price",
+    //   name: "Prix",
+    //   field: "sod_price",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   type: FieldType.float,
+    // },
+      {
+      id: "so_amt",
+      name: "Montant HT",
+      field: "so_amt",
       sortable: true,
       width: 50,
       filterable: true,
@@ -406,12 +456,12 @@ prepareGrid() {
       onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
   
   },
-    enablePagination: true, // you could optionally disable the Pagination
-      pagination: {
-      pageSizes: [20, 50, 100, 200, 300, 400, 500, 700, 1000],
-      pageSize: defaultPageSize,
-      totalItems: 0
-    },
+    // enablePagination: true, // you could optionally disable the Pagination
+    //   pagination: {
+    //   pageSizes: [20, 50, 100, 200, 300, 400, 500, 700, 1000],
+    //   pageSize: defaultPageSize,
+    //   totalItems: 0
+    // },
 
 
     dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
@@ -429,18 +479,18 @@ prepareGrid() {
 
 // fill the dataset with your data
 this.dataset = []
-this.soService.getAllwithDetail().subscribe(
-    (response: any) =>  ( this.dataset = response.data),
+// this.soService.getAllwithDetail().subscribe(
+    // (response: any) =>  ( this.dataset = response.data),
    
    
 
-   (error) => {
+//    (error) => {
     
-        this.dataset = []
-    },
-    () => {}
+//         this.dataset = []
+//     },
+//     () => {}
    
-)  
+// )  
 
   // fill the dataset with your data
 }
@@ -472,105 +522,147 @@ clearGrouping() {
   if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
     this.draggableGroupingPlugin.clearDroppedGroups();
   }
-  this.gridObj.invalidate(); // invalidate all rows and re-render
+  this.grid.invalidate(); // invalidate all rows and re-render
 }
 
 printpdf(nbr) {
  // const controlss = this.soForm.controls 
   
   var doc = new jsPDF();
- 
- // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-  var img = new Image()
-  img.src = "./assets/media/logos/companyentete.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
+   var img = new Image();
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
   doc.setFontSize(9);
-  if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
-  if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
-  if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
-  if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 55,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
   doc.setFontSize(12);
-  doc.text( 'Commande N° : ' + nbr  , 70, 40);
-  doc.setFontSize(8);
+  doc.text("Commande N° : " + nbr, 87, 60);
+  doc.setFontSize(10);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date : " + this.so.so_ord_date, 150, 65);
+  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
+  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if (this.customer.address.ad_misc2_id != null) {
+    doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  }
+  if (this.customer.address.ad_gst_id != null) {
+    doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  }
+  if (this.customer.address.ad_pst_id) {
+    doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  }
+  if (this.customer.address.ad_misc1_id != null) {
+    doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  }
+
+  doc.line(10, 100, 200, 100);
+  doc.line(10, 105, 200, 105);
+  doc.line(10, 100, 10, 105);
+  doc.text("LN", 12.5, 103.5);
+  doc.line(20, 100, 20, 105);
+  doc.text("Code Article", 25, 103.5);
+  doc.line(45, 100, 45, 105);
+  doc.text("Désignation", 67.5, 103.5);
+  doc.line(100, 100, 100, 105);
+  doc.text("QTE", 107, 103.5);
+  doc.line(120, 100, 120, 105);
+  doc.text("UM", 123, 103.5);
+  doc.line(130, 100, 130, 105);
+  doc.text("PU", 138, 103.5);
+  doc.line(150, 100, 150, 105);
+  doc.text("TVA", 152, 103.5);
+  doc.line(160, 100, 160, 105);
+  doc.text("REM", 162, 103.5);
+  doc.line(170, 100, 170, 105);
+  doc.text("THT", 181, 103.5);
+  doc.line(200, 100, 200, 105);
   
-  doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
-  doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
-  doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
-  if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
-      if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 70)}
-      if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 75)}
-      if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 80)}
-    
-  doc.line(10, 85, 200, 85);
-  doc.line(10, 90, 200, 90);
-  doc.line(10, 85, 10, 90);
-  doc.text('LN', 12.5 , 88.5);
-  doc.line(20, 85, 20, 90);
-  doc.text('Code Article', 25 , 88.5);
-  doc.line(45, 85, 45, 90);
-  doc.text('Désignation', 67.5 , 88.5);
-  doc.line(100, 85, 100, 90);
-  doc.text('QTE', 107 , 88.5);
-  doc.line(120, 85, 120, 90);
-  doc.text('UM', 123 , 88.5);
-  doc.line(130, 85, 130, 90);
-  doc.text('PU', 138 , 88.5);
-  doc.line(150, 85, 150, 90);
-  doc.text('TVA', 152 , 88.5);
-  doc.line(160, 85, 160, 90);
-  doc.text('REM', 162 , 88.5);
-  doc.line(170, 85, 170, 90);
-  doc.text('THT', 181 , 88.5);
-  doc.line(200, 85, 200, 90);
-  var i = 95;
+  var i = 110;
   doc.setFontSize(6);
   for (let j = 0; j < this.sodataset.length  ; j++) {
     
     if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-doc.addImage(img, 'png', 150, 5, 50, 30)
-doc.setFontSize(9);
-      if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
-      if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
-      if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
-      if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
-      doc.setFontSize(12);
-      doc.text( 'Commande N° : ' + nbr  , 70, 40);
-      doc.setFontSize(8);
-      
-      doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
-      doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
-      doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
-      if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
-      if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 70)}
-      if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 75)}
-      if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 80)}
-    
-      doc.line(10, 85, 200, 85);
-      doc.line(10, 90, 200, 90);
-      doc.line(10, 85, 10, 90);
-      doc.text('LN', 12.5 , 88.5);
-      doc.line(20, 85, 20, 90);
-      doc.text('Code Article', 25 , 88.5);
-      doc.line(45, 85, 45, 90);
-      doc.text('Désignation', 67.5 , 88.5);
-      doc.line(100, 85, 100, 90);
-      doc.text('QTE', 107 , 88.5);
-      doc.line(120, 85, 120, 90);
-      doc.text('UM', 123 , 88.5);
-      doc.line(130, 85, 130, 90);
-      doc.text('PU', 138 , 88.5);
-      doc.line(150, 85, 150, 90);
-      doc.text('TVA', 152 , 88.5);
-      doc.line(160, 85, 160, 90);
-      doc.text('REM', 162 , 88.5);
-      doc.line(170, 85, 170, 90);
-      doc.text('THT', 181 , 88.5);
-      doc.line(200, 85, 200, 90);
-      i = 95;
-      doc.setFontSize(6);
+doc.addImage(img, "png", 160, 5, 50, 30);
+doc.setFontSize(12);
+if (this.domain.dom_name != null) {
+  doc.text(this.domain.dom_name, 10, 10);
+}
+if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+doc.line(10, 32, 200, 32);
+doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+doc.line(10, 40, 200, 40);
+doc.barcode(nbr, {
+fontSize: 40,
+textColor: "#000000",
+x: 110,
+y: 55,
+textOptions: { align: "center" }, // optional text options
+});
+doc.setFont("Times-Roman");
+doc.setFontSize(12);
+doc.text("Commande N° : " + nbr, 87, 60);
+doc.setFontSize(10);
+//console.log(this.customer.address.ad_misc2_id);
+doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
+doc.text("Date : " + this.so.so_ord_date, 150, 65);
+doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
+doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+if (this.customer.address.ad_misc2_id != null) {
+doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+}
+if (this.customer.address.ad_gst_id != null) {
+doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+}
+if (this.customer.address.ad_pst_id) {
+doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+}
+if (this.customer.address.ad_misc1_id != null) {
+doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+}
 
-    }
+doc.line(10, 100, 200, 100);
+doc.line(10, 105, 200, 105);
+doc.line(10, 100, 10, 105);
+doc.text("LN", 12.5, 103.5);
+doc.line(20, 100, 20, 105);
+doc.text("Code Article", 25, 103.5);
+doc.line(45, 100, 45, 105);
+doc.text("Désignation", 67.5, 103.5);
+doc.line(100, 100, 100, 105);
+doc.text("QTE", 107, 103.5);
+doc.line(120, 100, 120, 105);
+doc.text("UM", 123, 103.5);
+doc.line(130, 100, 130, 105);
+doc.text("PU", 138, 103.5);
+doc.line(150, 100, 150, 105);
+doc.text("TVA", 152, 103.5);
+doc.line(160, 100, 160, 105);
+doc.text("REM", 162, 103.5);
+doc.line(170, 100, 170, 105);
+doc.text("THT", 181, 103.5);
+doc.line(200, 100, 200, 105);
+
+var i = 110;
+doc.setFontSize(10);
+}
 
 
 
@@ -839,5 +931,163 @@ doc.setFontSize(9);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
 
+  }
+
+  
+  printpdf2() {
+
+    console.log(this.dataView.getFilteredItems())
+    const data = this.dataView.getFilteredItems()
+    const controls = this.soForm.controls;
+    
+    const date = controls.calc_date.value
+      ? `${String("0" + controls.calc_date.value.day).slice(-2)}-${String("0" + controls.calc_date.value.month).slice(-2)}-${controls.calc_date.value.year}`
+      : null;
+     const date1 = controls.calc_date1.value
+      ? `${String("0" + controls.calc_date1.value.day).slice(-2)}-${String("0" + controls.calc_date1.value.month).slice(-2)}-${controls.calc_date1.value.year}`
+      : null;
+    console.log("pdf");
+    var doc = new jsPDF({orientation:'p'});
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image();
+    img.src = "./assets/media/logos/companylogo.png";
+    doc.addImage(img, "png", 160, 2, 50, 30);
+    doc.setFontSize(9);
+    if (this.domain.dom_name != null) {
+      doc.text(this.domain.dom_name, 10, 10);
+    }
+
+    // fill the dataset with your data
+  
+    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.setFontSize(14);
+    doc.text("Liste des Factures    " , 80, 40);
+    doc.setFontSize(12);
+    
+    doc.text("Date Début : " + date, 40, 50);
+    doc.text("Date Fin      : " + date1, 110, 50);
+
+    doc.setFontSize(10);
+    doc.line(5, 55, 205, 55);
+    doc.line(5, 55, 205, 55);
+    doc.line(5, 55, 205, 55);
+    doc.line(5, 60, 205, 60);
+    doc.line(5, 55, 5, 60);
+    doc.text("Code Cient", 7.5, 58.5);
+    doc.line(27, 55, 27, 60);
+    doc.text("Nom Client", 40, 58.5);
+    doc.line(80, 55, 80, 60);
+    doc.text("Date", 82, 58.5);
+    doc.line(102, 55, 102, 60);
+    doc.text("N° Facture", 104, 58.5);
+    doc.line(130, 55, 130, 60);
+    doc.text("Devise", 132, 58.5);
+    doc.line(145, 55, 145, 60);
+    doc.text("Montant", 160, 58.5);
+    doc.line(205, 55, 205, 60);
+       
+   
+    var i = 65;
+    doc.setFontSize(10);
+    let total = 0
+    let encaisse = 0
+    let credits = 0
+    for (let j = 0; j < data.length; j++) {
+      let mts =  String(  Number(data[j].so_tot_amt).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+   //   console.log(mts)
+      let mnt = replaceAll(mts,","," ")
+      
+
+     // console.log(mnsolde)
+      if (j % 44 == 0 && j != 0) {
+        doc.addPage();
+        // img.src = "./assets/media/logos/companylogo.png";
+        doc.addImage(img, "png", 160, 2, 50, 30);
+        doc.setFontSize(10);
+        if (this.domain.dom_name != null) {
+          doc.text(this.domain.dom_name, 10, 10);
+        }
+        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(14);
+        doc.text("Liste des Crédits    " , 80, 40);
+        doc.setFontSize(12);
+        
+        doc.text("Date Début : " + date, 40, 50);
+        doc.text("Date Fin      : " + date1, 110, 50);
+      
+        
+        doc.setFontSize(10);
+        doc.line(5, 55, 205, 55);
+        doc.line(5, 55, 205, 55);
+        doc.line(5, 55, 205, 55);
+        doc.line(5, 60, 205, 60);
+        doc.line(5, 55, 5, 60);
+        doc.text("Code Cient", 7.5, 58.5);
+        doc.line(27, 55, 27, 60);
+        doc.text("Nom Client", 40, 58.5);
+        doc.line(80, 55, 80, 60);
+        doc.text("Date", 82, 58.5);
+        doc.line(102, 55, 102, 60);
+        doc.text("N° Commande", 104, 58.5);
+        doc.line(130, 55, 130, 60);
+        doc.text("Devise", 132, 58.5);
+        doc.line(145, 55, 145, 60);
+        doc.text("Montant", 160, 58.5);
+        doc.line(205, 55, 205, 60);
+                   
+        i = 65;
+        doc.setFontSize(10);
+      }
+
+     
+        doc.line(5, i - 5, 5, i);
+        doc.text(data[j].so_cust, 7, i - 1);
+        doc.line(27, i - 5, 27, i);
+        doc.text(data[j].customer.cm_sort, 29, i - 1);
+        doc.line(80, i - 5, 80, i);
+        doc.text(data[j].so_ord_date, 82, i - 1);
+        doc.line(102, i - 5, 102, i);
+        doc.text(data[j].so_nbr, 104, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(data[j].so_curr, 132, i - 1);
+        doc.line(145, i - 5, 145, i);
+        doc.text(mnt, 203, i - 1,{ align: "right" });
+        doc.line(205, i - 5, 205, i);
+        
+        i = i + 5;
+        total = total + Number(data[j].ar_base_amt)
+       }
+               doc.line(5, i - 5, 205, i - 5);
+
+      //  doc.line(30, i-5, 110, i-5);
+
+       let tt =  String(  Number(total).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+      let ttc = replaceAll(tt,","," ")
+
+       
+       doc.line(130, i - 5, 130, i);
+       
+        // doc.line(40, i - 5, 40, i);
+        doc.text("Totaux", 143, i - 1,{ align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(ttc, 203, i - 1,{ align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(130, i, 205, i);
+        i = i + 5;
+
+
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
   }
 }

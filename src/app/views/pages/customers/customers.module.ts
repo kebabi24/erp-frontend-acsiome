@@ -54,7 +54,7 @@ import { NgxPermissionsModule } from "ngx-permissions"
 
 //Service 
 import {AccountReceivableService,SaleOrderService, AddressService, CodeService, CustomerService, AccountService, TaxeService, 
-        SiteService, DeviseService, BankService, SequenceService, RepertoryService } from '../../../core/erp';
+        SiteService, DeviseService, BankService, SequenceService, RepertoryService, CustomerMobileService } from '../../../core/erp';
 import { CustomerSoldelistComponent } from './customer-soldelist/customer-soldelist.component';
 import { CustomerCAlistComponent } from './customer-calist/customer-calist.component';
 import { CustomerCAbyItemlistComponent } from './customer-caby-itemlist/customer-caby-itemlist.component';
@@ -66,6 +66,7 @@ import { ListRepComponent } from './list-rep/list-rep.component';
 import { CreateStdCustomerComponent } from './create-std-customer/create-std-customer.component';
 import { CreateCustomerImmobilierComponent } from './create-customer-immobilier/create-customer-immobilier.component';
 import { CustomersSoldeComponent } from './customers-solde/customers-solde.component';
+import { ImportCustMobileComponent } from './import-cust-mobile/import-cust-mobile.component';
 const routes: Routes = [
   {
       path: "",
@@ -133,6 +134,10 @@ const routes: Routes = [
             path: "customers-solde",
             component: CustomersSoldeComponent,
           },
+          { 
+            path: "import-cust-mobile",
+            component: ImportCustMobileComponent,
+          },
       ],
   },
 ]
@@ -154,6 +159,7 @@ const routes: Routes = [
         CreateStdCustomerComponent,
         CreateCustomerImmobilierComponent,
         CustomersSoldeComponent,
+        ImportCustMobileComponent,
     ],
     imports: [
         CommonModule,
@@ -202,6 +208,7 @@ const routes: Routes = [
         AccountReceivableService,
         SequenceService,
         RepertoryService,
+        CustomerMobileService,
     ],
     entryComponents: [
         ActionNotificationComponent,

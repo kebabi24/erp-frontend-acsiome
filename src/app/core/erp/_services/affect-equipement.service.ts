@@ -58,4 +58,9 @@ export class AffectEquipementService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getallpaymentby/`, data,{ headers: httpHeaders })
     }
+    
+    public   getAllCautionsBy(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getallcautionsby/`, data,{ headers: httpHeaders })
+    }
 }

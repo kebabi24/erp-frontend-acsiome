@@ -278,7 +278,7 @@ export class CreateRolePaymentDetailComponent implements OnInit {
 
   createForm() {
     this.loadingSubject.next(false);
-
+console.log("ana houna")
     const date = new Date();
 
     this.rvForm = this.rvFB.group({
@@ -432,8 +432,8 @@ export class CreateRolePaymentDetailComponent implements OnInit {
     : null;
     
     console.log(controls.montant_tr.value);
-    let index = this.services.findIndex((service)=>{return service.role_code === controls.role_code.value})
-    console.log(this.services[index])
+    // let index = this.services.findIndex((service)=>{return service.role_code === controls.role_code.value})
+
     this.bankService.addBkhPaymentDetail({
         date: new Date(),
         effdate: effdate,
@@ -477,16 +477,36 @@ export class CreateRolePaymentDetailComponent implements OnInit {
           this.layoutUtilsService.showActionNotification(
             "Ajout avec succès",
             MessageType.Create,
-            10000,
+            1000,
             true,
             true
           );
-          this.printpdf()
-          this.loadingSubject.next(false);
-          //console.log(this.provider, po, this.dataset);
-          this.reset()
-          this.router.navigateByUrl("/account-receivable/create-role-payment-detail");
 
+         
+          this.printpdf()
+          const input = document.getElementById('submit') as HTMLInputElement | null;
+          input.removeAttribute("disabled");
+          this.createForm();
+          this.services = []
+          this.hasFormErrors = false;
+          //console.log(this.provider, po, this.dataset);
+          //  this.rvForm.reset()
+          //   // this.createForm()
+          // this.reset()
+            
+              this.loadingSubject.next(false);
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigateByUrl("/account-receivable/create-role-payment-detail");
+              });
+            // this.router.navigateByUrl("/account-receivable/create-role-payment-detail");
+          const controls = this.rvForm.controls
+          this.bankService
+          .getBy({bk_user1:this.user.usrd_code})
+          .subscribe((response: any) => {
+            console.log(response.data.bank)
+        controls.bank_code.setValue(response.data.bank.bk_code)});
+          
+          //  window.location.reload();
           })
         }
 

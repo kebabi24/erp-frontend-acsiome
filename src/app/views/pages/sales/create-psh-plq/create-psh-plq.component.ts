@@ -543,6 +543,7 @@ export class CreatePshPlqComponent implements OnInit {
       psh_nbr: [this.saleShiper.psh_nbr],
       psh_cust: [{value:this.saleShiper.psh_cust, disabled:true}],
       name: [{value:"", disabled:true}],
+      qtyglob: [{value:0, disabled:true}],
       psh_ship_date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
@@ -646,7 +647,7 @@ export class CreatePshPlqComponent implements OnInit {
     this.seq = response.data
     console.log(this.seq)   
         if (this.seq) {
-         this.pshnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+         this.pshnbr = `${this.seq.seq_prefix}${Number(this.seq.seq_curr_val)+1}`
          console.log(this.seq.seq_prefix)
          console.log(this.seq.seq_curr_val)
          
@@ -789,7 +790,7 @@ export class CreatePshPlqComponent implements OnInit {
     const controls = this.pshForm.controls
     
     this.saleShiperService
-      .add({detail, ps,pshnbr, tot})
+      .addPlq({detail, ps,pshnbr, tot})
       .subscribe(
        (reponse: any) => {
         console.log(reponse)
@@ -2555,6 +2556,8 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
     this.disc = 0;
     this.itemsService.getByOne({ pt_part: this.prod }).subscribe((resp: any) => {
       if (resp.data) {
+        let phantom = null
+        if (resp.data.pt_phantom) { phantom = 'M'}
         console.log(resp.data);
 console.log("controlsQ.qty.value:",controlsQ.qty.value)
         const date1 = new Date();
@@ -2601,7 +2604,7 @@ this.angularGrid.gridService.addItem(
                 psh_qty_ship: this.qtyl, //detail.sod_qty_ord - detail.sod_qty_ship,
                 psh_um: this.item.pt_um,
                 psh_um_conv: 1,
-                psh_type: (this.item.pt_phantom) ? "M" : null,
+                psh_type: phantom,
                 psh_price: this.price,
                 psh_disc_pct: this.disc,
                 psh_so_taxable: this.item.pt_taxable,
@@ -2619,6 +2622,9 @@ this.angularGrid.gridService.addItem(
 );
 this.calculatetot()
 const controls = this.pshForm.controls
+let nbq = Number(controls.qtyglob.value)
+
+controls.qtyglob.setValue(nbq + Number(this.qtyl))
 controls.pal.setValue(null);
 document.getElementById("pal").focus();
 this.modalService.dismissAll()

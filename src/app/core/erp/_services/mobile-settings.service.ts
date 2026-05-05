@@ -118,13 +118,25 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/createPriceList/`, {data},{ headers: httpHeaders })
     }
+    public updatePriceList(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/updatePriceList/`, {data},{ headers: httpHeaders })
+    }
     public getAllPriceList() {
         const httpHeaders = this.httpUtils.getHTTPHeaders();
         return this.http.get(`${API_URL_2}/getPriceList`, { headers: httpHeaders });
     }
+    public getAllPriceListGrp() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL_2}/getPriceListGrp`, { headers: httpHeaders });
+    }
     public   getAllInvoicesRole(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllInvoicesRole/`, data,{ headers: httpHeaders })
+    }
+    public   getAllInvoicesRoleExp(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoicesRoleExp/`, data,{ headers: httpHeaders })
     }
     public   getAllCreditsRole(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

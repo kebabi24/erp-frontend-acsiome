@@ -441,7 +441,7 @@ idpal: any
           seq_curr_val: Number(this.seq.seq_curr_val) + 1,
         };
         if(this.prhnbr == null)
-        { this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+        { this.prhnbr = `${this.seq.seq_prefix}${Number(this.seq.seq_curr_val) + 1}`;
           this.sequenceService.update(id, obj).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {

@@ -14,20 +14,28 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud"; 
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, SaleOrderService,Label, EmployeService, PrintersService } from "../../../../core/erp";
+import {  WorkOrderDetail,ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, SaleOrderService,Label, EmployeService, PrintersService,
+  WorkOrderDetailService, PsService,
+
+
+} from "../../../../core/erp";
 import date from 'src/assets/plugins/formvalidation/src/js/validators/date';
 import { environment } from "../../../../../environments/environment"
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';  
 const API_URL = environment.apiUrl + "/uploads/"
 declare var Edelweiss3: any;
 declare var Edelweiss2: any;
 declare var Edelweiss: any;
+
 @Component({
   selector: 'kt-wo-rct-img',
   templateUrl: './wo-rct-img.component.html',
   styleUrls: ['./wo-rct-img.component.scss']
 })
 export class WoRctImgComponent implements OnInit {
-
+  pdfUrl: SafeResourceUrl;
+  isOpen = false;
+  pdfDataUri: string;
   seuil : any;
   currentPrinter: string;
   PathPrinter: string;
@@ -117,7 +125,7 @@ autorisation:boolean;
   selectedIndexes2: any[];
 
 
-
+it : any
 
   index: any;
   woServer;
@@ -182,10 +190,16 @@ autorisation:boolean;
   exist:any;
   imageUrl
 
+  shifts: any[] = [];
 
+  lpnbr: String;
 
-
-  constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private saleOrderService: SaleOrderService,private employeService: EmployeService, private addressService: AddressService,private printerService: PrintersService) {
+  details: any;
+  ld: any;
+  ld_qty:any;
+  detail : any []
+  batch:any
+  constructor(config: NgbDropdownConfig, private woFB: FormBuilder,private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private saleOrderService: SaleOrderService,private employeService: EmployeService, private addressService: AddressService,private printerService: PrintersService, private workOrderDetailService: WorkOrderDetailService,private psService: PsService,) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true }).subscribe((response: any) => {
       console.log(response.date);
@@ -824,7 +838,13 @@ autorisation:boolean;
 
     this.sqdataset = [];
   }
-
+  ngOnChanges() {
+    if (this.pdfDataUri) {
+      // Sanitize the data URL to bypass Angular's security
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.pdfDataUri);
+      this.isOpen = true;
+    }
+  }
   //ISS-UNP qrt * -1 w ttna7a men ld_det
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
@@ -927,11 +947,11 @@ wo_bo_chg:[this.workOrder.wo_bo_chg],
       wo_serial: [{value:this.workOrder.wo_serial,disabled: true}],
       wo_serial_next: [""],
       printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
-      product_type: ["", Validators.required],
-      product_color: ["", Validators.required],
+      // product_type: ["", Validators.required],
+      // product_color: ["", Validators.required],
       // MANDRIN:[""],
-      product_quality: ["", Validators.required],
-      product_Cyl: ["", Validators.required],
+      // product_quality: ["", Validators.required],
+      // product_Cyl: ["", Validators.required],
     });
     const controls = this.woForm.controls;
     this.user = JSON.parse(localStorage.getItem("user"));
@@ -988,10 +1008,10 @@ wo_bo_chg:[this.workOrder.wo_bo_chg],
         controls.rest_bobine.setValue(this.woServer.wo_qty_ord - this.woServer.wo_qty_comp);
         controls.total_squelette.setValue(this.woServer.wo_qty_rjct);
         controls.desc.setValue(this.woServer.item.pt_desc1);
-        controls.product_type.setValue(this.woServer.item.pt_article);
-        controls.product_color.setValue(this.woServer.item.pt_break_cat);
-        controls.product_quality.setValue(this.woServer.item.pt_rev);
-        controls.product_Cyl.setValue(this.woServer.item.pt_group);
+        // controls.product_type.setValue(this.woServer.item.pt_article);
+        // controls.product_color.setValue(this.woServer.item.pt_break_cat);
+        // controls.product_quality.setValue(this.woServer.item.pt_rev);
+        // controls.product_Cyl.setValue(this.woServer.item.pt_group);
 
         
         this.product = this.woServer.item;
@@ -2036,17 +2056,37 @@ wo_bo_chg:[this.workOrder.wo_bo_chg],
   }
 
   handleSelectedRowsChangedgamme(e, args) {
+    const input = document.getElementById('lanch') as HTMLInputElement | null;
+
     const controls = this.woForm.controls;
     if (Array.isArray(args.rows) && this.gridObjgamme) {
       args.rows.map((idx) => {
         const item = this.gridObjgamme.getDataItem(idx);
         console.log(item);
+        // this.it = item.item
+        // console.log(this.it)
         controls.wo_routing.setValue(item.ro_routing || "");
         this.gamme = item.ro_routing
-        this.workOrderService.getByOne({ wo_status: "R", wo_routing: this.gamme }).subscribe((response: any) => {
+        this.workOrderService.getWoRo({ wo_status: "R", wo_routing: this.gamme }).subscribe((response: any) => {
            console.log(response.data)
+           this.it = response.data
+           if (response.data.wo_status == "R" && response.data != null) {
+            input?.setAttribute('disabled', '');
+           }
          controls.wo_lot.setValue(response.data.wo_lot)
+         controls.wo_nbr.setValue(response.data.wo_nbr)
          controls.desc.setValue(response.data.item.pt_desc1)
+         controls.wo_vend.setValue(response.data.wo_vend)
+         controls.wo_part.setValue(response.data.wo_part);
+         // controls.tr_so_job.setValue(item.wo_so_job);
+     
+      
+         controls.total_bobine.setValue(response.data.wo_qty_comp);
+         
+         controls.rest_bobine.setValue(response.data.wo_qty_ord - response.data.wo_qty_comp);
+         controls.wo_qty_ord.setValue(response.data.wo_qty_ord)
+        
+
          this.imageUrl = API_URL + response.data.item.pt_drwg_loc
          const element = document.getElementById('myImage');
 
@@ -2054,7 +2094,11 @@ wo_bo_chg:[this.workOrder.wo_bo_chg],
              element.src = this.imageUrl; // TypeScript knows it has 'src' here
          }
           // this.wos = response.data;
-
+          this.bomService.getByOne({bom_parent:this.it.wo_bom_code}).subscribe((response: any)=>{
+            console.log(response.data)
+            if(response.data) {
+             this.batch = (response.data.bom_batch); }else {this.batch = 1}
+            })
         });
 
       });
@@ -2476,8 +2520,10 @@ printpal(){
                                     });
                                     console.log(this.trdataset);
                                     this.addTR(this.trdataset, _tr);
+                                  //   let element: HTMLElement = document.getElementById("openCartonGrid") as HTMLElement;
+                                  //  element.click();
                                     this.labelService.addblob(_lb).subscribe((blob) => {
-                                      Edelweiss2.print3(lab);
+                                       Edelweiss2.print3(lab);
                                     });
                                   },
                                   (error) => {
@@ -3252,6 +3298,138 @@ this.ordre = "OF-" + item.wo_queue_eff;
 
     this.printpdf(controls.wo_nbr.value); 
   }
+
+  onLanch() {
+
+    const controls = this.woForm.controls;
+    let _wod = new WorkOrderDetail();
+    _wod.wod_nbr = controls.wo_nbr.value
+    _wod.wod_lot = controls.wo_lot.value
+    _wod.wod__qadt01 = controls.wo_ord_date.value
+    ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
+    : null
+    this.sequenceService.getByOne({ seq_type: "LP", seq_profile: this.user.usrd_profile }).subscribe(
+      (response: any) => {
+    this.seq = response.data
+    console.log(this.seq)   
+        if (this.seq) {
+         this.lpnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+         console.log(this.seq.seq_prefix)
+         console.log(this.seq.seq_curr_val)
+         
+        console.log(this.lpnbr)
+         const id = Number(this.seq.id)
+      let obj = { }
+      obj = {
+        seq_curr_val: Number(this.seq.seq_curr_val )+1
+      }
+      this.sequenceService.update(id , obj ).subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.message = "Erreur modification Sequence";
+          this.hasFormErrors = true;
+          return;
+     
+        
+        },
+        )
+
+/**/
+const ps_parent = this.it.wo_bom_code;
+
+this.psService.getBy({ps_parent}).subscribe((response: any)=>{
+        
+  this.details  = response.data;
+
+  console.log(this.details);
+
+  //for (var object = 0; object < this.details.length; object++) {
+  // console.log(this.details[object]);
+    // const detail = this.details[object];
+    this.detail = []
+    let i = 1
+    for (let object of this.details) {  
+      // this.ld_qty = 0;
+      // this.locationDetailService.getBy({ld_part: object.ps_comp}).subscribe(
+      //   (reponse: any) => { this.ld_qty = this.ld_qty + reponse.ld_qty_oh})
+    var qty = Number(object.ps_qty_per) * Number (controls.wo_qty_ord.value) / Number(this.batch) ;
+    console.log(qty)
+        this.detail.push(
+          {
+
+            id: i,
+            wod_line: i,
+            wod_part: object.ps_comp,
+            desc: object.item.pt_desc1,
+            wod_um: object.item.pt_um,
+            wod_qty_req: qty,
+            // qty_oh: this.ld_qty,
+            wod_site: controls.wo_site.value,
+            wod_loc: object.item.pt_loc,
+            
+          }
+        );
+        i++
+      }
+      console.log("this.detail",this.detail)
+      this.addIt( _wod,this.detail, this.lpnbr);
+  /**/
+  
+
+    })
+  
+       
+    
+      }else {
+        this.message = "Parametrage Manquant pour la sequence";
+        this.hasFormErrors = true;
+        return;
+   
+       }
+
+   
+  })
+
+}
+addIt( _wod: any, detail: any , lpnbr) {
+  console.log("kamel",detail)
+  for (let data of detail) {
+    delete data.id;
+ //   delete this.dataset[data].cmvid;
+  }
+  this.loadingSubject.next(true);
+  
+  const controls = this.woForm.controls
+ 
+  this.workOrderDetailService
+    .add({ _wod, detail,lpnbr})
+    .subscribe(
+     (reponse: any) => ( _wod = reponse.data),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+        const input = document.getElementById('lanch') as HTMLInputElement | null;
+        input?.setAttribute('disabled', '');
+     
+      }
+    );
+}
   printpdf(nbr) {
       // const controls = this.totForm.controls
       const controls = this.woForm.controls;
@@ -3733,4 +3911,23 @@ this.ordre = "OF-" + item.wo_queue_eff;
   //   window.open(URL.createObjectURL(blob));
     
   // } 
+
+
+
+  opencarton(content) {
+ 
+      // Few necessary setting options
+      const imgWidth = 208; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      this.modalService.open(content)
+      // Default export is a4 paper, portrait, using millimeters (mm)
+      let doc = new jsPDF('p', 'mm', 'a4'); 
+      var position = 0;
+      // pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
+      var blob = doc.output("blob");
+      window.open(URL.createObjectURL(blob));
+      
+  }
+  
+  
 }

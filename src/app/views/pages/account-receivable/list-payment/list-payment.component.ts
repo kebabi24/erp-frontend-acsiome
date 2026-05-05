@@ -211,6 +211,14 @@ role:any[]
           type: FieldType.string,
         },
         {
+          id: "ar_effdate",
+          name: "Date Effet",
+          field: "ar_effdate",
+          sortable: true,
+          filterable: true,
+          type: FieldType.date,
+        },
+        {
           id: "ar_curr",
           name: "Devise",
           field: "ar_curr",
@@ -266,7 +274,7 @@ role:any[]
         {
           id: "ar_amt",
           name: "Montant",
-          field: "ar_amt",
+          field: "aramt",
           sortable: true,
           filterable: true,
           type: FieldType.float,
@@ -274,7 +282,7 @@ role:any[]
         {
           id: "ar_applied",
           name: "Montant Applique",
-          field: "ar_applied",
+          field: "arapplied",
           sortable: true,
           filterable: true,
           type: FieldType.float,
@@ -282,17 +290,19 @@ role:any[]
         {
           id: "ar_base_amt",
           name: "Montant Devise",
-          field: "ar_base_amt",
+          field: "arbase_amt",
           sortable: true,
           filterable: true,
+          formatter:Formatters.decimal,
           type: FieldType.float,
         },
         {
           id: "ar_base_applied",
           name: "Montant Applique Devise",
-          field: "ar_base_applied",
+          field: "arbase_applied",
           sortable: true,
           filterable: true,
+          formatter:Formatters.decimal,
           type: FieldType.float,
         },
         {
@@ -343,7 +353,7 @@ role:any[]
         formatterOptions: {
         
           // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-          displayNegativeNumberWithParentheses: true,
+          displayNegativeNumberWithParentheses: false,
     
           // Defaults to undefined, minimum number of decimals
           minDecimal: 2,

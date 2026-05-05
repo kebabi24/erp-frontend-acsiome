@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core"
 import {
   Formatter,
+  GridService,
   Editor,
   Editors,
   OnEventArgs,
@@ -58,12 +59,15 @@ export class ListVendorPaymentComponent implements OnInit {
   draggableGroupingPluginp: any;
   
   selectedGroupingFieldsp: Array<string | GroupingGetterFunction> = ['', '', ''];
-  columnDefinitions: Column[] = []
-  gridOptions: GridOption = {}
-  dataset: any[] = []
-  dataView: any;
   
-  angularGrid: AngularGridInstance;
+  mvangularGrid: AngularGridInstance;
+  mvgrid: any;
+  mvgridService: GridService;
+  mvdataView: any;
+  mvcolumnDefinitions: Column[];
+  mvgridOptions: GridOption;
+  mvdataset: any[];
+
 
   
   gridObj: any;
@@ -95,15 +99,28 @@ export class ListVendorPaymentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
-    this.loadingSubject.next(false);
+    this.loadingSubject.next(true);
     this.user =  JSON.parse(localStorage.getItem('user'))
-    
     this.domain = JSON.parse(localStorage.getItem("domain"));
-    console.log(this.user)
     this.createForm();
-    this.prepareGrid()
+    this.initmvGrid();
+    //this.initGrid();
     this.solist();
   }
+
+  handleSelectedRowsChanged(e, args) {
+    const controls = this.soForm.controls;
+      if (Array.isArray(args.rows) && this.mvgrid) {
+      args.rows.map((idx) => {
+        const item = this.mvgrid.getDataItem(idx);
+        console.log(item);
+        
+       const invoicecode = item.invoice_code 
+       
+      })
+    }
+  }
+   
 
   createForm() {
     this.loadingSubject.next(false);
@@ -124,7 +141,7 @@ export class ListVendorPaymentComponent implements OnInit {
     });
   }
   solist() {
-    this.dataset = []
+    this.mvdataset = []
    
     const controls = this.soForm.controls
     const date = controls.calc_date.value
@@ -138,26 +155,27 @@ export class ListVendorPaymentComponent implements OnInit {
     let obj= {date,date1}
     this.bankService.getBKHTrBy(obj).subscribe(
       (response: any) => {   
-        this.dataset = response.data
-       console.log(this.dataset)
-       this.dataView.setItems(this.dataset);
+        this.mvdataset = response.data
+       console.log(this.mvdataset)
+       this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {
-          this.dataset = []
+          this.mvdataset = []
       },
       () => {}
   )
   }
   
-  angularGridReady(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
-    this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataView = angularGrid.dataView;
+  mvGridReady(angularGrid: AngularGridInstance) {
+    this.mvangularGrid = angularGrid;
+    this.mvdataView = angularGrid.dataView;
+    this.mvgrid = angularGrid.slickGrid;
+    this.mvgridService = angularGrid.gridService;
   }
-  prepareGrid() {
+  initmvGrid() {
 
-      this.columnDefinitions = [
+      this.mvcolumnDefinitions = [
           {
             id: "id",
             field: "id",
@@ -508,7 +526,7 @@ export class ListVendorPaymentComponent implements OnInit {
                             this.roleService.getByOne({ role_code: this.tr.chr01 }).subscribe((res: any) => {
                               this.role = res.data
                             
-                            // this.printpdf()
+                             this.printpdf()
                              })
                             ),
                           (error) => {
@@ -523,7 +541,7 @@ export class ListVendorPaymentComponent implements OnInit {
 
       ]
 
-      this.gridOptions = {
+      this.mvgridOptions = {
         enableDraggableGrouping: true,
         createPreHeaderPanel: true,
         showPreHeaderPanel: true,
@@ -569,7 +587,7 @@ export class ListVendorPaymentComponent implements OnInit {
       }
 
       // fill the dataset with your data
-      this.dataset = []
+      this.mvdataset = []
 //       this.bankService.getBKHBy({bkh_type : "P"}).subscribe(
 //           (response: any) => (this.dataset = response.data),
 //           (error) => {
@@ -596,11 +614,11 @@ export class ListVendorPaymentComponent implements OnInit {
     }
     
     collapseAllGroups() {
-      this.dataView.collapseAllGroups();
+      this.mvdataView.collapseAllGroups();
     }
   
     expandAllGroups() {
-      this.dataView.expandAllGroups();
+      this.mvdataView.expandAllGroups();
     }
     clearGrouping() {
       if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {

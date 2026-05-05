@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Résultats de la visite'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'Liste des Prix'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" *ngIf="!showUpdateButton" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
             <button type="button" *ngIf="showUpdateButton" (click)="updateData()" class="btn btn-success btn-sm mr-2">Mettre à jour </button>
@@ -22,11 +22,14 @@
             </div>
             
             <form [formGroup]="priceListForm" class="form">
-                <div class="row mb-2">
+            
+                <div class="row">
                     <!-- CODE POPULATION -->
-                    <div class=" form-group col-4">
+                    <div class="form-group col-2">
                       <!-- <span >Code paramètre:</span> -->
-                          <label class="form-group" id="code" >code liste de prix:</label>
+                     
+                          <label class="form-group" id="code" >Code Liste de prix:</label>
+                          <div class="input-group input-group-sm">
                           <input 
                           
                           type="text"
@@ -34,12 +37,19 @@
                           formControlName="pricelist_code"
                           (change) = "onChangeCode()"
                           >
-                          
+                          <div class="input-group-append">
+                            <span class="input-group-text" (click)="open(content)">
+                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                          </div>
+                      </div>
                           <!-- <div *ngIf="populationForm.controls['pricelist_code'].errors && (populationForm.controls['pricelist_code'].dirty || populationForm.controls['pricelist_code'].touched)"
                           class="invalid-feedback">Ce Champs est obligatoire</div> -->
     
                     </div>
                 </div>
+                <div class="row">
+                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un Article</button>
+                  </div>
             </form>
            
 
@@ -50,23 +60,65 @@
             <br><br>
 
             <!-- GRID -->
-            <div class="row"> 
-                <angular-slickgrid class="col-12" 
-                    gridId="grid" 
-                    [columnDefinitions]="columnDefinitions"
-                    (onAngularGridCreated)="angularGridReady($event)"
-                    
-                    [gridOptions]="gridOptions" 
-                    [dataset]="products"
-                    >
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                    [gridOptions]="gridOptions" [dataset]="products">
                 </angular-slickgrid>
-        </div>
-       
+            </div>
         </div>
         
         
-    
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Liste</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpos"
+                            [columnDefinitions]="columnDefinitionsl" (onAngularGridCreated)="angularGridReadyl($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedl($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsl" [dataset]="listes">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        
+        </div>
             
-
+        <div>
+            <ng-template #content4 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Service</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="items">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
+    
+        </div>
     </kt-portlet-body>
 </kt-portlet>

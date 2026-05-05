@@ -54,8 +54,18 @@ export class PriceListComponent implements OnInit {
 
   priceListForm: FormGroup;
 
+  listes: [];
+  columnDefinitionsl: Column[] = [];
+  gridOptionsl: GridOption = {};
+  gridObjl: any;
+  angularGridl: AngularGridInstance;
 
-
+  items: []
+  columnDefinitions4: Column[] = []
+  gridOptions4: GridOption = {}
+  gridObj4: any
+  angularGrid4: AngularGridInstance
+row_number;
   constructor(
     config: NgbDropdownConfig,
         private serviceF : FormBuilder,
@@ -184,7 +194,7 @@ angularGridReady(angularGrid: AngularGridInstance) {
   this.angularGrid = angularGrid;
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
-
+    this.gridService = angularGrid.gridService;
     // if you want to change background color of Duration over 50 right after page load,
     // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
     this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
@@ -228,6 +238,50 @@ updateData(){
       returnprice: parseFloat(prod.returnprice),
     })
   });
+  console.log(data)
+  this.mobileSettingsService.updatePriceList(
+    data
+     ).subscribe(
+     (response: any) => {
+      this.resetData()
+      this.createPriceListForm()
+     },
+     (error) => {
+         console.log(error)
+     },
+     () => {
+      this.layoutUtilsService.showActionNotification(
+        "Mise à jour avec succès",
+        MessageType.Create,
+        10000,
+        true,
+        true
+      );
+      this.createPriceListForm()
+      this.itemService.getAll().subscribe(
+        (response: any) => {
+          this.products = response.data
+          this.products.forEach(prod => {
+    
+            prod.salesprice = 0 
+            prod.pt_desc1 = prod.pt_desc1,
+            // pt_desc1 : prod.item.pt_desc1,
+            prod.pt_um = prod.pt_um,
+            prod.pt_part_type = prod.pt_part_type,
+            prod.pt_draw = prod.pt_draw,
+            prod.returnprice = 0 
+            prod.description  = "" 
+          });
+          this.dataView.setItems(this.products)
+        },
+        (error) => {
+            this.products = []
+        },
+        () => {}
+      )
+      this.loadingSubject.next(false);
+    }
+   )
 }
 
 
@@ -239,6 +293,11 @@ prepareGrid() {
       this.products.forEach(prod => {
 
         prod.salesprice = 0 
+        prod.pt_desc1 = prod.pt_desc1,
+        // pt_desc1 : prod.item.pt_desc1,
+        prod.pt_um = prod.pt_um,
+        prod.pt_part_type = prod.pt_part_type,
+        prod.pt_draw = prod.pt_draw,
         prod.returnprice = 0 
         prod.description  = "" 
       });
@@ -250,7 +309,20 @@ prepareGrid() {
     () => {}
   )
 
-    this.columnDefinitions = this.columnDefinitions = [      
+   this.columnDefinitions = [     
+    {
+      id: "id",
+      field: "id",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          this.angularGrid.gridService.deleteItem(args.dataContext);
+        }
+      },
+    }, 
       {
           id: "id",
           name: "id",
@@ -266,10 +338,13 @@ prepareGrid() {
           sortable: true,
           filterable: true,
           type: FieldType.string,
+          editor: {
+            model: Editors.text,
+          },
       },
       {
           id: "pt_desc1",
-          name: "Deescription",
+          name: "Description",
           field: "pt_desc1",
           sortable: true,
           filterable: true,
@@ -309,7 +384,7 @@ prepareGrid() {
         filterable: true,
         type: FieldType.string,
         editor: { 
-          model: Editors.integer,
+          model: Editors.text,
         },
       },
 
@@ -320,8 +395,11 @@ prepareGrid() {
         sortable: true,
         filterable: true,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
         editor: {
           model: Editors.float,
+          params: { decimalPlaces: 2 },
         },
       },
 
@@ -332,8 +410,11 @@ prepareGrid() {
         sortable: true,
         filterable: true,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
         editor: {
           model: Editors.float,
+          params: { decimalPlaces: 2 },
         },
       },
       
@@ -343,32 +424,75 @@ prepareGrid() {
 
       this.gridOptions = {
         autoHeight:false,
-        asyncEditorLoading: false,
         editable: true,
         enableAutoResize:true,
-        enableAddRow:true,
-        enableColumnPicker: true,
         enableCellNavigation: true,
         enableRowSelection: true,
         enableCheckboxSelector: true,
         rowSelectionOptions: {
-          selectActiveRow: false
+          selectActiveRow: true
         },
-        checkboxSelector: {
-          hideSelectAllCheckbox: true,
+        
+        formatterOptions: {
+        
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
         },
+       /* presets: {
+          sorters: [
+            { columnId: 'psh_line', direction: 'ASC' }
+          ],
+        },*/
+      
       };
 }
 
-
+addNewItem() {
+  const maxId = Math.max(...this.oldProductsForGrid.map(item => item.id));
+  console.log('MaxId',maxId)
+  this.gridService.addItem(
+    {
+      id: maxId + 1,
+      pt_part : null, 
+      pt_desc1 : null,
+      pt_um :null,
+      pt_part_type: null,
+      pt_draw: null,
+      description : null,
+      salesprice : null, 
+      returnprice: null
+      
+    },
+    { position: "bottom" }
+  );
+  this.row_number = this.oldProductsForGrid.length - 1;
+  console.log(this.row_number)
+  console.log(this.oldProductsForGrid.length)
+        // this.row_number = args.row
+        let element: HTMLElement = document.getElementById(
+          "openItemsGrid"
+      ) as HTMLElement
+      element.click()
+}
 onUpdatePriceList(){
   this.showUpdateButton = true
   this.isExist = false
   this.oldProductsForGrid = []
   this.oldProducts.forEach(prod => {
+    console.log("prod",prod.item)
     this.oldProductsForGrid.push({
       id : prod.id,
       pt_part : prod.product_code, 
+      pt_desc1 : prod.item.pt_desc1,
+      pt_um :prod.item.pt_um,
+      pt_part_type: prod.item.pt_part_type,
+      pt_draw: prod.item.pt_draw,
       description : prod.description,
       salesprice : prod.salesprice, 
       returnprice: prod.returnprice
@@ -378,5 +502,181 @@ onUpdatePriceList(){
   this.dataView.setItems(this.oldProductsForGrid)
 }
 
+
+handleSelectedRowsChangedl(e, args) {
+  const controls = this.priceListForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjl) {
+    args.rows.map((idx) => {
+      const item = this.gridObjl.getDataItem(idx);
+      controls.pricelist_code.setValue(item.pricelist_code || "");
+      this.onChangeCode()
+    });
+  }
+}
+
+angularGridReadyl(angularGrid: AngularGridInstance) {
+  this.angularGridl = angularGrid;
+  this.gridObjl = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridl() {
+  this.columnDefinitionsl = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "pricelist_code",
+      name: "Code",
+      field: "pricelist_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "designation",
+      name: "Designation",
+      field: "designation",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionsl = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.mobileSettingsService
+    .getAllPriceList()
+    .subscribe((response: any) => (this.listes = response.data));
+}
+open(content) {
+  this.prepareGridl();
+  this.modalService.open(content, { size: "lg" });
+}
+
+handleSelectedRowsChanged4(e, args) {
+  let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  
+  if (Array.isArray(args.rows) && this.gridObj4) {
+    args.rows.map((idx) => {
+      const item = this.gridObj4.getDataItem(idx);
+      console.log(item);
+      updateItem.pt_part = item.pt_part, 
+      updateItem.pt_desc1 = item.pt_desc1,
+      updateItem.pt_um = item.pt_um,
+      updateItem.pt_part_type = item.pt_part_type,
+      updateItem.pt_draw = item.pt_draw,
+      updateItem.description = this.oldProductsForGrid[0].description,
+      updateItem.salesprice = 0, 
+      updateItem.returnprice= 0
+      this.gridService.updateItem(updateItem);
+     
+    });
+  }
+}
+angularGridReady4(angularGrid: AngularGridInstance) {
+  this.angularGrid4 = angularGrid
+  this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+
+prepareGrid4() {
+  this.columnDefinitions4 = [
+    {
+      id: "pt_part",
+      name: "code ",
+      field: "pt_part",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "pt_desc1",
+      name: "desc",
+      field: "pt_desc1",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "pt_um",
+      name: "desc",
+      field: "pt_um",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ]
+
+  this.gridOptions4 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your 
+  const pt_part =[]
+  this.oldProductsForGrid.forEach(prod => {
+    if(prod.pt_part != null) {
+pt_part.push(prod.pt_part)
+    }
+
+  })
+  console.log(pt_part)
+  console.log(this.oldProductsForGrid)
+  this.itemService
+      .getByNot({pt_part })
+      .subscribe((response: any) => (this.items = response.data))
+}
+open4(content) {
+ 
+  this.prepareGrid4()
+  this.modalService.open(content, { size: "lg" })
+}
 
 }

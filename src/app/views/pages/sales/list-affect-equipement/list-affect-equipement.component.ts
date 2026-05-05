@@ -292,12 +292,22 @@ export class ListAffectEquipementComponent implements OnInit {
       },
       {
         id: "ae_eqp_nbr",
-        name: "N° Série",
+        name: "Nombre",
         field: "ae_eqp_nbr",
         sortable: true,
         filterable: true,
-        type: FieldType.text,
+        type: FieldType.integer,
        
+      },
+      {
+        id: "ae_amt_un",
+        name: "Prix UN",
+        field: "ae_amt_un",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "ae_amt",

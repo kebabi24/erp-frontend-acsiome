@@ -486,7 +486,7 @@ banks: [];
      
       const bank = controls.bank.value
       let obj= {bank,date,date1}
-      this.affectEquipementService.getAllPaymentBy(obj).subscribe(
+      this.affectEquipementService.getAllCautionsBy(obj).subscribe(
         (response: any) => {   
           this.mvdataset = response.data
           console.log(this.mvdataset)
@@ -647,7 +647,7 @@ banks: [];
       doc.text("Date Fin      : " + date1, 110, 50);
   
       doc.setFontSize(10);
-      doc.line(5, 55, 205, 55);
+      
       doc.line(5, 55, 205, 55);
       doc.line(5, 55, 205, 55);
       doc.line(5, 60, 205, 60);
@@ -655,13 +655,13 @@ banks: [];
       doc.text("Code Cient", 7.5, 58.5);
       doc.line(27, 55, 27, 60);
       doc.text("Nom Client", 40, 58.5);
-      doc.line(130, 55, 1300, 60);
-      doc.text("Date", 132, 58.5);
+      doc.line(120, 55, 120, 60);
+      doc.text("Date", 122, 58.5);
       doc.line(145, 55, 145, 60);
-      doc.text("Mode Paiement", 147, 58.5);
+      doc.text("Méthode", 147, 58.5);
      
-      doc.line(155, 55, 155, 60);
-      doc.text("Montant", 160, 58.5);
+      doc.line(165, 55, 165, 60);
+      doc.text("Montant", 175, 58.5);
       doc.line(205, 55, 205, 60);
          
      
@@ -671,7 +671,7 @@ banks: [];
       let encaisse = 0
       let credits = 0
       for (let j = 0; j < data.length; j++) {
-        let mts =  String(  Number(0 - data[j].bkh_amt).toLocaleString("en-US", {
+        let mts =  String(  Number( data[j].bkh_amt).toLocaleString("en-US", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }))
@@ -701,21 +701,22 @@ banks: [];
           
           doc.setFontSize(10);
           doc.line(5, 55, 205, 55);
-      doc.line(5, 55, 205, 55);
-      doc.line(5, 55, 205, 55);
-      doc.line(5, 60, 205, 60);
-      doc.line(5, 55, 5, 60);
-      doc.text("Code Cient", 7.5, 58.5);
-      doc.line(27, 55, 27, 60);
-      doc.text("Nom Client", 40, 58.5);
-      doc.line(130, 55, 1300, 60);
-      doc.text("Date", 132, 58.5);
-      doc.line(145, 55, 145, 60);
-      doc.text("Mode Paiement", 147, 58.5);
+          doc.line(5, 55, 205, 55);
+          doc.line(5, 55, 205, 55);
+          doc.line(5, 60, 205, 60);
+          doc.line(5, 55, 5, 60);
+          doc.text("Code Cient", 7.5, 58.5);
+          doc.line(27, 55, 27, 60);
+          doc.text("Nom Client", 40, 58.5);
+          doc.line(120, 55, 120, 60);
+          doc.text("Date", 122, 58.5);
+          doc.line(145, 55, 145, 60);
+          doc.text("Méthode", 147, 58.5);
      
-      doc.line(155, 55, 155, 60);
-      doc.text("Montant", 160, 58.5);
-      doc.line(205, 55, 205, 60);
+          doc.line(165, 55, 165, 60);
+          doc.text("Montant", 175, 58.5);
+          doc.line(205, 55, 205, 60);
+             
          
                      
           i = 65;
@@ -727,11 +728,11 @@ banks: [];
           doc.text(data[j].bkh_addr, 7, i - 1);
           doc.line(27, i - 5, 27, i);
           doc.text(String(data[j].chr02), 29, i - 1);
-          doc.line(130, i - 5, 130, i);
-          doc.text(data[j].bkh_effdate, 132, i - 1);
+          doc.line(120, i - 5, 120, i);
+          doc.text(data[j].bkh_effdate, 122, i - 1);
           doc.line(145, i - 5, 145, i);
-          doc.text(data[j].bkh_terms, 104, i - 1);
-          doc.line(155, i - 5, 155, i);
+        if(data[j].chr03 != null) {  doc.text(data[j].chr03, 147, i - 1) } else {doc.text("", 147, i - 1) };
+          doc.line(165, i - 5, 165, i);
           doc.text(mnt, 203, i - 1,{ align: "right" });
           doc.line(205, i - 5, 205, i);
           
@@ -742,21 +743,21 @@ banks: [];
   
         //  doc.line(30, i-5, 110, i-5);
   
-         let tt =  String(  Number(0 - total).toLocaleString("en-US", {
+         let tt =  String(  Number(total).toLocaleString("en-US", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }))
         let ttc = replaceAll(tt,","," ")
   
          
-         doc.line(130, i - 5, 130, i);
+         doc.line(120, i - 5, 120, i);
          
           // doc.line(40, i - 5, 40, i);
           doc.text("Totaux", 143, i - 1,{ align: "right" });
           doc.line(145, i - 5, 145, i);
           doc.text(ttc, 203, i - 1,{ align: "right" });
           doc.line(205, i - 5, 205, i);
-          doc.line(130, i, 205, i);
+          doc.line(120, i, 205, i);
           i = i + 5;
   
   

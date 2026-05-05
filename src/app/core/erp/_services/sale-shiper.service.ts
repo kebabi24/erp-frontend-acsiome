@@ -24,6 +24,10 @@ export class SaleShiperService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
+    public addPlq(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+"/plq", data, { headers: httpHeaders })
+    }
 
     // READ
     public findBy(data: any) {

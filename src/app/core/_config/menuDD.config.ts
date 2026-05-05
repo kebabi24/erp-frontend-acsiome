@@ -122,6 +122,10 @@ export class MenuDDConfig {
                 title: "Liste Soldes clients",
                 page: "/customers/customers-solde",
               },
+              {
+                title: "Importer Client Mobile",
+                page: "/customers/import-cust-mobile",
+              },
             ],
           },
           {
@@ -271,6 +275,23 @@ export class MenuDDConfig {
                 title: "Export Demande Chargement",
                 page: "/supervision/export-lr",
               },
+
+              // {
+              //   title: "Exportation Factures Préstigieux",
+              //   page: "/sales/export-invoice-ih",
+              // },
+              // {
+              //   title: "Liste des Commandes",
+              //   page: "/sales/list-so-edit",
+              // },
+              // {
+              //   title: "Génération BL",
+              //   page: "/sales/create-psh",
+              // },
+              // {
+              //   title: "Facturation",
+              //   page: "/sales/create-invoice-ih",
+              // },
               // {
               //   title: "Service roadmap",
               //   page: "/supervision/dashboard-service",
@@ -511,6 +532,10 @@ export class MenuDDConfig {
                 page: "/sales/affect-equipement",
               },
               {
+                title: "Affectation des Equipements Clients Gros",
+                page: "/sales/affect-equip-gros",
+              },
+              {
                 title: "Listes des Affectations des Equipements",
                 page: "/sales/list-affect-equipement",
               },
@@ -523,6 +548,10 @@ export class MenuDDConfig {
                 title: "Listes des Paiements des Equipements",
                 page: "/account-receivable/list-caution-cust",
               },
+              {
+                title: "Solde Client  Des Equipements",
+                page: "/account-receivable/edit-solde-equipement",
+              },
              
             ],
           },
@@ -533,38 +562,73 @@ export class MenuDDConfig {
             icon: "flaticon2-delivery-package",
             submenu: [
               {
+                title: "Devis Clients",
+                page: "/sales/create-quote",
+              },
+              {
                 title: "Commande Clients",
                 page: "/sales/create-so-bc",
               },
               {
                 title: "Liste des Commandes",
-                page: "/sales/so-list",
+                page: "/sales/list-so-edit",
+              },
+              {
+                title: "Génération BL",
+                page: "/sales/create-psh",
               },
               {
                 title: "Liste des BLS",
                 page: "/sales/list-psh",
               },
               {
-                title: "Facturation ",
-                page: "/sales/create-invoice",
+                title: "Facturation",
+                page: "/sales/create-invoice-ih",
               },
               {
-                title: "Avoir sur Facture",
-                page: "/sales/undo-invoice",
+                title: "Imputation Facture DD  ",
+                page: "/sales/create-accounting-inv",
               },
               {
                 title: "Réimpression Facture ",
                 page: "/sales/reprint-invoice",
               },
               {
-                title: "Liste des Factures",
-                page: "/sales/list-invoices",
+                title: "Avoir sur Facture",
+                page: "/sales/undo-invoice",
               },
-              
               {
-                title: "Ajouter Facture DD",
-                page: "/sales/create-inv-mob",
+                title: "Exportation Factures Préstigieux",
+                page: "/sales/export-invoice-ih",
               },
+              {
+                title: "Ajouter Facture Client",
+                page: "/sales/create-direct-so-seq",
+              },
+              {
+                title: "Impression Facture ",
+                page: "/sales/print-invoice-seq",
+              },
+             
+              {
+                title: "Liste des Factures",
+                page: "/sales/list-invoices-detail",
+              },
+              {
+                title: "Liste des Ventes ",
+                page: "/sales/list-sales-inv",
+              },
+             
+             
+              // {
+              //   title: "Liste des Factures",
+              //   page: "/sales/list-invoices-details",
+              // },
+              
+              // {
+              //   title: "Ajouter Facture DD",
+              //   page: "/sales/create-inv-mob",
+              // },
               
               {
                 title: "Liste des Factures DD",
@@ -606,10 +670,7 @@ export class MenuDDConfig {
                 title: "Liste CA Par Type",
                 page: "/sales/list-ca-type",
               },
-              {
-                title: "Imputation Facture DD  ",
-                page: "/sales/create-accounting-inv",
-              },
+            
               {
                 title: "Liste Factures DD Imputées ",
                 page: "/sales/list-invoice-acc",
@@ -618,6 +679,13 @@ export class MenuDDConfig {
                 title: "Liste des Ventes DD Imputées",
                 page: "/sales/list-sales-acc",
               },
+            
+              // {
+              //   title: "Liste des Commandes",
+              //   page: "/sales/list-so-edit",
+              // },
+            
+              
             ],
           },
           // {

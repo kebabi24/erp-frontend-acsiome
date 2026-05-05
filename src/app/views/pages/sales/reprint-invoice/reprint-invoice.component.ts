@@ -142,6 +142,7 @@ export class ReprintInvoiceComponent implements OnInit {
   curr: any;  
   user;
   pshnbr: String;
+  dateinv: any;
   constructor(
     config: NgbDropdownConfig,
     private ihFB: FormBuilder,
@@ -371,7 +372,8 @@ export class ReprintInvoiceComponent implements OnInit {
         ih_bill: [{value: this.invoiceOrder.ih_bill , disabled: true}],
         namebill: [{value:"", disabled: true}],
         
-        ih_inv_date: [{value:null, disabled:true}],
+        ih_inv_date: [null],
+        
         
         ih_taxable: [{value: this.invoiceOrder.ih_taxable, disabled: true}],
        
@@ -935,6 +937,14 @@ handleSelectedRowsChanged5(e, args) {
             controlss.ttc.setValue(this.soServer.ih_tot_amt)
 
             controls.ih_inv_date.setValue(String(this.soServer.ih_inv_date)|| "")
+            this.dateinv = new Date(this.soServer.ih_inv_date)
+            this.dateinv.setDate(this.dateinv.getDate() )
+          //  controls.ih_inv_date.setValue(this.dateinv)
+            // cm_cr_review: [{
+            //   year: this.dateinv.getFullYear(),
+            //   month: this.dateinv.getMonth()+1,
+            //   day: this.dateinv.getDate()
+            // }],
             controls.ih_cust.setValue(this.soServer.ih_cust|| "");
             controls.ih_bill.setValue(this.soServer.ih_bill|| "");
             controls.ih_curr.setValue(this.soServer.ih_curr|| "");
@@ -1110,10 +1120,24 @@ open5(content) {
 printpdf(nbr) {
   const controls = this.totForm.controls 
   const controlss = this.ihForm.controls 
+  const index = this.ih_cr_terms.findIndex(element =>{
+    return element.code_value == controlss.ih_cr_terms.value
+  })
+  console.log(index)
+  let terms = ""
+  if(index >= 0) { terms = this.ih_cr_terms[index].code_cmmt}
   console.log("pdf")
   var doc = new jsPDF();
- const dateinv =  controlss.ih_inv_date.value
- 
+  console.log(controlss.ih_inv_date.value)
+  //const dateinv = this.dateinv
+   const dateinvv =  String(controlss.ih_inv_date.value)
+   const y = dateinvv.substring(0,4)
+   const m = dateinvv.substring(5,7)
+   const d = dateinvv.substring(8,10)
+   const dateinv =  `${d}/${m}/${y}`
+   
+ console.log(dateinv)
+ console.log(controlss.ih_inv_date.value.day)
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
   img.src = "./assets/media/logos/company.png";
@@ -1337,10 +1361,12 @@ console.log("this.iharray[j].desc",this.iharray)
    
         doc.text( "Arretée la présente facture a la somme de :" + mt1  , 20, i + 53)
         doc.text(  mt2  , 20, i + 60)
+        doc.text('Mode Paiement : ' + terms, 20 , i+67 )
       } else {
         doc.text( "Arretée la présente facture a la somme de :" + mt  , 20, i + 53)
-
+        doc.text('Mode Paiement : ' + terms, 20 , i+60 )
       }
+     
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
     var blob = doc.output("blob");

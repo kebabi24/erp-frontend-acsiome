@@ -5,6 +5,8 @@ import {
     GridOption,
     Formatter,
     Formatters,
+    AngularGridInstance,
+    GridService,
     Editor,
     Editors,
     FieldType,
@@ -37,9 +39,22 @@ import { UsersService } from "../../../../core/erp"
 export class UsersListComponent implements OnInit {
 
   // slick grid
+  
+  // slick grid
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
+  
   dataset: any[] = []
+  draggableGroupingPlugin: any;
+  angularGrid: AngularGridInstance;
+
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+  gridObj: any;
+  dataviewObj: any;
+
+  
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -56,6 +71,16 @@ export class UsersListComponent implements OnInit {
   createCode() {
       this.router.navigateByUrl("users/create-user")
   }
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.gridObj = angularGrid.slickGrid; // grid object
+    this.dataviewObj = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
+      this.grid = angularGrid.slickGrid; // grid object
+      this.dataview = angularGrid.dataView;
+    
+  }
+
   prepareGrid() {
       this.columnDefinitions = [
           {
@@ -104,7 +129,7 @@ export class UsersListComponent implements OnInit {
          
           {
               id: "usrd_code",
-              name: "Code Profile",
+              name: "Code Utilisateur",
               field: "usrd_code",
               sortable: true,
               filterable: true,
@@ -161,7 +186,10 @@ export class UsersListComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       this.usersService.getAllUsers().subscribe(
-          (response: any) => (this.dataset = response.data),
+        (response: any) => {
+            this.dataset = response.data
+            this.dataviewObj.setItems(this.dataset)
+        },
           (error) => {
               this.dataset = []
           },

@@ -87,6 +87,7 @@ export class CreateCautionCustComponent implements OnInit {
   nbr: any
   solde:Number
   isExist:Boolean = false
+  bkh_terms: any[] = []
   constructor(
     config: NgbDropdownConfig,
     private rvFB: FormBuilder,
@@ -111,7 +112,9 @@ export class CreateCautionCustComponent implements OnInit {
     private affectEquipementService : AffectEquipementService,
 
   ) {
-    
+    this.codeService
+    .getBy({ code_fldname: "cm_cr_terms" })
+    .subscribe((response: any) => (this.bkh_terms = response.data))          
   }
 
   ngOnInit(): void {
@@ -146,7 +149,7 @@ export class CreateCautionCustComponent implements OnInit {
       customer_code : [{value:"",disabled:true}],
       customer_name : [{value:"",disabled:true}],
       equipement : [{value:"",disabled:true}],
-      montant_tr: [{value:"",disabled:true}, Validators.required],
+      montant_tr: [0, Validators.required],
       bkh_rmks : [""],
       bkh_terms: ["CODPM1", Validators.required],
       bkh_cheque: [{value:null,disabled: !this.isExist}],
@@ -217,7 +220,13 @@ controls.montant_tr.setValue(response.data.ae_amt)
     : null;
     
     console.log(controls.montant_tr.value);
-   
+    const index = this.bkh_terms.findIndex(element =>{
+      return element.code_value == controls.bkh_terms.value
+    })
+    console.log(index)
+  let terms = ""
+  if(index >= 0) { terms = this.bkh_terms[index].code_cmmt}
+  console.log(terms,index,this.bkh_terms[index])
     this.bankService.addBkhCautionDetail({
         date: new Date(),
         effdate: effdate,
@@ -233,6 +242,7 @@ controls.montant_tr.setValue(response.data.ae_amt)
         site: this.user.usrd_site,
       
         bkh_terms: controls.bkh_terms.value,
+        chr03:terms,
         bkh_cheque: Number(controls.bkh_cheque.value),
         bkh_rmks: controls.bkh_rmks.value
 

@@ -45,6 +45,10 @@ export class InvoiceOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findAll`,data, { headers: httpHeaders })
     }
+    public getByBetween(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findBetween`,data, { headers: httpHeaders })
+    }
     public getAllwithDetail(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/allwithdetail', data,{ headers: httpHeaders })

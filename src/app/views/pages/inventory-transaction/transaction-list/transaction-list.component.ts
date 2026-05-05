@@ -621,18 +621,18 @@ export class TransactionListComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
           
-            filter: {
+            // filter: {
 
               
-              // collectionAsync: this.elem,
-              collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+            //   // collectionAsync: this.elem,
+            //   collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
            
-              model: Filters.multipleSelect , operator: OperatorType.inContains
+            //   model: Filters.multipleSelect , operator: OperatorType.inContains
              
               
               
-             },
-            //filter: {model: Filters.multipleSelect , operator: OperatorType.contains },
+            //  },
+            // //filter: {model: Filters.multipleSelect , operator: OperatorType.contains },
             grouping: {
               getter: 'tr_type',
               formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
