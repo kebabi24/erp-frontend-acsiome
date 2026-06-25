@@ -26,7 +26,7 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import { Code, CodeService } from "../../../../core/erp"
-@Component({
+@Component({ 
   selector: 'kt-provider-settings-edit',
   templateUrl: './provider-settings-edit.component.html',
   styleUrls: ['./provider-settings-edit.component.scss']

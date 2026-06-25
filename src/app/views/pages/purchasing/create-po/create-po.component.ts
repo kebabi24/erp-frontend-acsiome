@@ -61,6 +61,7 @@ import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 import { Console } from "console";
+import { F } from "@angular/cdk/keycodes";
 
 
 @Component({
@@ -159,6 +160,7 @@ error = false;
   po_cr_terms: any[] = [];
   domain : any;
   prov:any;
+  isExistc = true;
   constructor(
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
@@ -676,6 +678,8 @@ console.log(this.vpServer)
                     this.prov = resprov.data
                     console.log("this.provider", this.provider)
                     controls.po_taxable.setValue(this.provider.ad_taxable)
+                    if(this.prov.vd_type == 'C'){console.log(this.prov.vd_type),this.isExistc = false, controls.po_taxable.enable() }
+                    else{this.isExistc = true, controls.po_taxable.disable()}
                     controls.po_taxc.setValue(this.provider.ad_taxc)
                     controls.po_cr_terms.setValue(this.vpServer.vp_pay_meth || "");
                   this.deviseService.getBy({cu_curr:this.prov.vd_curr}).subscribe((resc:any)=>{  
@@ -781,7 +785,7 @@ console.log(this.vpServer)
         day: date.getDate()
       }],
       
-      po_taxable: [this.purchaseOrder.po_taxable],
+      po_taxable: [{value:this.purchaseOrder.po_taxable,disabled: this.isExistc}],
       po_taxc: [this.purchaseOrder.po_taxc],
       po_buyer: [this.purchaseOrder.po_buyer],
       po_req_id: [this.purchaseOrder.po_req_id],
@@ -1189,6 +1193,8 @@ changeTax(){
             this.error = true;
           } else {
             this.error = false;
+            if(data.vd_type == 'C'){this.isExistc = true, controls.po_taxable.enable() }
+            else{this.isExistc = true,controls.po_taxable.disable()}
             controls.po_vend.setValue(data.vd_addr || "");
             controls.po_curr.setValue(data.vd_curr || "");
             controls.po_taxable.setValue(data.address.ad_taxable || "");
@@ -1265,6 +1271,8 @@ changeTax(){
   
 
         this.provider = item.address;
+        if(item.vd_type == 'C'){this.isExistc = false, controls.po_taxable.enable() }
+        else{this.isExistc = true, controls.po_taxable.disable()}
         controls.po_vend.setValue(item.vd_addr || "");
         controls.po_curr.setValue(item.vd_curr || "");
         controls.po_taxable.setValue(item.address.ad_taxable || false);

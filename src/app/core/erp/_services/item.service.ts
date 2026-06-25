@@ -28,6 +28,12 @@ export class ItemService {
         const headers = { "Content-Type": "multipart/form-data" }; // Set the Content-Type header to multipart/form-data
         return this.http.post(API_URL, data);
     }
+    public alter(data: any) {
+        // const httpHeaders = this.httpUtils.getHTTPHeaders()
+        // return this.http.post(API_URL, item, { headers: httpHeaders })
+        const headers = { "Content-Type": "multipart/form-data" }; // Set the Content-Type header to multipart/form-data
+        return this.http.post(API_URL+'/alter', data);
+    }
     public adddetail(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/detail', data, { headers: httpHeaders })
@@ -81,6 +87,9 @@ export class ItemService {
     public getByNot(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findnot`,data, { headers: httpHeaders })
+    public getByseq(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findseq`,data, { headers: httpHeaders })
 
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         

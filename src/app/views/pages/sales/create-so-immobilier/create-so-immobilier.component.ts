@@ -915,7 +915,7 @@ export class CreateSoImmobilierComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         console.log(this.dataset);
-        if (controls.print.value == true) {this.printpdf(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
+        // if (controls.print.value == true) {this.printpdf(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
         this.router.navigateByUrl("/");
       }
     );

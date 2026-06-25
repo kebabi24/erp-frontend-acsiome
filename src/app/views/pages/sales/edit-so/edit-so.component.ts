@@ -162,7 +162,7 @@ mt:any;
   price: Number;
   disc: Number;
   taxable: Boolean;
-  
+  soo: any
   date1: any;
   date2: any;
   title: String = 'Modifier Commande - '
@@ -732,6 +732,7 @@ mt:any;
         this.saleOrderService.getOne(id).subscribe((response: any)=>{
           this.soEdit = response.data.saleOrder
           this.ov_amt = this.soEdit.so_prepaid
+          this.soo = response.data
 this.soEdit.so_prepaid = Number(this.soEdit.so_amt) + Number(this.soEdit.so_tax_amt) + Number(this.soEdit.so_trl3_amt) - Number(this.soEdit.so_prepaid)
 this.solde = Number(this.soEdit.so_amt) + Number(this.soEdit.so_tax_amt) + Number(this.soEdit.so_trl3_amt) - Number(this.soEdit.so_prepaid)
           this.nom     = this.soEdit.so_cust
@@ -972,10 +973,18 @@ initCode() {
             //   if(controls.so_cr_terms.value == 'CI'){this.nom = controls.so_bank.value}
             //   else{this.nom = null}
               
+<<<<<<< HEAD
             // }
             // else{this.nom = 'FNPOS'}
             this.printpdf(this.soEdit.so_nbr)} 
          this.router.navigateByUrl("/sales/list-so-edit");
+=======
+            }
+            else{this.nom = 'FNPOS'}
+            this.printpv(so.so_nbr)
+            } 
+         this.router.navigateByUrl("/sales/so-list");
+>>>>>>> 424218a7527612d1a44f6fd3e30bcceab4cc1cdb
         }
       );
   }
@@ -2879,5 +2888,538 @@ doc.text('•	En cas de désistement, une retenue de dix (10%) sera appliquée s
           });
     
     }
+printpdf(nbr) {
+    const controls = this.totForm.controls;
+    const controlss = this.soForm.controls;
+    // const controlsao = this.asForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF('l','mm','a5');
 
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+  //   var img = new Image();
+  //   img.src = "./assets/media/logos/companylogo.png";
+  // doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(16);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10); 
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 25);
+  // doc.line(10, 32, 200, 32);
+  // doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  // doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 35,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
+  doc.setFontSize(12);
+  doc.text("Commande N° : " + nbr, 87, 40);
+  doc.setFontSize(12);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code        : " + this.customer.cm_addr, 10, 45);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 45);
+  doc.text("Nom         : " + this.customer.address.ad_name, 10, 50);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 10, 55); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 10, 60);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 10, 65);}
+  // if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  // if (this.customer.address.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  // }
+  // if (this.customer.address.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  // }
+  // if (this.customer.address.ad_pst_id) {
+  //   doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  // }
+  // if (this.customer.address.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  // }
+  doc.setFontSize(10);
+  doc.line(10, 70, 205, 70);
+  doc.line(10, 75, 205, 75);
+  doc.line(10, 70, 10, 75);
+  doc.text("LN", 12.5, 73.5);
+  doc.line(20, 70, 20, 75);
+  doc.text("Code Article", 22, 73.5);
+  doc.line(45, 70, 45, 75);
+  doc.text("Désignation", 67.5, 73.5);
+  doc.line(120, 70, 120, 75);
+  doc.text("M", 123, 73.5);
+  doc.line(130, 70, 130, 75);
+  doc.text("C", 133, 73.5);
+  doc.line(145, 70, 145, 75);
+  doc.text("P", 147, 73.5);
+  doc.line(158, 70, 158, 75);
+  doc.text("PU", 170, 73.5);
+  doc.line(180, 70, 180, 75);
+  // doc.text("REM", 172, 103.5);
+  // doc.line(181, 100, 181, 105);
+  doc.text("THT", 183, 73.5);
+  doc.line(205, 70, 205, 75);
+    var i = 80;
+    doc.setFontSize(12);
+    for (let j = 0; j < this.dataset.length; j++) {
+      if (j % 10 == 0 && j != 0) {
+        doc.addPage();
+        // img.src = "./assets/media/logos/companyentete.png";
+        // img.src = "./assets/media/logos/companylogo.png";
+  // doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(16);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10); 
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 25);
+  // doc.line(10, 32, 200, 32);
+  // doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  // doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 35,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
+  doc.setFontSize(12);
+  doc.text("Commande N° : " + nbr, 87, 40);
+  doc.setFontSize(12);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code        : " + this.customer.cm_addr, 10, 45);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 45);
+  doc.text("Nom         : " + this.customer.address.ad_name, 10, 50);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 10, 55); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 10, 60);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 10, 65);}
+  // if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  // if (this.customer.address.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  // }
+  // if (this.customer.address.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  // }
+  // if (this.customer.address.ad_pst_id) {
+  //   doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  // }
+  // if (this.customer.address.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  // }
+  doc.setFontSize(10);
+  doc.line(10, 70, 205, 70);
+  doc.line(10, 75, 205, 75);
+  doc.line(10, 70, 10, 75);
+  doc.text("LN", 12.5, 73.5);
+  doc.line(20, 70, 20, 75);
+  doc.text("Code Article", 22, 73.5);
+  doc.line(45, 70, 45, 75);
+  doc.text("Désignation", 67.5, 73.5);
+  doc.line(120, 70, 120, 75);
+  doc.text("M", 123, 73.5);
+  doc.line(130, 70, 130, 75);
+  doc.text("C", 133, 73.5);
+  doc.line(145, 70, 145, 75);
+  doc.text("P", 147, 73.5);
+  doc.line(158, 70, 158, 75);
+  doc.text("PU", 170, 73.5);
+  doc.line(180, 70, 180, 75);
+  // doc.text("REM", 172, 103.5);
+  // doc.line(181, 100, 181, 105);
+  doc.text("THT", 183, 73.5);
+  doc.line(205, 70, 205, 75);
+        i = 110;
+        doc.setFontSize(10);
+      }
+
+      if (this.dataset[j].sod_desc.length > 25) {
+        let desc1 = this.dataset[j].sod_desc.substring(25);
+        let ind = desc1.indexOf(" ");
+        desc1 = this.dataset[j].sod_desc.substring(0, 25 + ind);
+        let desc2 = this.dataset[j].sod_desc.substring(25 + ind);
+  doc.setFontSize(9);
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(120, i - 5, 120, i);
+        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 129, i - 1, { align: "right" });
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 144, i - 1, { align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 157, i - 1, { align: "right" });
+        doc.line(158, i - 5, 158, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 179, i - 1, { align: "right" });
+        
+        // doc.line(170, i - 5, 170, i);
+        // doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(180, i - 5, 180, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        // doc.line(10, i, 200, i );
+  
+        i = i + 5;
+  
+        doc.text(desc2, 47, i - 1);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        // doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(130, i - 5, 130, i);
+        doc.line(145, i - 5, 145, i);
+        doc.line(158, i - 5, 158, i);
+        doc.line(180, i - 5, 180, i);
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
+  
+        i = i + 5;
+      } else {
+        doc.setFontSize(9);
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(this.dataset[j].sod_desc, 47, i - 1);
+        doc.line(120, i - 5, 120, i);
+        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 134, i - 1, { align: "right" });
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 144, i - 1, { align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 157, i - 1, { align: "right" });
+        doc.line(158, i - 5, 158, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 179, i - 1, { align: "right" });
+        
+        // doc.line(170, i - 5, 170, i);
+        // doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(180, i - 5, 180, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
+        i = i + 5;
+      }
+    }
+
+    // doc.line(10, i - 5, 200, i - 5);
+
+    doc.line(130, i + 7, 205, i + 7);
+    doc.line(130, i + 14, 205, i + 14);
+    // doc.line(130, i + 21, 200, i + 21);
+    // doc.line(130, i + 28, 200, i + 28);
+    // doc.line(130, i + 35, 200, i + 35);
+    doc.line(130, i + 7, 130, i + 14);
+    doc.line(160, i + 7, 160, i + 14);
+    doc.line(205, i + 7, 205, i + 14);
+    doc.setFontSize(12);
+
+    doc.text("Total ", 140, i + 12, { align: "left" });
+    doc.text("Versé ", 140, i + 19, { align: "left" });
+    // doc.text("TVA", 140, i + 19, { align: "left" });
+    // doc.text("Timbre", 140, i + 26, { align: "left" });
+    // doc.text("Total TC", 140, i + 33, { align: "left" });
+
+    doc.text(String(Number(controls.tht.value).toFixed(2)), 203, i + 12, { align: "right" });
+    // doc.text(String(Number(controlsao.ao_amt.value).toFixed(2)), 203, i + 19, { align: "right" });
+    
+    // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
+    // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
+    // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
+
+    doc.setFontSize(12);
+    let mt = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
+
+    if (mt.length > 95) {
+      let mt1 = mt.substring(90);
+      let ind = mt1.indexOf(" ");
+
+      mt1 = mt.substring(0, 90 + ind);
+      let mt2 = mt.substring(90 + ind);
+
+      doc.text("Arretée la présente Commande a la somme de : " + mt1, 20, i + 30);
+      doc.text(mt2, 20, i + 35);
+    } else {
+      doc.text("Arretée la présente Commande a la somme de : " + mt, 20, i + 30);
+    }
+    doc.addPage()
+    var img = new Image();
+    // img.src = "./assets/media/logos/companylogo.png";
+  // doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(16);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10); 
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 25);
+  // doc.line(10, 32, 200, 32);
+  // doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  // doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 35,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
+  doc.setFontSize(12);
+  doc.text("Commande Bureau N° : " + nbr, 87, 40);
+  doc.setFontSize(12);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code        : " + this.customer.cm_addr, 10, 45);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 45);
+  doc.text("Nom         : " + this.customer.address.ad_name, 10, 50);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 10, 55); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 10, 60);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 10, 65);}
+  // if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  // if (this.customer.address.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  // }
+  // if (this.customer.address.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  // }
+  // if (this.customer.address.ad_pst_id) {
+  //   doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  // }
+  // if (this.customer.address.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  // }
+  doc.setFontSize(10);
+  doc.line(10, 70, 205, 70);
+  doc.line(10, 75, 205, 75);
+  doc.line(10, 70, 10, 75);
+  doc.text("LN", 12.5, 73.5);
+  doc.line(20, 70, 20, 75);
+  doc.text("Code Article", 22, 73.5);
+  doc.line(45, 70, 45, 75);
+  doc.text("Désignation", 67.5, 73.5);
+  doc.line(120, 70, 120, 75);
+  doc.text("M", 123, 73.5);
+  doc.line(130, 70, 130, 75);
+  doc.text("C", 133, 73.5);
+  doc.line(145, 70, 145, 75);
+  doc.text("P", 147, 73.5);
+  doc.line(158, 70, 158, 75);
+  doc.text("PU", 170, 73.5);
+  doc.line(180, 70, 180, 75);
+  // doc.text("REM", 172, 73.5);
+  // doc.line(181, 70, 181, 75);
+  doc.text("THT", 183, 73.5);
+  doc.line(205, 70, 205, 75);
+    var i = 80;
+    doc.setFontSize(12);
+    for (let j = 0; j < this.dataset.length; j++) {
+      if (j % 20 == 0 && j != 0) {
+        doc.addPage();
+        // img.src = "./assets/media/logos/companyentete.png";
+        // img.src = "./assets/media/logos/companylogo.png";
+  // doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(16);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10); 
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 25);
+  // doc.line(10, 32, 200, 32);
+  // doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  // doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 35,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
+  doc.setFontSize(12);
+  doc.text("Commande Bureau N° : " + nbr, 87, 40);
+  doc.setFontSize(12);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code        : " + this.customer.cm_addr, 10, 45);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 45);
+  doc.text("Nom         : " + this.customer.address.ad_name, 10, 50);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 10, 55); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 10, 60);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 10, 65);}
+  // if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  // if (this.customer.address.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  // }
+  // if (this.customer.address.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  // }
+  // if (this.customer.address.ad_pst_id) {
+  //   doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  // }
+  // if (this.customer.address.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  // }
+  doc.setFontSize(10);
+  doc.line(10, 70, 205, 70);
+  doc.line(10, 75, 205, 75);
+  doc.line(10, 70, 10, 75);
+  doc.text("LN", 12.5, 73.5);
+  doc.line(20, 70, 20, 75);
+  doc.text("Code Article", 22, 73.5);
+  doc.line(45, 70, 45, 75);
+  doc.text("Désignation", 67.5, 73.5);
+  doc.line(120, 70, 120, 75);
+  doc.text("M", 123, 73.5);
+  doc.line(130, 70, 130, 75);
+  doc.text("C", 133, 73.5);
+  doc.line(145, 70, 145, 75);
+  doc.text("P", 147, 73.5);
+  doc.line(158, 70, 158, 75);
+  doc.text("PU", 170, 73.5);
+  doc.line(180, 70, 180, 75);
+  // doc.text("REM", 172, 73.5);
+  // doc.line(181, 70, 181, 75);
+  doc.text("THT", 183, 73.5);
+  doc.line(205, 70, 205, 75);
+        i = 80;
+        doc.setFontSize(9);
+      }
+
+      if (this.dataset[j].sod_desc.length > 25) {
+        let desc1 = this.dataset[j].sod_desc.substring(25);
+        let ind = desc1.indexOf(" ");
+        desc1 = this.dataset[j].sod_desc.substring(0, 25 + ind);
+        let desc2 = this.dataset[j].sod_desc.substring(25 + ind);
+  doc.setFontSize(9);
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(120, i - 5, 120, i);
+        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 129, i - 1, { align: "right" });
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 144, i - 1, { align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 157, i - 1, { align: "right" });
+        doc.line(158, i - 5, 158, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 179, i - 1, { align: "right" });
+        
+        // doc.line(170, i - 5, 170, i);
+        // doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(180, i - 5, 180, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        // doc.line(10, i, 200, i );
+  
+        i = i + 5;
+  
+        doc.text(desc2, 47, i - 1);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        // doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(130, i - 5, 130, i);
+        doc.line(145, i - 5, 145, i);
+         doc.line(158, i - 5, 158, i);
+        doc.line(180, i - 5, 180, i);
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
+  
+        i = i + 5;
+      } else {
+        doc.setFontSize(9);
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(this.dataset[j].sod_desc, 47, i - 1);
+        doc.line(120, i - 5, 120, i);
+        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 134, i - 1, { align: "right" });
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 144, i - 1, { align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 157, i - 1, { align: "right" });
+        doc.line(158, i - 5, 158, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 179, i - 1, { align: "right" });
+        
+        // doc.line(170, i - 5, 170, i);
+        // doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(180, i - 5, 180, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
+        i = i + 5;
+      }
+    }
+
+    // doc.line(10, i - 5, 200, i - 5);
+
+    doc.line(130, i + 7, 205, i + 7);
+    doc.line(130, i + 14, 205, i + 14);
+    // doc.line(130, i + 21, 200, i + 21);
+    // doc.line(130, i + 28, 200, i + 28);
+    // doc.line(130, i + 35, 200, i + 35);
+    doc.line(130, i + 7, 130, i + 14);
+    doc.line(160, i + 7, 160, i + 14);
+    doc.line(205, i + 7, 205, i + 14);
+    doc.setFontSize(12);
+
+    doc.text("Total ", 140, i + 12, { align: "left" });
+    doc.text("Versé ", 140, i + 19, { align: "left" });
+    // doc.text("TVA", 140, i + 19, { align: "left" });
+    // doc.text("Timbre", 140, i + 26, { align: "left" });
+    // doc.text("Total TC", 140, i + 33, { align: "left" });
+
+    doc.text(String(Number(controls.tht.value).toFixed(2)), 203, i + 12, { align: "right" });
+    // doc.text(String(Number(controlsao.ao_amt.value).toFixed(2)), 203, i + 19, { align: "right" });
+    
+    // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
+    // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
+    // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
+
+    doc.setFontSize(12);
+    let mtB = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
+
+    if (mtB.length > 95) {
+      let mt1 = mtB.substring(90);
+      let ind = mt1.indexOf(" ");
+
+      mt1 = mt.substring(0, 90 + ind);
+      let mt2 = mt.substring(90 + ind);
+
+      doc.text("Arretée la présente Commande a la somme de : " + mt1, 20, i + 30);
+      doc.text(mt2, 20, i + 35);
+    } else {
+      doc.text("Arretée la présente Commande a la somme de : " + mt, 20, i + 30);
+    }
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+  }
 }

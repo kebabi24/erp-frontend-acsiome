@@ -224,6 +224,11 @@ export class InventoryTransactionService {
         return this.http.post(`${API_URL}/findrefs`,data, { headers: httpHeaders })
  
     }
+    public getByExs(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findexs`,data, { headers: httpHeaders })
+ 
+    }
     public getByActivity(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findactivity`,data, { headers: httpHeaders })

@@ -2910,19 +2910,19 @@ doc.addImage(img, "png", 5, 5, 50, 30);
  doc.setFontSize(10);
  
  doc.text('Total HT', 140 ,  i + 12 , { align: 'left' });
- doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
- doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
- doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+//  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+//  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+//  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
 
  
  doc.text(String(Number(controls.tht.value).toFixed(2)), 198 ,  i + 12 , { align: 'right' });
- doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
- doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
- doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+//  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
+//  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
+//  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
 
  doc.setFontSize(8);
     let mt = NumberToLetters(
-      Number(controls.ttc.value).toFixed(2),this.curr.cu_desc)
+      Number(controls.tht.value).toFixed(2),this.curr.cu_desc)
 
       if (mt.length > 95) {
         let mt1 = mt.substring(90)

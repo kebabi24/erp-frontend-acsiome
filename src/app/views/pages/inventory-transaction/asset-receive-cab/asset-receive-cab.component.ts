@@ -452,7 +452,7 @@ export class AssetReceiveCabComponent implements OnInit {
                     let barcode = lab.lb_ref;
                     
                      this.index = this.dataset.findIndex((el) => {
-                      return el.tr_line == args.dataContext.id;
+                      return el.id == args.dataContext.id;
                     });
                     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc, printed:true });              
                     
@@ -558,7 +558,18 @@ export class AssetReceiveCabComponent implements OnInit {
         
       }
     );
-    this.seuil = 999999;
+    this.seuil = 999999
+    this.codeService.getByOne({ code_fldname: "LIMIT",code_value:'GLOBAL' }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+       this.seuil = Number(reponse.data.code_cmmt);   
+        } 
+      },
+
+      (error) => {
+        
+      }
+    );
     this.createForm();
     console.log(this.PathPrinter);
     

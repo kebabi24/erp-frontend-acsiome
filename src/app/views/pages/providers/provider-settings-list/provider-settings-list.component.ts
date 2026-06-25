@@ -146,7 +146,7 @@ export class ProviderSettingsListComponent implements OnInit {
           filterable: true,
           type: FieldType.string,
           filter: {
-            collection: [ { value: 'vd_type', label: 'Type' }, { value: 'vd_shipvia', label: 'Mode Expédition' }, { value: 'vd_promo', label: 'Groupe Promotion' },{ value: 'vd_lang', label: 'Langue' }, { value: 'check_form', label: 'Mode de Paiement' },{ value: 'vd_cr_terms', label: 'Délai de Paiement' } ],
+            collection: [ { value: 'vd_type', label: 'Type' }, { value: 'vd_shipvia', label: 'Incoterme' }, { value: 'vd_promo', label: 'Famille' }, { value: 'check_form', label: 'Mode de Paiement' },{ value: 'vd_cr_terms', label: 'Délai de Paiement' },{ value: 'vd_sort', label: 'Sous-famille' }],
             model: Filters.multipleSelect,
      
             // you can add "multiple-select" plugin options like styling the first row

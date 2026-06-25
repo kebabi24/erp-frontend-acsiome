@@ -96,7 +96,12 @@ import { CopieArticleComponent } from './copie-article/copie-article.component';
 import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
 import { UpdatePriceDdComponent } from './update-price-dd/update-price-dd.component';
 import { CreateEpiModComponent } from './create-epi-mod/create-epi-mod.component';
-import { UpdateEpiModComponent } from './update-epi-mod/update-epi-mod.component'
+import { UpdateEpiModComponent } from './update-epi-mod/update-epi-mod.component';
+import { PartSettingsComponent } from './part-settings/part-settings.component';
+import { PartSettingsEditComponent } from './part-settings-edit/part-settings-edit.component';
+import { PartSettingsListComponent } from './part-settings-list/part-settings-list.component';
+import { AddPartComponent } from './add-part/add-part.component';
+import { AlterPartComponent } from './alter-part/alter-part.component'
 
 
 const routes: Routes = [
@@ -118,6 +123,16 @@ const routes: Routes = [
                 path: "add",
                 component: CreateComponent,
             },
+            {
+                path: "part-settings",
+                component: PartSettingsComponent,
+            },
+            {
+                path: "part-settings-list",
+                component: PartSettingsListComponent,
+            },
+            
+
             {
                 path: "create-spec",
                 component: CreateSpecComponent,
@@ -190,6 +205,14 @@ const routes: Routes = [
             {
                 path: "create-epi-mod",
                 component: CreateEpiModComponent,
+            },
+            {
+                path: "add-part",
+                component: AddPartComponent,
+            },
+            {
+                path: "alter-part",
+                component: AlterPartComponent,
             },
             {
                 path: "update-epi-mod",
@@ -284,6 +307,11 @@ const routes: Routes = [
         UpdatePriceDdComponent,
         CreateEpiModComponent,
         UpdateEpiModComponent,
+        PartSettingsComponent,
+        PartSettingsEditComponent,
+        PartSettingsListComponent,
+        AddPartComponent,
+        AlterPartComponent,
     ],
     imports: [
         CommonModule,

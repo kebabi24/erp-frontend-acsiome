@@ -372,7 +372,18 @@ export class CreateDirectWoComponent implements OnInit {
         this.domconfig = false;
       }
     );
-    this.seuil = 1200;
+    this.seuil = 999999
+    this.codeService.getByOne({ code_fldname: "LIMIT",code_value:'GLOBAL' }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+       this.seuil = Number(reponse.data.code_cmmt);   
+        } 
+      },
+
+      (error) => {
+        
+      }
+    );
     this.createForm();
   }
 
@@ -1912,9 +1923,9 @@ onChangeCust(){}
     //console.log(this.provider.ad_misc2_id)
     doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
     doc.text(" " + this.provider.ad_name, 60, 50);
-    doc.text("Equipe            : " + this.shift, 120, 50);
+    doc.text("Equipe            : " + this.shift, 120, 70);
     doc.text("Type produit      : " + this.type, 20, 55);
-    doc.text("Employés          : " + this.user1, 120, 55);
+    doc.text("Employés          : " + this.user1, 120, 75);
     doc.text("Couleur Produit   : " + this.color, 20, 60);
     doc.text("Quantité sortie   : " + this.prodqty, 20, 65);
     doc.text("Lot N°            : " + this.prodlot, 20, 70);
@@ -1974,8 +1985,8 @@ onChangeCust(){}
     doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
     doc.text(" " + this.provider.ad_name, 60, 50);
     doc.text("Equipe            : " + this.shift, 120, 50);
-    doc.text("Type produit      : " + this.type, 20, 55);
-    doc.text("Employés          : " + this.user1, 120, 55);
+    doc.text("Type produit      : " + this.type, 20, 70);
+    doc.text("Employés          : " + this.user1, 120, 75);
     doc.text("Couleur Produit   : " + this.color, 20, 60);
     doc.text("Quantité sortie   : " + this.prodqty, 20, 65);
     doc.text("Lot N°            : " + this.prodlot, 20, 70);
@@ -2021,12 +2032,12 @@ onChangeCust(){}
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].tr_serial), 168, i - 1, );
+        doc.text(String(this.dataset[j].tr_serial), 132, i - 1, );
         doc.line(170, i - 5, 170, i);
-        doc.text(String(this.dataset[j].tr_ref), 183, i - 1, );
+        doc.text(String(this.dataset[j].tr_ref), 173, i - 1, );
         doc.line(185, i - 5, 185, i);
-        doc.text(String(this.dataset[j].tr_program), 203, i - 1, );
-        doc.line(205, i - 5, 205, i);
+        doc.text(String(this.dataset[j].tr_program), 187, i - 1, );
+        doc.line(200, i - 5, 200, i);
         // doc.line(10, i, 200, i );
   
         i = i + 5;
@@ -2041,7 +2052,7 @@ onChangeCust(){}
         doc.line(130, i - 5, 130, i);
         doc.line(170, i - 5, 170, i);
         doc.line(185, i - 5, 185, i);
-        doc.line(205, i - 5, 205, i);
+        doc.line(200, i - 5, 200, i);
         doc.line(10, i, 200, i);
   
         i = i + 5;
@@ -2057,21 +2068,21 @@ onChangeCust(){}
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_serial), 132, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
-        doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_ref), 173, i - 1, { align: "right" });
         doc.line(185, i - 5, 185, i);
-        doc.text(String(this.dataset[j].tr_program), 203, i - 1, { align: "right" });
-        doc.line(205, i - 5, 205, i);
-        doc.line(10, i, 205, i);
+        doc.text(String(this.dataset[j].tr_program), 187, i - 1, { align: "right" });
+        doc.line(200, i - 5, 200, i);
+        doc.line(10, i, 200, i);
         i = i + 5;
       }
     }
   
     
   
-    doc.line(130, i + 7, 205, i + 7);
-    doc.line(130, i + 14, 205, i + 14);
+    doc.line(130, i + 7, 200, i + 7);
+    doc.line(130, i + 14, 200, i + 14);
     doc.line(130, i + 7, 130, i + 14);
     doc.line(160, i + 7, 160, i + 14);
     doc.line(205, i + 7, 205, i + 14);

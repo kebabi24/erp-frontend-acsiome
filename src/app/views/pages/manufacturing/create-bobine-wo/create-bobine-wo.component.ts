@@ -305,6 +305,7 @@ autorisation:boolean;
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if(this.printable == true && args.dataContext.printed != true){
+            this.printable = false;
           this.itemsService.getByOne({pt_part:args.dataContext.tr_part }).subscribe( 
             (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type + ' QUALITE ' + reponse.data.pt_rev
                               this.miclaise = reponse.data.pt_article
@@ -312,7 +313,7 @@ autorisation:boolean;
                               if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
                                 const controls = this.woForm.controls;
                                 this.printbuttonState = true;
-                                this.printable = false;
+                                
                                 const _lb = new Label();
                                 (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
                                 // _lb.lb_rmks = controls.tr_rmks.value;
@@ -343,7 +344,7 @@ autorisation:boolean;
                                     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc,printed:true });
                                     
                                     this.index = this.dataset.findIndex((el) => {
-                                      return el.tr_line == args.dataContext.id;
+                                      return el.id == args.dataContext.id;
                                     });
                                     console.log(this.index);
                                     this.globalState = true;
@@ -677,7 +678,7 @@ autorisation:boolean;
                 this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc,sqprinted:true });
                 
                 this.index = this.dataset.findIndex((el) => {
-                  return el.tr_line == args.dataContext.id;
+                  return el.id == args.dataContext.id;
                 });
                 console.log(this.index);
                 this.globalState = true;
@@ -875,7 +876,18 @@ autorisation:boolean;
         this.domconfig = false;
       }
     );
-    this.seuil = 1200;
+    this.seuil = 999999
+    this.codeService.getByOne({ code_fldname: "LIMIT",code_value:'GLOBAL' }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+       this.seuil = Number(reponse.data.code_cmmt);   
+        } 
+      },
+
+      (error) => {
+        
+      }
+    );
     this.createForm();
     this.codeService
     .getBy({ code_fldname: "manufacturing/create-bobine-wo" })

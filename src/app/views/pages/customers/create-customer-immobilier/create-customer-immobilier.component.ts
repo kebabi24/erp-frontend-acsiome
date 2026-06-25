@@ -70,7 +70,7 @@ import {
     TaxeService,
     DeviseService,
     BankService,
-    SequenceService,
+    SequenceService, 
 } from "../../../../core/erp"
 @Component({
   selector: 'kt-create-customer-immobilier',
@@ -582,98 +582,138 @@ fldname;
 console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
       document.getElementById('code').innerHTML = 'Couuuude';
     }*/
-    onChangeCode() {
-        const controls  = this.addressForm.controls
-        const controls1 = this.customerForm.controls
-      console.log(!Number.isNaN(Number(controls.ad_addr.value)))
-        if(!Number.isNaN(Number(controls.ad_addr.value)) && String(controls.ad_addr.value).length == 18) {
+    // onChangeCode() {
+    //     const controls  = this.addressForm.controls
+    //     const controls1 = this.customerForm.controls
+    //   console.log(!Number.isNaN(Number(controls.ad_addr.value)))
+    //     if(!Number.isNaN(Number(controls.ad_addr.value)) && String(controls.ad_addr.value).length == 18) {
 
-        this.addressService
-            .getBy({
-                  ad_addr: controls.ad_addr.value,
-            })
-            .subscribe((response: any) => {
+    //     this.addressService
+    //         .getBy({
+    //               ad_addr: controls.ad_addr.value,
+    //         })
+    //         .subscribe((response: any) => {
                 
-                if (response.data.length > 0) {
-                    this.isExist = true
-                    console.log(response.data)
+    //             if (response.data.length > 0) {
+    //                 this.isExist = true
+    //                 console.log(response.data)
+    // // onChangeCode() {
+    // //     const controls  = this.addressForm.controls
+    // //     const controls1 = this.customerForm.controls
+      
+    // //     this.addressService
+    // //         .getBy({
+    // //               ad_addr: controls.ad_addr.value,
+    // //         })
+    // //         .subscribe((response: any) => {
+                
+    // //             if (response.data) {
+    // //                 this.isExist = true
+    // //                 console.log(response.data)
                     
-                } else {
+    // //             } else {
                     
-                    controls.ad_name.enable()
-                    document.getElementById("ad_name").focus();
-                    controls.ad_line1.enable()
-                    controls.ad_line2.enable()
-                    controls.ad_city.enable()
-                    controls.ad_state.enable()
-                    controls.ad_zip.enable()
-                    controls.ad_country.enable()
-                    controls.ad_temp.enable()
-                    controls.ad_phone.enable()
-                    controls.ad_phone2.enable()
-                    controls.ad_ext.enable()
-                    controls.ad_ext2.enable()
-                    controls.ad_fax.enable()
-                    controls.ad_fax2.enable()
-                    controls.ad_attn.enable()
-                    controls.ad_attn2.enable()
-                    controls.ad_taxable.enable()
-                    controls.ad_tax_zone.enable()
-                    controls.ad_taxc.enable()
-                    controls.ad_tax_usage.enable()
-                    controls.ad_tax_in.enable()
-                    controls.ad_gst_id.enable()
-                    controls.ad_pst_id.enable()
-                    controls.ad_misc1_id.enable()
-                    controls.ad_misc2_id.enable()
+    //                 controls.ad_name.enable()
+    //                 document.getElementById("ad_name").focus();
+    //                 controls.ad_line1.enable()
+    //                 controls.ad_line2.enable()
+    //                 controls.ad_city.enable()
+    //                 controls.ad_state.enable()
+    //                 controls.ad_zip.enable()
+    //                 controls.ad_country.enable()
+    //                 controls.ad_temp.enable()
+    //                 controls.ad_phone.enable()
+    //                 controls.ad_phone2.enable()
+    //                 controls.ad_ext.enable()
+    //                 controls.ad_ext2.enable()
+    //                 controls.ad_fax.enable()
+    //                 controls.ad_fax2.enable()
+    //                 controls.ad_attn.enable()
+    //                 controls.ad_attn2.enable()
+    //                 controls.ad_taxable.enable()
+    //                 controls.ad_tax_zone.enable()
+    //                 controls.ad_taxc.enable()
+    //                 controls.ad_tax_usage.enable()
+    //                 controls.ad_tax_in.enable()
+    //                 controls.ad_gst_id.enable()
+    //                 controls.ad_pst_id.enable()
+    //                 controls.ad_misc1_id.enable()
+    //                 controls.ad_misc2_id.enable()
+    // //                 controls.ad_name.enable()
+    // //                 controls.ad_line1.enable()
+    // //                 controls.ad_line2.enable()
+    // //                 controls.ad_city.enable()
+    // //                 controls.ad_state.enable()
+    // //                 controls.ad_zip.enable()
+    // //                 controls.ad_country.enable()
+    // //                 controls.ad_temp.enable()
+    // //                 controls.ad_phone.enable()
+    // //                 controls.ad_phone2.enable()
+    // //                 controls.ad_ext.enable()
+    // //                 controls.ad_ext2.enable()
+    // //                 controls.ad_fax.enable()
+    // //                 controls.ad_fax2.enable()
+    // //                 controls.ad_attn.enable()
+    // //                 controls.ad_attn2.enable()
+    // //                 controls.ad_taxable.enable()
+    // //                 controls.ad_tax_zone.enable()
+    // //                 controls.ad_taxc.enable()
+    // //                 controls.ad_tax_usage.enable()
+    // //                 controls.ad_tax_in.enable()
+    // //                 controls.ad_gst_id.enable()
+    // //                 controls.ad_pst_id.enable()
+    // //                 controls.ad_misc1_id.enable()
+    // //                 controls.ad_misc2_id.enable()
                     
-                    controls1.cm_sort.enable()
-                    controls1.cm_seq.enable()
-                    controls1.cm_type.enable()
-                    controls1.cm_slspn.enable()
-                    controls1.cm_region.enable()
+    // //                 controls1.cm_sort.enable()
+    // //                 controls1.cm_seq.enable()
+    // //                 controls1.cm_type.enable()
+    // //                 controls1.cm_slspn.enable()
+    // //                 controls1.cm_region.enable()
                     
                     
                     
-                    controls1.cm_shipvia.enable()
-                    controls1.cm_curr.enable()
-                    controls1.cm_ar_acct.enable()
-                    controls1.cm_ar_sub.enable()
-                    controls1.cm_ar_cc.enable()
+    // //                 controls1.cm_shipvia.enable()
+    // //                 controls1.cm_curr.enable()
+    // //                 controls1.cm_ar_acct.enable()
+    // //                 controls1.cm_ar_sub.enable()
+    // //                 controls1.cm_ar_cc.enable()
                     
-                    controls1.cm_resale.enable()
-                    controls1.cm_site.enable()
-                    controls1.cm_lang.enable()
-                    controls1.cm_class.enable()
-                    controls1.cm_sic.enable()
-                    controls1.cm_bank.enable()
-                    controls1.cm_pay_method.enable()
-                    controls1.cm_fix_pr.enable()
-                    controls1.cm_inv_auto.enable()
-                    controls1.cm_partial.enable()
-                    controls1.cm_cr_limit.enable()
-                    controls1.cm_disc_pct.enable()
-                    controls1.cm_bill.enable()
-                    controls1.cm_cr_terms.enable()
-                    controls1.cm_hold.enable()
-                    controls1.cm_fin.enable()
-                    controls1.cm_stmt.enable()
-                    controls1.cm_cr_review.enable()
-                    controls1.cm_cr_update.enable()
-                    controls1.cm_db.enable()
-                    controls1.cm_po_reqd.enable()
-                    controls1.cm_stmt_cyc.enable()
-                    controls1.cm_dun.enable()
+    // //                 controls1.cm_resale.enable()
+    // //                 controls1.cm_site.enable()
+    // //                 controls1.cm_lang.enable()
+    // //                 controls1.cm_class.enable()
+    // //                 controls1.cm_sic.enable()
+    // //                 controls1.cm_bank.enable()
+    // //                 controls1.cm_pay_method.enable()
+    // //                 controls1.cm_fix_pr.enable()
+    // //                 controls1.cm_inv_auto.enable()
+    // //                 controls1.cm_partial.enable()
+    // //                 controls1.cm_cr_limit.enable()
+    // //                 controls1.cm_disc_pct.enable()
+    // //                 controls1.cm_bill.enable()
+    // //                 controls1.cm_cr_terms.enable()
+    // //                 controls1.cm_hold.enable()
+    // //                 controls1.cm_fin.enable()
+    // //                 controls1.cm_stmt.enable()
+    // //                 controls1.cm_cr_review.enable()
+    // //                 controls1.cm_cr_update.enable()
+    // //                 controls1.cm_db.enable()
+    // //                 controls1.cm_po_reqd.enable()
+    // //                 controls1.cm_stmt_cyc.enable()
+    // //                 controls1.cm_dun.enable()
                    
-                  }
+    // //               }
                 
-          })
-        }
-        else {
-          alert("Code NIN Erroné")
-          document.getElementById("ad_addr").focus();
-        }
-      }
+    //       })
+    //     }
+    //     else {
+    //       alert("Code NIN Erroné")
+    //       document.getElementById("ad_addr").focus();
+    //     }
+    //   }
+    //       })
+    //   }
     /**
       * Go back to the list
       *
@@ -1954,4 +1994,96 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
       this.prepareGrid1()
       this.modalService.open(content, { size: "lg" })
   }
+  onChangeCode() {
+        const controls  = this.addressForm.controls
+        const controls1 = this.customerForm.controls
+      console.log(!Number.isNaN(Number(controls.ad_addr.value)))
+        if(!Number.isNaN(Number(controls.ad_addr.value)) && String(controls.ad_addr.value).length == 18) {
+
+        this.addressService
+            .getBy({
+                  ad_addr: controls.ad_addr.value,
+            })
+            .subscribe((response: any) => {
+                
+                if (response.data.length > 0) {
+                    this.isExist = true
+                    console.log(response.data)
+                    
+                } else {
+                    
+                    controls.ad_name.enable()
+                    document.getElementById("ad_name").focus();
+                    controls.ad_line1.enable()
+                    controls.ad_line2.enable()
+                    controls.ad_city.enable()
+                    controls.ad_state.enable()
+                    controls.ad_zip.enable()
+                    controls.ad_country.enable()
+                    controls.ad_temp.enable()
+                    controls.ad_phone.enable()
+                    controls.ad_phone2.enable()
+                    controls.ad_ext.enable()
+                    controls.ad_ext2.enable()
+                    controls.ad_fax.enable()
+                    controls.ad_fax2.enable()
+                    controls.ad_attn.enable()
+                    controls.ad_attn2.enable()
+                    controls.ad_taxable.enable()
+                    controls.ad_tax_zone.enable()
+                    controls.ad_taxc.enable()
+                    controls.ad_tax_usage.enable()
+                    controls.ad_tax_in.enable()
+                    controls.ad_gst_id.enable()
+                    controls.ad_pst_id.enable()
+                    controls.ad_misc1_id.enable()
+                    controls.ad_misc2_id.enable()
+                    
+                    controls1.cm_sort.enable()
+                    controls1.cm_seq.enable()
+                    controls1.cm_type.enable()
+                    controls1.cm_slspn.enable()
+                    controls1.cm_region.enable()
+                    
+                    
+                    
+                    controls1.cm_shipvia.enable()
+                    controls1.cm_curr.enable()
+                    controls1.cm_ar_acct.enable()
+                    controls1.cm_ar_sub.enable()
+                    controls1.cm_ar_cc.enable()
+                    
+                    controls1.cm_resale.enable()
+                    controls1.cm_site.enable()
+                    controls1.cm_lang.enable()
+                    controls1.cm_class.enable()
+                    controls1.cm_sic.enable()
+                    controls1.cm_bank.enable()
+                    controls1.cm_pay_method.enable()
+                    controls1.cm_fix_pr.enable()
+                    controls1.cm_inv_auto.enable()
+                    controls1.cm_partial.enable()
+                    controls1.cm_cr_limit.enable()
+                    controls1.cm_disc_pct.enable()
+                    controls1.cm_bill.enable()
+                    controls1.cm_cr_terms.enable()
+                    controls1.cm_hold.enable()
+                    controls1.cm_fin.enable()
+                    controls1.cm_stmt.enable()
+                    controls1.cm_cr_review.enable()
+                    controls1.cm_cr_update.enable()
+                    controls1.cm_db.enable()
+                    controls1.cm_po_reqd.enable()
+                    controls1.cm_stmt_cyc.enable()
+                    controls1.cm_dun.enable()
+                   
+                  }
+                
+          })
+        }
+        else {
+          alert("Code NIN Erroné")
+          document.getElementById("ad_addr").focus();
+        }
+      }
 }

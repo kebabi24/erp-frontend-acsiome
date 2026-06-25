@@ -75,7 +75,7 @@ import {
 
 import { jsPDF } from "jspdf";
 @Component({
-  selector: 'kt-create-std-provider',
+  selector: 'kt-create-std-provider', 
   templateUrl: './create-std-provider.component.html',
   styleUrls: ['./create-std-provider.component.scss']
 })
@@ -254,6 +254,12 @@ constructor(
     this.codeService
         .getBy({ code_fldname: "vd_promo" })
         .subscribe((response: any) => (this.vd_promo = response.data))
+        this.codeService
+        .getBy({ code_fldname: "vd_remit" })
+        .subscribe((response: any) => (this.dataclas = response.data))
+        this.codeService
+        .getBy({ code_fldname: "vd_sort" })
+        .subscribe((response: any) => (this.dataAct = response.data))
     this.codeService
         .getBy({ code_fldname: "vd_lang" })
         .subscribe((response: any) => (this.vd_lang = response.data))
@@ -598,7 +604,10 @@ createProviderForm() {
         // vd_db: [{ value: this.provider.vd_db, disabled: !this.isExist }],
     })
 }
-
+onchangepromo(){
+  const controls = this.addressForm.controls
+  
+}
 onchangeRC(){
   const controls = this.addressForm.controls
   if(controls.ad_country.value == 'DZ') {
@@ -1331,7 +1340,7 @@ prepareGridAct() {
 
   // fill the dataset with your data
   this.codeService
-      .getBy({code_fldname:"pt_draw"})
+      .getBy({code_fldname:"vd_sort",})
       .subscribe((response: any) => (this.dataAct = response.data))
 }
 openAct(content) {
@@ -1411,7 +1420,7 @@ prepareGridclas() {
 
   // fill the dataset with your data
   this.codeService
-      .getBy({code_fldname:"pt_group"})
+      .getBy({code_fldname:"vd_remit"})
       .subscribe((response: any) => (this.dataclas = response.data))
 }
 openclas(content) {
@@ -2179,62 +2188,67 @@ printpdf() {
     doc.text(this.docs[0].date02, 180, 27);
   }
         
-          const date = new Date()
+          const tdate = new Date()
+          doc.setFontSize(10)
+          doc.text("imprimé Le: " + tdate.toLocaleDateString() , 160, 35);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 40);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 45);
           doc.setFontSize(16);
     
           
           // doc.setFont("Times-Roman");
-          doc.line(35,35,150,35)
-          doc.text("Code Fournisseur : " + controlsx.ad_addr.value, 40, 40);
           doc.line(35,45,150,45)
+          doc.text("Code Fournisseur : " + controlsx.ad_addr.value, 40, 50);
+          doc.line(35,55,150,55)
           doc.setFontSize(12);
           
-          doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 50);
-          if(controls.vd_sort.value != null){doc.text("Sous-Famille: " + controls.vd_sort.value, 7, 55);}
-          else {doc.text("Sous-famille: " , 7, 55);}
-          if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_sort.value, 57, 55);}
-          else {doc.text("Classe: " , 57, 55);}
-          doc.line(5,60,200,60)
-          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value, 7, 65);}
-          else{doc.text("Addresse: ", 7, 65);}
-          if(controlsa.ad_country.value != null){doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 7, 70);}
-          else{doc.text("Pays: ", 7, 70);}
+          doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 60);
+          if(controls.vd_promo.value != null){doc.text("Famille: " + controls.vd_promo.value, 7, 65);}
+          else {doc.text("Famille: " , 7, 65);}
+          
+          if(controls.vd_sort.value != null){doc.text("Sous-Famille: " + controls.vd_sort.value, 67, 65);}
+          else {doc.text("Sous-famille: " , 67, 65);}
+          if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_sort.value, 167, 65);}
+          else {doc.text("Classe: " , 167, 65);}
+          doc.line(5,70,200,70)
+          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value , 7, 75);}
+          else{doc.text("Addresse: ", 7, 75);}
+          if(controlsa.ad_country.value != null){doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 7, 80);}
+          else{doc.text("Pays: ", 7, 80);}
           // doc.line(5,75,200,75)
-          if(controlsa.ad_phone.value != null){doc.text("Tel: " + controlsa.ad_phone.value, 7, 80);}
-          else{doc.text("Tel: ", 7, 80);}  
-          if(controlsa.ad_ext.value != null){doc.text("Email: " + controlsa.ad_ext.value, 57, 80);}
-          else{doc.text("Email: ", 57, 80)}  
-          doc.line(5,85,200,85)
+          if(controlsa.ad_phone.value != null){doc.text("Tel: " + controlsa.ad_phone.value, 7, 90);}
+          else{doc.text("Tel: ", 7, 90);}  
+          if(controlsa.ad_ext.value != null){doc.text("Email: " + controlsa.ad_ext.value, 67, 90);}
+          else{doc.text("Email: ", 67, 90)}  
+          doc.line(5,95,200,95)
           if ( controlsa.ad_taxable.value == true) {
-          doc.text("Taxable: " + "OUI", 7, 90); } else {
-            doc.text("Taxable: " + "NON", 7, 90);
+          doc.text("Taxable: " + "OUI", 7, 100); } else {
+            doc.text("Taxable: " + "NON", 7, 100);
           }
-          doc.text("Taux de taxe: " + controlsa.ad_taxc.value, 57, 90);
+          doc.text("Taux de taxe: " + controlsa.ad_taxc.value, 67, 100);
           // doc.line(5,85,200,85)
           // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
           // doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 45);
-          if(controlsa.ad_gst_id.value != null){doc.text("RC N°: " + controlsa.ad_gst_id.value, 7, 95);}
-          else{doc.text("RC N°: ", 7, 95)}
-          if(controlsa.ad_misc2_id.value != null){doc.text("NIF: " + controlsa.ad_misc2_id.value, 57, 95);}
-          else{doc.text("NIF: ", 57, 95)}
-          if(controlsa.ad_pst_id.value != null){doc.text("AI: " + controlsa.ad_pst_id.value, 7, 100);}
-          else{doc.text("AI: " , 7, 100)}
-          if(controlsa.ad_misc1_id.value != null){doc.text("NIS: " + controlsa.ad_misc1_id.value, 57, 100);}
-          {doc.text("NIS: ", 57, 100)}
-          doc.line(5,105,200,105)
+          if(controlsa.ad_gst_id.value != null){doc.text("RC N°: " + controlsa.ad_gst_id.value, 7, 105);}
+          else{doc.text("RC N°: ", 7, 105)}
+          if(controlsa.ad_misc2_id.value != null){doc.text("NIF: " + controlsa.ad_misc2_id.value, 67, 105);}
+          else{doc.text("NIF: ", 67, 105)}
+          if(controlsa.ad_pst_id.value != null){doc.text("AI: " + controlsa.ad_pst_id.value, 7, 110);}
+          else{doc.text("AI: " , 7, 110)}
+          if(controlsa.ad_misc1_id.value != null){doc.text("NIS: " + controlsa.ad_misc1_id.value, 67, 110);}
+          {doc.text("NIS: ", 67, 110)}
+          doc.line(5,115,200,115)
           
-          if(controls.vd_type.value != null){doc.text("Famille: " + controls.vd_type.value , 7, 110);}
-          else{doc.text("Famille: ", 7, 110)}
-          if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 115);}
-          else{doc.text("Séquence: ", 7, 115)}
-          if(controls.vd_shipvia.value!=null){doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 120);}
-          else{doc.text("Modalité de transport: ", 7, 120)}
-          doc.line(5,125,200,125)
+          if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value , 7, 120);}
+          else{doc.text("Type: ", 7, 120)}
+          if(controls.vd_shipvia.value!=null){doc.text("Incoterme: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 125);}
+          else{doc.text("Incoterme: ", 7, 125)}
+          // doc.line(5,125,200,125)
          
           if(controls.vd_ckfrm.value!=null){doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' - ' + this.ckfrm, 7, 130);}
           else{doc.text("Méthode de paiement: ", 7, 130)}
-          if(controls.vd_cr_terms.value!=null){doc.text("Condition: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 135);}
-          else{doc.text("Condition: ", 7, 135)}
+          if(controls.vd_cr_terms.value!=null){doc.text("Délai: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 135);}
+          else{doc.text("Délai: ", 7, 135)}
           if(controls.vd_curr.value!=null){doc.text("Devise: " + controls.vd_curr.value + ' - ' + this.devise, 7, 140);}
           else{doc.text("Devise: ", 7, 140)}
           // if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}
@@ -2277,7 +2291,7 @@ printpdf() {
             doc.line(110, i - 5, 110, i);
             doc.text( String(tr.vdbk_rib), 112,  i-1)
             doc.line(155, i - 5, 155, i);
-            doc.text( String(tr.vdbk_num), 157,  i-1)
+            doc.text( String(tr.vdbk_num), 167,  i-1)
             doc.line(200, i - 5, 200, i);
 
             doc.line(5, i, 200, i );

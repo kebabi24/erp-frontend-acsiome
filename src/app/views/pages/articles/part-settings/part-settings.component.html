@@ -1,0 +1,162 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Paramétrage'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+      <ng-container ktPortletTools>
+        <button type="button"   (click)="goBack()" class="btn btn-secondary btn-sm mr-2"> Annuler  </button>
+        <button type="button"  (click)="reset()" class="btn btn-secondary btn-sm mr-2"> Réinitialiser </button>
+        <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2"> Enregistrer </button>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <div class="example-preview">
+        <form class="form" [formGroup]="codeForm">
+            <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="3000"
+            (close)="onAlertClose($event)">
+            Ce Code existe deja
+        </kt-alert> 
+          <div class="row">
+            <div class="form-group col-2">
+              <label class="form-group">Paramétre:</label>
+  
+              <select
+                [className]="
+                  codeForm.controls['code_fldname'].errors &&
+                  (codeForm.controls['code_fldname'].dirty ||
+                    codeForm.controls['code_fldname'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="code_fldname"
+                (change)="onChangeField()"
+                id="exampleSelects7"
+              >
+                <option value=""></option>
+                <option value="pt_prod_line">Categorie</option>
+                <option value="pt_fr_class">Classe</option>
+                <option value="pt_part_type">Famille</option>
+                <option value="pt_draw">Sous Famille</option> 
+                <option value="pt_group">Groupe</option>
+                <option value="pt_rev">Nature</option>
+                <option value="pt_break_cat">Couleur</option>
+                <option value="pt_dsgn_grp">Forme</option>
+                <option value="pt_status">Statut</option>
+                <option value="pt_abc">ABC</option>
+                <option value="pt_model">Modèle</option>
+                
+                
+              </select>
+              <div
+                *ngIf="
+                  codeForm.controls['code_fldname'].errors &&
+                  (codeForm.controls['code_fldname'].dirty ||
+                    codeForm.controls['code_fldname'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <div class="row">   
+            <div class="form-group col-2">
+              <label class="form-group">Code:</label>
+              <input
+                type="text"
+                formControlName="code_value" (change)="onChangeCode()"
+                [className]="
+                  codeForm.controls['code_value'].errors &&
+                  (codeForm.controls['code_value'].dirty ||
+                    codeForm.controls['code_value'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+              />
+              <div
+                *ngIf="
+                  codeForm.controls['code_value'].errors &&
+                  (codeForm.controls['code_value'].dirty ||
+                    codeForm.controls['code_value'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+        </div>
+        <div class="row">       
+            <div class="form-group col-6">
+              <label class="form-group">Designation:</label>
+              <input
+                type="text"
+                [className]="
+                  codeForm.controls['code_cmmt'].errors &&
+                  (codeForm.controls['code_cmmt'].dirty ||
+                    codeForm.controls['code_cmmt'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="code_cmmt"
+              />
+  
+              <div
+                *ngIf="
+                  codeForm.controls['code_cmmt'].errors &&
+                  (codeForm.controls['code_cmmt'].dirty ||
+                    codeForm.controls['code_cmmt'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-2">
+                <label class="form-group ">Lié à:</label>
+               
+                    <select class="form-control form-control-sm form-control-solid"
+                        formControlName="code_desc" id="exampleSelects4">
+                        <option value=""></option>
+                        <option *ngFor="let elem of check_form" [value]="elem.code_value">
+                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                    </select>
+                    <div *ngIf="codeForm.controls['code_desc'].errors && (codeForm.controls['code_desc'].dirty || codeForm.controls['code_desc'].touched)"
+            class="invalid-feedback">Ce Champs est obligatoire</div>
+                
+            </div>
+            <div class="form-group col-3">
+                <label class="form-group">Délai: </label>
+                <input type="number" formControlName="dec01" placeholder="délai de paiement" class='form-control form-control-sm form-control-solid' >
+            </div>
+          </div>   
+          <div class="row">
+            <angular-slickgrid class="col-12"  gridId="gridCode" [columnDefinitions]="columnDefinitions"
+            (onAngularGridCreated)="angularGridReady($event)"
+                [gridOptions]="gridOptions" [dataset]="dataset">
+            </angular-slickgrid>
+
+        </div>
+        <div>
+            <ng-template #content let-c="close"   let-d="dismiss" aria-hidden="true">
+              <div class="modal-header"  aria-hidden="true" >
+                <h4 class="modal-title">Suppression Fournisseur</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <span>Voulez vous Supprimer Le parametre Fournisseur </span>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Non</button>
+                <button type="button" class="btn btn-primary" (click)="deleteProvider()">OUI</button>
+              </div>
+            </ng-template>
+            <button hidden id="deleteDAGrid" class="btn btn-primary" (click)="open(content)">Launch demo
+                modal</button>
+          </div>
+        </form>
+    </div>
+</kt-portlet-body>
+</kt-portlet>
+

@@ -180,26 +180,26 @@ export class MenuConfig {
         //   ],
         // },
 
-        {
-          title: "Assurance de qualité",
-          bullet: "dot",
-          icon: "flaticon-event-calendar-symbol",
-          root: true,
-          submenu: [
-            {
-              title: "Ajouter paramètre de contrôle",
-              page: "/quality-assurance/add-control-parameter",
-            },
-            {
-              title: "Saisie résultats de contrôle",
-              page: "/quality-assurance/control-results-entry",
-            },
-            {
-              title: "Ajouter une gamme",
-              page: "/quality-assurance/create-gamme",
-            },
-          ],
-        },
+        // {
+        //   title: "Assurance de qualité",
+        //   bullet: "dot",
+        //   icon: "flaticon-event-calendar-symbol",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Ajouter paramètre de contrôle",
+        //       page: "/quality-assurance/add-control-parameter",
+        //     },
+        //     {
+        //       title: "Saisie résultats de contrôle",
+        //       page: "/quality-assurance/control-results-entry",
+        //     },
+        //     {
+        //       title: "Ajouter une gamme",
+        //       page: "/quality-assurance/create-gamme",
+        //     },
+        //   ],
+        // },
 
         {
           title: "Gestion des Fournisseurs",
@@ -221,7 +221,7 @@ export class MenuConfig {
             },
             {
               title: "La liste des Fournisseurs",
-              page: "/providers/list-std-provider",
+              page: "/providers/list",
             },
             {
               title: "Ajouter Fournisseurs",
@@ -239,14 +239,7 @@ export class MenuConfig {
               title: "Liste Répertoire Fournisseurs",
               page: "/providers/list-rep",
             },
-            {
-              title: "Paramétrage Fournisseur",
-              page: "/providers/provider-settings",
-            },
-            {
-              title: "Liste Paramétrage Fournisseur",
-              page: "/providers/provider-settings-list",
-            },
+            
            
           ],
         },
@@ -258,8 +251,16 @@ export class MenuConfig {
           root: true,
           submenu: [
             {
+              title: "Paramétrage Fournisseur",
+              page: "/providers/provider-settings",
+            },
+            {
+              title: "Liste Paramétrage Fournisseur",
+              page: "/providers/provider-settings-list",
+            },
+            {
               title: "La liste des Fournisseurs STD",
-              page: "/providers/list",
+              page: "/providers/list-std-provider",
             },
             {
               title: "Ajouter Fournisseur STD",
@@ -356,227 +357,227 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Gestion des clients mobile",
-          bullet: "dot",
-          icon: "flaticon2-avatar",
-          root: true,
-          submenu: [
-            {
-              title: "La liste des Clients",
-              page: "/customers-mobile/list-customer-mobile",
-            },
-            {
-              title: "Ajouter Clients",
-              page: "/customers-mobile/create-customer-mobile",
-            },
+        // {
+        //   title: "Gestion des clients mobile",
+        //   bullet: "dot",
+        //   icon: "flaticon2-avatar",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "La liste des Clients",
+        //       page: "/customers-mobile/list-customer-mobile",
+        //     },
+        //     {
+        //       title: "Ajouter Clients",
+        //       page: "/customers-mobile/create-customer-mobile",
+        //     },
             
-            {
-              title: "Ajouter Cluster",
-              page: "/customers-mobile/cluster-create",
-            },
-            {
-              title: "Ajouter Category",
-              page: "/customers-mobile/category-create",
-            },
-            {
-              title: "Ajouter Sub Cluster",
-              page: "/customers-mobile/cluster-sub-create",
-            },
-            {
-              title: "Ajouter Category Type",
-              page: "/customers-mobile/category-type-create",
-            },
-            {
-              title: "Ajouter canaux de vente",
-              page: "/customers-mobile/sales-channels-create",
-            },
-          ],
-        },
-        {
-          title: "Préparation Sortie Camion",
-          bullet: "dot",
-          icon: "flaticon-user-settings",
-          root: true,
-          submenu: [
-            {
-              title: "Crée demande de chargement",
-              page: "/supervision/create-load-request",
-            },
-            {
-              title: "Validation des demandes de chargement",
-              page: "/supervision/validate-charge-demande",
-            },
+        //     {
+        //       title: "Ajouter Cluster",
+        //       page: "/customers-mobile/cluster-create",
+        //     },
+        //     {
+        //       title: "Ajouter Category",
+        //       page: "/customers-mobile/category-create",
+        //     },
+        //     {
+        //       title: "Ajouter Sub Cluster",
+        //       page: "/customers-mobile/cluster-sub-create",
+        //     },
+        //     {
+        //       title: "Ajouter Category Type",
+        //       page: "/customers-mobile/category-type-create",
+        //     },
+        //     {
+        //       title: "Ajouter canaux de vente",
+        //       page: "/customers-mobile/sales-channels-create",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Préparation Sortie Camion",
+        //   bullet: "dot",
+        //   icon: "flaticon-user-settings",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Crée demande de chargement",
+        //       page: "/supervision/create-load-request",
+        //     },
+        //     {
+        //       title: "Validation des demandes de chargement",
+        //       page: "/supervision/validate-charge-demande",
+        //     },
             
            
-            {
-              title: "Transfert à la livraison",
-              page: "/supervision/transfer-charge-demande-delivery",
-            },
-            {
-              title: "Service roadmap",
-              page: "/supervision/dashboard-service",
-            },
-            {
-              title: "Décompte Role",
-              page: "/supervision/decompte-role",
-            },
-            {
-              title: "Créer un nouveau service",
-              page: "/services/create-new-service",
-            },
-            {
-              title: "Consultation des Services",
-              page: "/services/list-service",
-            },
-            {
-              title: "Validation des demandes de dechargement",
-              page: "/supervision/validate-decharge-demande",
-            },
-            {
-              title: "Impression Facture Camion",
-              page: "/supervision/print-inventory-role",
-            },
-            {
-              title: "Export Demande Chargement",
-              page: "/supervision/export-lr",
-            },
+        //     {
+        //       title: "Transfert à la livraison",
+        //       page: "/supervision/transfer-charge-demande-delivery",
+        //     },
+        //     {
+        //       title: "Service roadmap",
+        //       page: "/supervision/dashboard-service",
+        //     },
+        //     {
+        //       title: "Décompte Role",
+        //       page: "/supervision/decompte-role",
+        //     },
+        //     {
+        //       title: "Créer un nouveau service",
+        //       page: "/services/create-new-service",
+        //     },
+        //     {
+        //       title: "Consultation des Services",
+        //       page: "/services/list-service",
+        //     },
+        //     {
+        //       title: "Validation des demandes de dechargement",
+        //       page: "/supervision/validate-decharge-demande",
+        //     },
+        //     {
+        //       title: "Impression Facture Camion",
+        //       page: "/supervision/print-inventory-role",
+        //     },
+        //     {
+        //       title: "Export Demande Chargement",
+        //       page: "/supervision/export-lr",
+        //     },
     
-          ],
-        },
-        {
-          title: "Supervision",
-          bullet: "dot",
-          icon: "flaticon-user-settings",
-          root: true,
-          submenu: [
-            {
-              title: "Crée Demande Chargement",
-              page: "/supervision/create-lr-sup",
-            },
-            {
-              title: "Validation des Demandes de Chargement Sup",
-              page: "/supervision/validate-lr-sup",
-            },
-            // {
-            //   title: "Validation des demandes de dechargement",
-            //   page: "/supervision/validate-decharge-demande",
-            // },
-            // {
-            //   title: "Transfert demandes de chargement à la livraison",
-            //   page: "/supervision/transfer-charge-demande-delivery",
-            // },
-            {
-              title: "Liste des Chargement non Respectés",
-              page: "/supervision/list-diff-loadrequest",
-            },
-            {
-              title: "Liste des Factures Par Role",
-              page: "/supervision/list-invoice-role",
-            },
-            {
-              title: "Liste des Crédits Par Role",
-              page: "/sales/list-credit-role",
-            },
-            {
-              title: "Liste des Payments Par Role ",
-              page: "/supervision/list-payment-role",
-            },
-            {
-              title: "Liste des Visites Par Role ",
-              page: "/supervision/list-visite-role",
-            },
-            {
-              title: "Liste des Ventes Par Role ",
-              page: "/supervision/list-sales-role",
-            },
-            {
-              title: "Stock Camion Valorisé",
-              page: "/supervision/list-inventory-role",
-            },
-            {
-              title: "Export Demande Chargement",
-              page: "/supervision/export-lr",
-            },
-            // {
-            //   title: "Service roadmap",
-            //   page: "/supervision/dashboard-service",
-            // },
-            // {
-            //   title: "Décompte Role",
-            //   page: "/supervision/decompte-role",
-            // },
-          ],
-        },
-        {
-          title: "Gestion des itinéraires",
-          bullet: "dot",
-          icon: "flaticon2-delivery-truck",
-          root: true,
-          submenu: [
-            {
-              title: "Listes des itinéraires",
-              page: "/itinerary/list-itinerary",
-            },
-            {
-              title: "Ajouter un itinéraire",
-              page: "/itinerary/create-new-itinerary",
-            },
-            {
-              title: "Impression Code a Bare Client",
-              page: "/itinerary/print-qrcode",
-            },
-          ],
-        },
-        {
-          title: "Gestion des roles",
-          bullet: "dot",
-          icon: "fab fa-critical-role",
-          root: true,
-          submenu: [
-            {
-              title: "Créer un nouveau role",
-              page: "/roles/create-new-roles",
-            },
-            {
-              title: "Liste des roles",
-              page: "/roles/list-all-roles",
-            },
-          ],
-        },
-        {
-          title: "Token Series",
-          bullet: "dot",
-          icon: "flaticon2-list-1",
-          root: true,
-          submenu: [
-            {
-              title: "Créer token serie",
-              page: "/token-serie/create-new-token",
-            },
-            {
-              title: "Liste des token",
-              page: "/token-serie/list-all-tokens",
-            },
-          ],
-        },
+        //   ],
+        // },
+        // {
+        //   title: "Supervision",
+        //   bullet: "dot",
+        //   icon: "flaticon-user-settings",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Crée Demande Chargement",
+        //       page: "/supervision/create-lr-sup",
+        //     },
+        //     {
+        //       title: "Validation des Demandes de Chargement Sup",
+        //       page: "/supervision/validate-lr-sup",
+        //     },
+        //     // {
+        //     //   title: "Validation des demandes de dechargement",
+        //     //   page: "/supervision/validate-decharge-demande",
+        //     // },
+        //     // {
+        //     //   title: "Transfert demandes de chargement à la livraison",
+        //     //   page: "/supervision/transfer-charge-demande-delivery",
+        //     // },
+        //     {
+        //       title: "Liste des Chargement non Respectés",
+        //       page: "/supervision/list-diff-loadrequest",
+        //     },
+        //     {
+        //       title: "Liste des Factures Par Role",
+        //       page: "/supervision/list-invoice-role",
+        //     },
+        //     {
+        //       title: "Liste des Crédits Par Role",
+        //       page: "/sales/list-credit-role",
+        //     },
+        //     {
+        //       title: "Liste des Payments Par Role ",
+        //       page: "/supervision/list-payment-role",
+        //     },
+        //     {
+        //       title: "Liste des Visites Par Role ",
+        //       page: "/supervision/list-visite-role",
+        //     },
+        //     {
+        //       title: "Liste des Ventes Par Role ",
+        //       page: "/supervision/list-sales-role",
+        //     },
+        //     {
+        //       title: "Stock Camion Valorisé",
+        //       page: "/supervision/list-inventory-role",
+        //     },
+        //     {
+        //       title: "Export Demande Chargement",
+        //       page: "/supervision/export-lr",
+        //     },
+        //     // {
+        //     //   title: "Service roadmap",
+        //     //   page: "/supervision/dashboard-service",
+        //     // },
+        //     // {
+        //     //   title: "Décompte Role",
+        //     //   page: "/supervision/decompte-role",
+        //     // },
+        //   ],
+        // },
+        // {
+        //   title: "Gestion des itinéraires",
+        //   bullet: "dot",
+        //   icon: "flaticon2-delivery-truck",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Listes des itinéraires",
+        //       page: "/itinerary/list-itinerary",
+        //     },
+        //     {
+        //       title: "Ajouter un itinéraire",
+        //       page: "/itinerary/create-new-itinerary",
+        //     },
+        //     {
+        //       title: "Impression Code a Bare Client",
+        //       page: "/itinerary/print-qrcode",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Gestion des roles",
+        //   bullet: "dot",
+        //   icon: "fab fa-critical-role",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Créer un nouveau role",
+        //       page: "/roles/create-new-roles",
+        //     },
+        //     {
+        //       title: "Liste des roles",
+        //       page: "/roles/list-all-roles",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Token Series",
+        //   bullet: "dot",
+        //   icon: "flaticon2-list-1",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Créer token serie",
+        //       page: "/token-serie/create-new-token",
+        //     },
+        //     {
+        //       title: "Liste des token",
+        //       page: "/token-serie/list-all-tokens",
+        //     },
+        //   ],
+        // },
 
-        {
-          title: "Gestion des services",
-          bullet: "dot",
-          icon: "flaticon2-checking",
-          root: true,
-          submenu: [
-            {
-              title: "Création service",
-              page: "/services/create-new-service",
-            },
-            {
-              title: "Consultation  Services",
-              page: "/services/list-service",
-            },
-          ],
-        },
+        // {
+        //   title: "Gestion des services",
+        //   bullet: "dot",
+        //   icon: "flaticon2-checking",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Création service",
+        //       page: "/services/create-new-service",
+        //     },
+        //     {
+        //       title: "Consultation  Services",
+        //       page: "/services/list-service",
+        //     },
+        //   ],
+        // },
         {
           title: "Gestion Standard des Produits",
           bullet: "dot",
@@ -604,6 +605,22 @@ export class MenuConfig {
           icon: "flaticon2-box-1",
           root: true,
           submenu: [
+            {
+              title: "Paramétrage articles",
+              page: "/articles/part-settings",
+            },
+            {
+              title: "Liste Paramétrage Articles",
+              page: "/articles/part-settings-list",
+            },
+            {
+              title: "création articles",
+              page: "/articles/add-part",
+            },
+            {
+              title: "modification articles",
+              page: "/articles/alter-part",
+            },
             {
               title: "La liste des articles",
               page: "/articles/list",
@@ -707,34 +724,46 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon2-delivery-package",
           submenu: [
-            {
-              title: "Chargement Des Vans",
-              page: "/inventory-management/loading-vans",
-            },
-            {
-              title: "Chargement Des Vans 2",
-              page: "/inventory-transaction/loading-vans-v2",
-            },
-            {
-              title: "Chargement Des Vans (scan)",
-              page: "/inventory-management/loading-vans-scan",
-            },
-            {
-              title: "Dechargement Des Vans",
-              page: "/inventory-management/unloading-vans",
-            },
-            {
-              title: "Chargement Des BLs",
-              page: "/sales/create-psh-plq",
-            },
-            {
-              title: "Liste des Chargements ",
-              page: "/supervision/list-chargement",
-            },
-            {
-              title: "Consultation demandes de chargement",
-              page: "/inventory-management/load-request-list",
-            },
+            // {
+            //   title: "Liste des Produits",
+            //   page: "/articles/list",
+            // },
+            // {
+            //   title: "Modification des Produits",
+            //   page: "/articles/list-std-update",
+            // },
+            // {
+            //   title: "Ajouter un Produit",
+            //   page: "/articles/create-std-item",
+            // },
+            // {
+            //   title: "Chargement Des Vans",
+            //   page: "/inventory-management/loading-vans",
+            // },
+            // {
+            //   title: "Chargement Des Vans 2",
+            //   page: "/inventory-transaction/loading-vans-v2",
+            // },
+            // {
+            //   title: "Chargement Des Vans (scan)",
+            //   page: "/inventory-management/loading-vans-scan",
+            // },
+            // {
+            //   title: "Dechargement Des Vans",
+            //   page: "/inventory-management/unloading-vans",
+            // },
+            // {
+            //   title: "Chargement Des BLs",
+            //   page: "/sales/create-psh-plq",
+            // },
+            // {
+            //   title: "Liste des Chargements ",
+            //   page: "/supervision/list-chargement",
+            // },
+            // {
+            //   title: "Consultation demandes de chargement",
+            //   page: "/inventory-management/load-request-list",
+            // },
             {
               title: "Réception ",
               page: "/inventory-transaction/po-receip-std",
@@ -833,6 +862,10 @@ export class MenuConfig {
             {
               title: "Réception Bobines",
               page: "/inventory-transaction/bobine-receipt-cab",
+            },
+            {
+              title: "Imprimer liste des Réalisations extrusion ",
+              page: "/inventory-transaction/ex-wo-print",
             },
             {
               title: "Mise A Jour Le Prix Récéption",
@@ -1058,10 +1091,14 @@ export class MenuConfig {
               title: "Commande Clients",
               page: "/sales/create-so",
             },
-            {
-              title: "Commande Clients Céramique",
-              page: "/sales/create-ceram-so",
-            },
+            // {
+            //   title: "Commande Clients Céramique",
+            //   page: "/sales/create-ceram-so",
+            // },
+            // {
+            //   title: "Liste des Commandes Clients Céramique",
+            //   page: "/sales/list-so-ceram",
+            // },
             {
               title: "Fiche de Voeu",
               page: "/sales/create-so-immobilier",
@@ -1075,7 +1112,7 @@ export class MenuConfig {
               page: "/sales/list-so-edit",
             },
             {
-              title: "Débloque commande",
+              title: "deblocage commande",
               page: "/sales/unblock-so",
             },
             {
@@ -1090,10 +1127,10 @@ export class MenuConfig {
               title: "Liste des Livraisons",
               page: "/sales/psh-list",
             },
-            {
-              title: "Commande Clients Céramic",
-              page: "/sales/create-ceram-so",
-            },
+            // {
+            //   title: "Commande Clients Céramic",
+            //   page: "/sales/create-ceram-so",
+            // },
             
             {
               title: "Génération des BL",
@@ -1102,6 +1139,10 @@ export class MenuConfig {
             {
               title: "ajouter Commande Client",
               page: "/sales/create-direct-invoice",
+            },
+            {
+              title: "ajouter Commande Client immobilier",
+              page: "/sales/create-so-immobilier",
             },
             {
               title: "Versement Client",
@@ -1149,14 +1190,14 @@ export class MenuConfig {
               page: "/sales/create-invoice",
             },
             
-            {
-              title: "Facture Projet ",
-              page: "/sales/create-project-invoice",
-            },
-            {
-              title: "Imputation Facture Projet",
-              page: "/sales/imput-project-invoice",
-            },
+            // {
+            //   title: "Facture Projet ",
+            //   page: "/sales/create-project-invoice",
+            // },
+            // {
+            //   title: "Imputation Facture Projet",
+            //   page: "/sales/imput-project-invoice",
+            // },
             {
               title: "Impression Facture en Attente ",
               page: "/sales/print-invoice",
@@ -1181,66 +1222,66 @@ export class MenuConfig {
               title: "Liste des paiements Factures ",
               page: "/sales/list-invoices",
             },
-            {
-              title: "Ajouter Facture DD",
-              page: "/sales/create-inv-mob",
-            },
-            {
-              title: "Chiffre d'affaire Par Client",
-              page: "/sales/list-ca-dd",
-            },
-            {
-              title: "Liste des Factures DD",
-              page: "/sales/list-invoice-mob",
-            },
-            {
-              title: "Liste des Crédits",
-              page: "/sales/list-credit-dd",
-            },
-            {
-              title: "Liste des Ventes DD",
-              page: "/sales/list-sales-dd",
-            },
-            {
-              title: "Liste des Paiement DD",
-              page: "/sales/list-paiement-mob",
-            },
-            {
-              title: "Liste des Visites",
-              page: "/sales/list-visit-mob",
-            },
+            // {
+            //   title: "Ajouter Facture DD",
+            //   page: "/sales/create-inv-mob",
+            // },
             {
               title: "Chiffre d'affaire Par Client",
               page: "/sales/list-ca-dd",
             },
-            {
-              title: "Chiffre d'affaire Par Type Produit",
-              page: "/sales/list-sales-type",
-            },
-            {
-              title: "Chiffre d'affaire Par Client",
-              page: "/sales/list-ca-dd",
-            },
-            {
-              title: "Quantitée Vendue Par Role",
-              page: "/sales/list-sales-role",
-            },
-            {
-              title: "Liste Ventes Role/Type ",
-              page: "/sales/list-roles-sales",
-            },
-            {
-              title: "Imputation Facture DD  ",
-              page: "/sales/create-accounting-inv",
-            },
-            {
-              title: "Liste Factures DD Imputées ",
-              page: "/sales/list-invoice-acc",
-            },
-            {
-              title: "Liste des Ventes DD Imputées",
-              page: "/sales/list-sales-acc",
-            },
+            // {
+            //   title: "Liste des Factures DD",
+            //   page: "/sales/list-invoice-mob",
+            // },
+            // {
+            //   title: "Liste des Crédits",
+            //   page: "/sales/list-credit-dd",
+            // },
+            // {
+            //   title: "Liste des Ventes DD",
+            //   page: "/sales/list-sales-dd",
+            // },
+            // {
+            //   title: "Liste des Paiement DD",
+            //   page: "/sales/list-paiement-mob",
+            // },
+            // {
+            //   title: "Liste des Visites",
+            //   page: "/sales/list-visit-mob",
+            // },
+            // {
+            //   title: "Chiffre d'affaire Par Client",
+            //   page: "/sales/list-ca-dd",
+            // },
+            // {
+            //   title: "Chiffre d'affaire Par Type Produit",
+            //   page: "/sales/list-sales-type",
+            // },
+            // {
+            //   title: "Chiffre d'affaire Par Client",
+            //   page: "/sales/list-ca-dd",
+            // },
+            // {
+            //   title: "Quantitée Vendue Par Role",
+            //   page: "/sales/list-sales-role",
+            // },
+            // {
+            //   title: "Liste Ventes Role/Type ",
+            //   page: "/sales/list-roles-sales",
+            // },
+            // {
+            //   title: "Imputation Facture DD  ",
+            //   page: "/sales/create-accounting-inv",
+            // },
+            // {
+            //   title: "Liste Factures DD Imputées ",
+            //   page: "/sales/list-invoice-acc",
+            // },
+            // {
+            //   title: "Liste des Ventes DD Imputées",
+            //   page: "/sales/list-sales-acc",
+            // },
           ],
         },
         {
@@ -1822,60 +1863,60 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Gestion Des Formations",
-          bullet: "dot",
-          icon: "flaticon-presentation-1",
-          root: true,
-          submenu: [
-            {
-              title: "Création Formation",
-              page: "/training/create-training",
-            },
-            {
-              title: "Modification Des Formation",
-              page: "/training/update-training",
-            },
-            {
-              title: "Liste Des Formations",
-              page: "/training/list-training",
-            },
+        // {
+        //   title: "Gestion Des Formations",
+        //   bullet: "dot",
+        //   icon: "flaticon-presentation-1",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Création Formation",
+        //       page: "/training/create-training",
+        //     },
+        //     {
+        //       title: "Modification Des Formation",
+        //       page: "/training/update-training",
+        //     },
+        //     {
+        //       title: "Liste Des Formations",
+        //       page: "/training/list-training",
+        //     },
             
-            {
-              title: "Création session de Formation",
-              page: "/training/create-training-session",
-            },
-            {
-              title: "Liste session de Formation",
-              page: "/training/training-session-list",
-            },
-            {
-              title: "Lancement session de Formation",
-              page: "/training/launch-training-session",
-            },
-            {
-              title: "Rapport de Formation",
-              page: "/training/training-report",
-            },
-            {
-              title: "Liste Rapport de Formation",
-              page: "/training/training-report-list",
-            },
-            {
-              title: "évaluation à chaud Formation",
-              page: "/training/training-hot-eval",
-            },
-            {
-              title: "évaluation à froid Formation",
-              page: "/training/training-cold-eval",
-            },
-            {
-              title: "Liste des évaluations Formation",
-              page: "/training/training-eval-list",
-            },
+        //     {
+        //       title: "Création session de Formation",
+        //       page: "/training/create-training-session",
+        //     },
+        //     {
+        //       title: "Liste session de Formation",
+        //       page: "/training/training-session-list",
+        //     },
+        //     {
+        //       title: "Lancement session de Formation",
+        //       page: "/training/launch-training-session",
+        //     },
+        //     {
+        //       title: "Rapport de Formation",
+        //       page: "/training/training-report",
+        //     },
+        //     {
+        //       title: "Liste Rapport de Formation",
+        //       page: "/training/training-report-list",
+        //     },
+        //     {
+        //       title: "évaluation à chaud Formation",
+        //       page: "/training/training-hot-eval",
+        //     },
+        //     {
+        //       title: "évaluation à froid Formation",
+        //       page: "/training/training-cold-eval",
+        //     },
+        //     {
+        //       title: "Liste des évaluations Formation",
+        //       page: "/training/training-eval-list",
+        //     },
             
-          ],
-        },
+        //   ],
+        // },
 
         // {
         //   title: "Gestion des Patients",
@@ -1937,152 +1978,152 @@ export class MenuConfig {
         //     },
         //   ],
         // },
-        {
-          title: "Gestion des projets",
-          root: true,
-          bullet: "dot",
-          icon: "flaticon2-files-and-folders",
-          submenu: [
-            {
-              title: "La liste Detail des Projets",
-              page: "/project/list-project",
-            },
-            {
-              title: "Ajouter un projet",
-              page: "/project/create-project",
-            },
-            {
-              title: "mettre A jour Projet",
-              page: "/project/update-project",
-            },
-            {
-              title: "La liste des Projets",
-              page: "/project/list-pm",
-            },
+        // {
+        //   title: "Gestion des projets",
+        //   root: true,
+        //   bullet: "dot",
+        //   icon: "flaticon2-files-and-folders",
+        //   submenu: [
+        //     {
+        //       title: "La liste Detail des Projets",
+        //       page: "/project/list-project",
+        //     },
+        //     {
+        //       title: "Ajouter un projet",
+        //       page: "/project/create-project",
+        //     },
+        //     {
+        //       title: "mettre A jour Projet",
+        //       page: "/project/update-project",
+        //     },
+        //     {
+        //       title: "La liste des Projets",
+        //       page: "/project/list-pm",
+        //     },
 
-            {
-              title: "Lancer un projet",
-              page: "/project/launch-project",
-            },
-            // {
-            //   title: "Affectation des Employés",
-            //   page: "/project/create-project-payment",
-            // },
+        //     {
+        //       title: "Lancer un projet",
+        //       page: "/project/launch-project",
+        //     },
+        //     // {
+        //     //   title: "Affectation des Employés",
+        //     //   page: "/project/create-project-payment",
+        //     // },
 
-            {
-              title: "Affectation des Employés",
-              page: "/accounting-setting/affect-emp",
-            },
-            {
-              title: "Rapport des activités",
-              page: "/project/add-report",
-            },
-            {
-              title: "Déclaration de panne des équipements",
-              page: "/project/asset-down",
-            },
-            {
-              title: "Déclaration de accident/incident",
-              page: "/project/accident-incident",
-            },
+        //     {
+        //       title: "Affectation des Employés",
+        //       page: "/accounting-setting/affect-emp",
+        //     },
+        //     {
+        //       title: "Rapport des activités",
+        //       page: "/project/add-report",
+        //     },
+        //     {
+        //       title: "Déclaration de panne des équipements",
+        //       page: "/project/asset-down",
+        //     },
+        //     {
+        //       title: "Déclaration de accident/incident",
+        //       page: "/project/accident-incident",
+        //     },
 
-            {
-              title: "Sensibilisation",
-              page: "/project/sensibilisation",
-            },
-            {
-              title: "identification",
-              page: "/project/identification",
-            },
-            {
-              title: "Fiche revue exigences client V 01 model",
-              page: "/project/review-customer-req",
-            },
-            {
-              title: "Fiche de suivi d'affaire projet V02 model",
-              page: "/project/business-monitoring-sheet",
-            },
+        //     {
+        //       title: "Sensibilisation",
+        //       page: "/project/sensibilisation",
+        //     },
+        //     {
+        //       title: "identification",
+        //       page: "/project/identification",
+        //     },
+        //     {
+        //       title: "Fiche revue exigences client V 01 model",
+        //       page: "/project/review-customer-req",
+        //     },
+        //     {
+        //       title: "Fiche de suivi d'affaire projet V02 model",
+        //       page: "/project/business-monitoring-sheet",
+        //     },
 
-            /**/
-            {
-              title: "Gestion des Nomenclatures",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-tools-and-utensils",
-              submenu: [
-                {
-                  title: "ajouter Code Formules",
-                  page: "/manufacturing/create-nomenclature",
-                },
-                {
-                  title: "Liste des codes formules",
-                  page: "/manufacturing/list-bom",
-                },
-                {
-                  title: "ajouter des composants Nomenclatures",
-                  page: "/manufacturing/create-ps",
-                },
-                {
-                  title: "Liste des Formules",
-                  page: "/manufacturing/list-ps",
-                },
-                {
-                  title: "Affectation Formules",
-                  page: "/manufacturing/affect-bom",
-                },
-                {
-                  title: "Liste des affectations Formules",
-                  page: "/manufacturing/list-ptb", 
-                },
-                {
-                  title: "Calcul coût des Nomenclatures",
-                  page: "/manufacturing/bom-cost",
-                },
-              ],
-            },
-            /* */
-            {
-              title: "Gestion des Listes Outils",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-tools-and-utensils",
-              submenu: [
-                {
-                  title: "La liste des Listes Outils",
-                  page: "/tool/list-tool",
-                },
-                {
-                  title: "Ajouter une Liste Outil",
-                  page: "/tool/create-tool",
-                },
-              ],
-            },
-            {
-              title: "Gestion des Instructions",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-sms",
-              submenu: [
-                {
-                  title: "La liste des Instructions",
-                  page: "/task/list-task",
-                },
-                {
-                  title: "Ajouter une Instruction",
-                  page: "/task/create-task",
-                },
-              ],
-            },
+        //     /**/
+        //     {
+        //       title: "Gestion des Nomenclatures",
+        //       root: true,
+        //       bullet: "dot",
+        //       icon: "flaticon2-tools-and-utensils",
+        //       submenu: [
+        //         {
+        //           title: "ajouter Code Formules",
+        //           page: "/manufacturing/create-nomenclature",
+        //         },
+        //         {
+        //           title: "Liste des codes formules",
+        //           page: "/manufacturing/list-bom",
+        //         },
+        //         {
+        //           title: "ajouter des composants Nomenclatures",
+        //           page: "/manufacturing/create-ps",
+        //         },
+        //         {
+        //           title: "Liste des Formules",
+        //           page: "/manufacturing/list-ps",
+        //         },
+        //         {
+        //           title: "Affectation Formules",
+        //           page: "/manufacturing/affect-bom",
+        //         },
+        //         {
+        //           title: "Liste des affectations Formules",
+        //           page: "/manufacturing/list-ptb", 
+        //         },
+        //         {
+        //           title: "Calcul coût des Nomenclatures",
+        //           page: "/manufacturing/bom-cost",
+        //         },
+        //       ],
+        //     },
+        //     /* */
+        //     {
+        //       title: "Gestion des Listes Outils",
+        //       root: true,
+        //       bullet: "dot",
+        //       icon: "flaticon2-tools-and-utensils",
+        //       submenu: [
+        //         {
+        //           title: "La liste des Listes Outils",
+        //           page: "/tool/list-tool",
+        //         },
+        //         {
+        //           title: "Ajouter une Liste Outil",
+        //           page: "/tool/create-tool",
+        //         },
+        //       ],
+        //     },
+        //     {
+        //       title: "Gestion des Instructions",
+        //       root: true,
+        //       bullet: "dot",
+        //       icon: "flaticon2-sms",
+        //       submenu: [
+        //         {
+        //           title: "La liste des Instructions",
+        //           page: "/task/list-task",
+        //         },
+        //         {
+        //           title: "Ajouter une Instruction",
+        //           page: "/task/create-task",
+        //         },
+        //       ],
+        //     },
 
-            // {
-            //     title: "Création des Projets",
+        //     // {
+        //     //     title: "Création des Projets",
 
-            //     submenu: [
+        //     //     submenu: [
 
-            //     ],
-            // },
-          ],
-        },
+        //     //     ],
+        //     // },
+        //   ],
+        // },
 
         
         {
@@ -2114,26 +2155,26 @@ export class MenuConfig {
           ],
         },
 
-        {
-          title: "Gestion des Transporteurs",
-          bullet: "dot",
-          icon: "flaticon2-lorry",
-          root: true,
-          submenu: [
-            {
-              title: "Ajouter Transporteur",
-              page: "/transport/create-transporter",
-            },
-            {
-              title: "Edit Transporteur",
-              page: "/transport/list-edit-transporter",
-            },
-            {
-              title: "Liste des Transporteurs",
-              page: "/transport/list-transporter",
-            },
-          ],
-        },
+        // {
+        //   title: "Gestion des Transporteurs",
+        //   bullet: "dot",
+        //   icon: "flaticon2-lorry",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Ajouter Transporteur",
+        //       page: "/transport/create-transporter",
+        //     },
+        //     {
+        //       title: "Edit Transporteur",
+        //       page: "/transport/list-edit-transporter",
+        //     },
+        //     {
+        //       title: "Liste des Transporteurs",
+        //       page: "/transport/list-transporter",
+        //     },
+        //   ],
+        // },
         {
           title: "Gestion des utilisateurs",
           bullet: "dot",
@@ -2156,20 +2197,20 @@ export class MenuConfig {
                 },
               ],
             },
-            {
-              title: "Gestion des utilisateurs mobile",
-              icon: "flaticon-user",
-              submenu: [
-                {
-                  title: "Ajouter un utilisateur mobile",
-                  page: "/users-mobile/create-user-mobile",
-                },
-                {
-                  title: "La liste des utilisateurs mobile",
-                  page: "/users-mobile/list-user-mobile",
-                },
-              ],
-            },
+            // {
+            //   title: "Gestion des utilisateurs mobile",
+            //   icon: "flaticon-user",
+            //   submenu: [
+            //     {
+            //       title: "Ajouter un utilisateur mobile",
+            //       page: "/users-mobile/create-user-mobile",
+            //     },
+            //     {
+            //       title: "La liste des utilisateurs mobile",
+            //       page: "/users-mobile/list-user-mobile",
+            //     },
+            //   ],
+            // },
           ],
         },
         {
@@ -2192,28 +2233,28 @@ export class MenuConfig {
                 },
               ],
             },
-            {
-              title: "Gestion des profils mobiles",
-              icon: "flaticon-profile",
-              submenu: [
-                {
-                  title: "Ajouter un profil mobile",
-                  page: "/profiles-mobile/create-profile-mobile",
-                },
-                {
-                  title: "Affection des pages produits",
-                  page: "/profiles-mobile/assign-profile-products-pages",
-                },
-                {
-                  title: "liste des profiles mobile",
-                  page: "/profiles-mobile/profiles-list-mobile",
-                },
-                {
-                  title: "Ajouter un menu mobile",
-                  page: "/mobile-menu/create-new-menu",
-                },
-              ],
-            },
+            // {
+            //   title: "Gestion des profils mobiles",
+            //   icon: "flaticon-profile",
+            //   submenu: [
+            //     {
+            //       title: "Ajouter un profil mobile",
+            //       page: "/profiles-mobile/create-profile-mobile",
+            //     },
+            //     {
+            //       title: "Affection des pages produits",
+            //       page: "/profiles-mobile/assign-profile-products-pages",
+            //     },
+            //     {
+            //       title: "liste des profiles mobile",
+            //       page: "/profiles-mobile/profiles-list-mobile",
+            //     },
+            //     {
+            //       title: "Ajouter un menu mobile",
+            //       page: "/mobile-menu/create-new-menu",
+            //     },
+            //   ],
+            // },
           ],
         },
         {

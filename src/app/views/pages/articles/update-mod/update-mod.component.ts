@@ -204,6 +204,15 @@ export class UpdateModComponent implements OnInit {
         minWidth: 80,
       },
       {
+        id: "mod_buyer",
+        name: "Séquence achat",
+        field: "mod_buyer",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.text,
+        minWidth: 80,
+      },
+      {
         id: "mod_abc",
         name: "Classe ABC",
         field: "mod_abc",

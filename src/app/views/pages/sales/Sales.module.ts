@@ -118,6 +118,8 @@ import { UndoInvoiceComponent } from './undo-invoice/undo-invoice.component';
 import { ListCaTypeComponent } from './list-ca-type/list-ca-type.component';
 import { ListSoCeramComponent } from './list-so-ceram/list-so-ceram.component';
 import { ListSoDetComponent } from './list-so-det/list-so-det.component';
+import { ListSoEditImmobilierComponent } from './list-so-edit-immobilier/list-so-edit-immobilier.component';
+import { EditSoImmobilierComponent } from './edit-so-immobilier/edit-so-immobilier.component';
 
 import { RowDetailViewComponent } from "./rowDetails/rowdetail-view.component";
 import { RowDetailPreloadComponent } from "./rowDetails/row-details-preload.component";
@@ -425,7 +427,8 @@ component: AttestationReservationComponent,
      CreateDirectSoSeqComponent,
      PrintInvoiceSeqComponent,
      EditSoPlqComponent,
-     ListSalesInvComponent,],
+     ListSalesInvComponent,
+     ListSoEditImmobilierComponent, EditSoImmobilierComponent],
     imports: [
         CommonModule,
         HttpClientModule,

@@ -103,7 +103,7 @@ const myCustomCheckmarkFormatter: Formatter = (
   `;
 };
 
-@Component({
+ @Component({
   selector: 'kt-create-epi-mod',
   templateUrl: './create-epi-mod.component.html',
   styleUrls: ['./create-epi-mod.component.scss']
@@ -248,23 +248,23 @@ export class CreateEpiModComponent implements OnInit {
     this.prepareGrid();
     this.prepareGrid2();
     this.codeService
-      .getBy({ code_fldname: "pt_break_cat",code_desc:'EPI' })
+      .getBy({ code_fldname: "epi_break_cat",code_desc:'EPI' })
       .subscribe((response: any) => (this.pt_break_cat = response.data));
     
-    this.codeService
-      .getBy({ code_fldname: "pt_group" })
-      .subscribe((response: any) => (this.pt_group = response.data));
-this.codeService
-      .getBy({ code_fldname: "pt_article" })
-      .subscribe((response: any) => (this.pt_article = response.data));
+//     this.codeService
+//       .getBy({ code_fldname: "epi_group" })
+//       .subscribe((response: any) => (this.pt_group = response.data));
+// this.codeService
+//       .getBy({ code_fldname: "epi_article" })
+//       .subscribe((response: any) => (this.pt_article = response.data));
       this.codeService
-      .getBy({ code_fldname: "pt_part_type",code_desc:'EPI' })
+      .getBy({ code_fldname: "epi_part_type" })
       .subscribe((response: any) => (this.pt_part_type = response.data));
+      // this.codeService
+      // .getBy({ code_fldname: "epi_draw" })
+      // .subscribe((response: any) => (this.pt_draw = response.data));
       this.codeService
-      .getBy({ code_fldname: "pt_draw" })
-      .subscribe((response: any) => (this.pt_draw = response.data));
-      this.codeService
-      .getBy({ code_fldname: "pt_rev" })
+      .getBy({ code_fldname: "epi_rev" })
       .subscribe((response: any) => (this.pt_rev = response.data));
 
   }
@@ -405,9 +405,9 @@ this.codeService
       pt_prod_line: [{ value: 'EPI',disabled:true},Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type,},Validators.required],
       pt_draw: [{ value: this.item.pt_draw, },Validators.required],
-      pt_rev: [ this.item.pt_rev, Validators.required],
+      pt_rev: [ this.item.pt_rev],
       pt_group: [{value: this.item.pt_group,},Validators.required ],
-      pt_model:['',Validators.required ],
+      pt_model:['' ],
       pt_break_cat:[{value: this.item.pt_break_cat,},Validators.required ],
       
 
@@ -535,6 +535,7 @@ onChangecolor() {
   
  controls1.pt_break_cat.disable()
  controls1.pt_desc1.setValue(controls1.pt_part_type.value + ' ' + controls1.pt_draw.value + ' ' + controls1.pt_group.value + ' ' + controls1.pt_model.value + ' ' + controls1.pt_break_cat.value + ' ' + controls1.pt_rev.value)
+controls1.pt_desc1.enable()
  controls1.pt_dea.enable()
  controls1.pt_plan_ord.enable() 
   
@@ -542,7 +543,7 @@ onChangecolor() {
 onChangearticle() {
   const controls1 = this.form1.controls
   
- controls1.pt_rev.disable()
+ controls1.pt_model.disable()
   
 }
 onChangegroup() {
@@ -550,23 +551,26 @@ onChangegroup() {
   
  controls1.pt_group.disable()
  this.codeService
-      .getBy({ code_fldname: "pt_draw",code_desc:'EPI',chr01:controls1.pt_group.value })
+      .getBy({ code_fldname: "epi_draw",chr01:controls1.pt_group.value })
       .subscribe((response: any) => (this.pt_draw = response.data)); 
+if(controls1.pt_group.value == 'CHAUSSURE') {this.codeService
+      .getBy({ code_fldname: "epi_rev",chr01:controls1.pt_group.value })
+      .subscribe((response: any) => (this.pt_rev = response.data));   }   
 }
 onChangedraw() {
   const controls1 = this.form1.controls
   
  controls1.pt_draw.disable()
-   this.codeService
-      .getBy({code_fldname:'pt_rev',code_desc:'EPI',chr01:controls1.pt_draw.value})
-      .subscribe((response: any) => (this.datamod = response.data))
+  //  this.codeService
+  //     .getBy({code_fldname:'epi_rev',code_desc:'EPI',chr01:controls1.pt_draw.value})
+  //     .subscribe((response: any) => (this.datamod = response.data))
 }
 onChangeparttype() {
   const controls1 = this.form1.controls
   
  controls1.pt_part_type.disable()
  this.codeService
-      .getBy({ code_fldname: "pt_group",code_desc:'EPI',chr01:controls1.pt_part_type.value })
+      .getBy({ code_fldname: "epi_group",chr01:controls1.pt_part_type.value })
       .subscribe((response: any) => (this.pt_group = response.data)); 
  
 }
@@ -863,48 +867,48 @@ onAlertClose($event) {
       (error) => console.log(error)
     );
   }
-  changemod() {
-    const controls = this.form1.controls; // chof le champs hada wesh men form rah
-    const mod_code = controls.pt_rev.value;
-    this.itemModelService.getBy({ mod_code}).subscribe(
-      (res: any) => {
-        const { data } = res;
-        if (!data) {
-          this.layoutUtilsService.showActionNotification(
-            "ce Modèle n'existe pas!",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.error = true;
-        } else {
-          this.error = false;
-          this.model = data
-          console.log(this.model,'model')
-          controls.pt_group.setValue(null)
-          controls.pt_group.enable()
-          controls.pt_um.setValue(null)
-          controls.pt_prod_line.setValue(null)
-          controls.pt_part_type.setValue(null)
-          controls.pt_price.setValue(0)
+  // changemod() {
+  //   const controls = this.form1.controls; // chof le champs hada wesh men form rah
+  //   const mod_code = controls.pt_rev.value;
+  //   this.itemModelService.getBy({ mod_code}).subscribe(
+  //     (res: any) => {
+  //       const { data } = res;
+  //       if (!data) {
+  //         this.layoutUtilsService.showActionNotification(
+  //           "ce Modèle n'existe pas!",
+  //           MessageType.Create,
+  //           10000,
+  //           true,
+  //           true
+  //         );
+  //         this.error = true;
+  //       } else {
+  //         this.error = false;
+  //         this.model = data
+  //         console.log(this.model,'model')
+  //         controls.pt_group.setValue(null)
+  //         controls.pt_group.enable()
+  //         controls.pt_um.setValue(null)
+  //         controls.pt_prod_line.setValue(null)
+  //         controls.pt_part_type.setValue(null)
+  //         controls.pt_price.setValue(0)
          
-          controls.pt_draw.setValue(null)
-            controls.pt_origin.setValue(null)
-            controls.pt_bom_code.setValue(null)
-            controls.pt_dsgn_grp.setValue(null)
-            controls.pt_status.setValue(null)
-            controls.pt_part.setValue(null)
-            controls.pt_desc1.setValue(null)
-            controls.pt_desc2.setValue(null)
-            controls.pt_part.disable()
-            controls.pt_desc1.disable()
-            controls.pt_desc2.disable()
-        }
-      },
-      (error) => console.log(error)
-    );
-  }
+  //         controls.pt_draw.setValue(null)
+  //           controls.pt_origin.setValue(null)
+  //           controls.pt_bom_code.setValue(null)
+  //           controls.pt_dsgn_grp.setValue(null)
+  //           controls.pt_status.setValue(null)
+  //           controls.pt_part.setValue(null)
+  //           controls.pt_desc1.setValue(null)
+  //           controls.pt_desc2.setValue(null)
+  //           controls.pt_part.disable()
+  //           controls.pt_desc1.disable()
+  //           controls.pt_desc2.disable()
+  //       }
+  //     },
+  //     (error) => console.log(error)
+  //   );
+  // }
   
   changeCode(field) {
     const controls = this.form1.controls; // chof le champs hada wesh men form rah
@@ -1549,32 +1553,32 @@ handleSelectedRowsChangedmod(e, args) {
     args.rows.map((idx) => {
       const item = this.gridObjmod.getDataItem(idx);
       
-      controls1.pt_rev.setValue(item.mod_code || "");
+      controls1.pt_model.setValue(item.code_value || "");
       this.model = item
       console.log(controls1.pt_rev.value)
       
-      controls1.pt_group.setValue(null)
-          controls1.pt_group.enable()
-          controls1.pt_rev.disable()
+          // controls1.pt_group.setValue(null)
+          // controls1.pt_group.enable()
+          // controls1.pt_rev.disable()
           
-            controls1.pt_um.setValue(null)
-            controls1.pt_prod_line.setValue(null)
-            controls1.pt_part_type.setValue(null)
-            controls1.pt_price.setValue(0)
-            controls1.pt_draw.setValue(null)
-            controls1.pt_origin.setValue(null)
-            controls1.pt_bom_code.setValue(null)
-            controls1.pt_dsgn_grp.setValue(null)
-            controls1.pt_status.setValue(null)
-            controls1.int01.setValue(null)
-            controls1.int02.setValue(null)
-           controls1.int03.setValue(0)
-            controls1.pt_part.setValue(null)
-            controls1.pt_desc1.setValue(null)
-            controls1.pt_desc2.setValue(null)
-            controls1.pt_part.disable()
-            controls1.pt_desc1.disable()
-            controls1.pt_desc2.disable()
+          //   controls1.pt_um.setValue(null)
+          //   controls1.pt_prod_line.setValue(null)
+          //   controls1.pt_part_type.setValue(null)
+          //   controls1.pt_price.setValue(0)
+          //   controls1.pt_draw.setValue(null)
+          //   controls1.pt_origin.setValue(null)
+          //   controls1.pt_bom_code.setValue(null)
+          //   controls1.pt_dsgn_grp.setValue(null)
+          //   controls1.pt_status.setValue(null)
+          //   controls1.int01.setValue(null)
+          //   controls1.int02.setValue(null)
+          //  controls1.int03.setValue(0)
+          //   controls1.pt_part.setValue(null)
+          //   controls1.pt_desc1.setValue(null)
+          //   controls1.pt_desc2.setValue(null)
+          //   controls1.pt_part.disable()
+          //   controls1.pt_desc1.disable()
+          //   controls1.pt_desc2.disable()
     });
   }
 }
@@ -1636,8 +1640,9 @@ prepareGridmod() {
   }
 
   // fill the dataset with your data
+  const controls = this.form1.controls
   this.codeService
-      .getBy({code_fldname:'pt_model',code_desc:'EPI'})
+      .getBy({code_fldname:'epi_model',code_desc:'EPI',chr01:controls.pt_draw.value})
       .subscribe((response: any) => (this.datamod = response.data))
 }
 openmod(content) {
@@ -1671,7 +1676,11 @@ printpdf() {
     doc.text(this.docs[0].date02, 180, 27);
   }
         
-          const date = new Date()
+          const tdate = new Date()
+          
+      //     doc.text("imprimé Le: " + tdate.toLocaleDateString() , 160, 35);
+      // doc.text("A: " + new Date().toLocaleTimeString(), 220, 35);
+      // doc.text("Edité par: " + this.user.usrd_code, 220, 40);
 doc.setFontSize(14);
     
           
