@@ -1192,17 +1192,23 @@ printpdf(nbr) {
   var img = new Image()
   img.src = "./assets/media/logos/company.png";
   img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, "png", 160, 5, 50, 30);
-  doc.setFontSize(9);
+  doc.addImage(img, "png", 5, 5, 50, 30);
+  doc.setFont('times','bold')
+  doc.setFontSize(10);
   if (this.domain.dom_name != null) {
-    doc.text(this.domain.dom_name, 10, 10);
+    doc.text(this.domain.dom_name, 100, 10);
   }
-  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-  doc.line(10, 32, 200, 32);
-  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
-  doc.line(10, 40, 200, 40);
+  let tel1 =  (this.domain.dom_tel1 != null) ? this.domain.dom_tel1 : ""
+  let tel2 =  (this.domain.dom_tel2 != null) ? this.domain.dom_tel2 : ""
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 100, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 100, 20);
+  if (tel1!= "" || tel2 != "") doc.text("Tél : " + tel1 + " / " + tel2, 100, 25);
+  
+  doc.setFontSize(8);
+  doc.line(2, 32, 208, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "      NIF : " + this.domain.dom_nif +  "      AI : " + this.domain.dom_ai + "      NIS : " + this.domain.dom_nis + "      Compte Bancaire :" + this.domain.dom_bank1 + " N° : " + this.domain.dom_rib1, 10, 37);
+  doc.line(2, 40, 208, 40);
+  doc.setFont('times','normal')
   doc.setFontSize(12);
   doc.text( 'Facture N°: ' + nbr  , 70, 45);
   doc.setFontSize(8);
@@ -1246,17 +1252,23 @@ printpdf(nbr) {
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
 img.src = "./assets/media/logos/companylogo.png";
-doc.addImage(img, "png", 160, 5, 50, 30);
-doc.setFontSize(9);
-if (this.domain.dom_name != null) {
-  doc.text(this.domain.dom_name, 10, 10);
-}
-if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    doc.line(10, 32, 200, 32);
-    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
-    doc.line(10, 40, 200, 40);
+doc.addImage(img, "png", 5, 5, 50, 30);
+  doc.setFont('times','bold')
+  doc.setFontSize(10);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 100, 10);
+  }
+  let tel1 =  (this.domain.dom_tel1 != null) ? this.domain.dom_tel1 : ""
+  let tel2 =  (this.domain.dom_tel2 != null) ? this.domain.dom_tel2 : ""
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 100, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 100, 20);
+  if (tel1!= "" || tel2 != "") doc.text("Tél : " + tel1 + " / " + tel2, 100, 25);
+  
+  doc.setFontSize(8);
+  doc.line(2, 32, 208, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "      NIF : " + this.domain.dom_nif +  "      AI : " + this.domain.dom_ai + "      NIS : " + this.domain.dom_nis + "      Compte Bancaire :" + this.domain.dom_bank1 + " N° : " + this.domain.dom_rib1, 10, 37);
+  doc.line(2, 40, 208, 40);
+  doc.setFont('times','normal')
       doc.setFontSize(12);
       doc.text( 'N° Facture : ' + nbr  , 70, 45);
       doc.setFontSize(8);

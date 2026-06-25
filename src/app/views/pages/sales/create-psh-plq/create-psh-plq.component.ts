@@ -544,6 +544,7 @@ export class CreatePshPlqComponent implements OnInit {
       psh_cust: [{value:this.saleShiper.psh_cust, disabled:true}],
       name: [{value:"", disabled:true}],
       qtyglob: [{value:0, disabled:true}],
+      qtynbr: [{value:0, disabled:true}],
       psh_ship_date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
@@ -2217,25 +2218,24 @@ printpdf(nbr) {
   var doc = new jsPDF();
   var img = new Image();
   img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, "png", 160, 5, 50, 30);
-    doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    doc.line(10, 32, 200, 32);
-    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
-    doc.line(10, 40, 200, 40);
-    // doc.barcode(nbr, {
-    //   fontSize: 45,
-    //   textColor: "#000000",
-    //   x: 120,
-    //   y: 50,
-    //   textOptions: { align: "center" }, // optional text options
-    // });
-    doc.setFont("Times-Roman");
+  doc.addImage(img, "png", 5, 5, 50, 30);
+  doc.setFont('times','bold')
+  doc.setFontSize(10);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 100, 10);
+  }
+  let tel1 =  (this.domain.dom_tel1 != null) ? this.domain.dom_tel1 : ""
+  let tel2 =  (this.domain.dom_tel2 != null) ? this.domain.dom_tel2 : ""
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 100, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 100, 20);
+  if (tel1!= "" || tel2 != "") doc.text("Tél : " + tel1 + " / " + tel2, 100, 25);
+  
+  doc.setFontSize(8);
+  doc.line(2, 32, 208, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "      NIF : " + this.domain.dom_nif +  "      AI : " + this.domain.dom_ai + "      NIS : " + this.domain.dom_nis + "      Compte Bancaire :" + this.domain.dom_bank1 + " N° : " + this.domain.dom_rib1, 10, 37);
+  doc.line(2, 40, 208, 40);
+  doc.setFont('times','normal')
+   
   doc.setFontSize(12);
   doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
   doc.setFontSize(12);
@@ -2276,25 +2276,23 @@ printpdf(nbr) {
     
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
-doc.addImage(img, "png", 160, 5, 50, 30);
-doc.setFontSize(9);
-if (this.domain.dom_name != null) {
-  doc.text(this.domain.dom_name, 10, 10);
-}
-if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-doc.line(10, 32, 200, 32);
-doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
-doc.line(10, 40, 200, 40);
-// doc.barcode(nbr, {
-//   fontSize: 45,
-//   textColor: "#000000",
-//   x: 120,
-//   y: 50,
-//   textOptions: { align: "center" }, // optional text options
-// });
-doc.setFont("Times-Roman");
+doc.addImage(img, "png", 5, 5, 50, 30);
+  doc.setFont('times','bold')
+  doc.setFontSize(10);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 100, 10);
+  }
+  let tel1 =  (this.domain.dom_tel1 != null) ? this.domain.dom_tel1 : ""
+  let tel2 =  (this.domain.dom_tel2 != null) ? this.domain.dom_tel2 : ""
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 100, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 100, 20);
+  if (tel1!= "" || tel2 != "") doc.text("Tél : " + tel1 + " / " + tel2, 100, 25);
+  
+  doc.setFontSize(8);
+  doc.line(2, 32, 208, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "      NIF : " + this.domain.dom_nif +  "      AI : " + this.domain.dom_ai + "      NIS : " + this.domain.dom_nis + "      Compte Bancaire :" + this.domain.dom_bank1 + " N° : " + this.domain.dom_rib1, 10, 37);
+  doc.line(2, 40, 208, 40);
+  doc.setFont('times','normal')
 doc.setFontSize(12);
 doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
       doc.setFontSize(12);
@@ -2548,6 +2546,13 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
     
     const controls = this.pshForm.controls;
     const controlsQ = this.qtyForm.controls;
+    let qtnbr = Number(controls.qtynbr.value)
+
+    const index = this.dataset.findIndex(element =>{
+      return element.psh_part == this.prod
+    })
+   
+    if(index <0) { controls.qtynbr.setValue(qtnbr + 1)}
     this.qtyl = controlsQ.qty.value;
     const qty = controlsQ.qty.value;
     // let pricebefore = args.dataContext.sod_price;
@@ -2623,6 +2628,7 @@ this.angularGrid.gridService.addItem(
 this.calculatetot()
 const controls = this.pshForm.controls
 let nbq = Number(controls.qtyglob.value)
+
 
 controls.qtyglob.setValue(nbq + Number(this.qtyl))
 controls.pal.setValue(null);

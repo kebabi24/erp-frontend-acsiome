@@ -73,4 +73,8 @@ export class CodeService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/findprovider`, { headers: httpHeaders })
     }
+    public getAllCustomer() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findcustomer`, { headers: httpHeaders })
+    }
 }

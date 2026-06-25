@@ -1,21 +1,21 @@
 <kt-portlet>
-  <kt-portlet-header [sticky]="true" [title]="'Ajouter un nouveau itinéraire'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+  <kt-portlet-header [sticky]="true" [title]="'Modification itinéraire'" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Enregistrer</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
     <div class="example-preview">
       <div class="row">
-        <div *ngIf="formReady" class="col-6">
+        <div  class="col-6">
           <form [formGroup]="itineraryForm" class="form">
             <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
             <div class="row">
               <div class="form-group col-6">
                 <label class="form-group" id="code">Code de l'itinéraire :</label>
-                <input disabled type="text" [className]="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="itinerary_code" />
+                <input disabled type="text" [(ngModel)]="itineraryEdit.itinerary_code" [className]="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="itinerary_code" />
                 <div *ngIf="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
               </div>
             </div>
@@ -49,9 +49,9 @@
               </div>
             </div>
 
-            <div>
+            <!--div>
               {{ time | async }}
-            </div>
+            </div-->
           </form>
           <br />
           <br />
@@ -62,8 +62,35 @@
           </agm-map>
         </div>
       </div>
-      <div *ngIf="formReady" class="col-12">
-        <angular-slickgrid gridId="grid4" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
+      <div class="row col-lg-12">
+        <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter un
+            Niveau</button>
+    </div>
+      <div  class="col-12">
+        <angular-slickgrid gridId="grid4" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)"
+         (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
       </div>
-    </div> </kt-portlet-body
+    </div> 
+    <div>
+      <ng-template #contentcust let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le Client</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro" [columnDefinitions]="columnDefinitionscust" (onAngularGridCreated)="angularGridReadycust($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedcust($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionscust" [dataset]="datacust"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+      <button hidden id="openItemsGrid" class="btn btn-primary" (click)="opencust(contentcust)">Launch demo modal</button>
+ 
+    </div>
+    </kt-portlet-body
 ></kt-portlet>

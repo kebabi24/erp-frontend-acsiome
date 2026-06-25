@@ -9,6 +9,7 @@ import {
   Column,
   DelimiterType,
   FieldType,
+  GridService,
   FileType,
   Filters,
   Formatters,
@@ -45,6 +46,8 @@ import {
 import { jsPDF } from "jspdf";
 import { replace } from "lodash";
 import { replaceAll } from "chartist";
+import { environment } from "../../../../../environments/environment"
+import { HttpClient } from "@angular/common/http"
 const myCustomCheckboxFormatter: Formatter = (
   row: number,
   cell: number,
@@ -57,7 +60,7 @@ const myCustomCheckboxFormatter: Formatter = (
     ? `<div class="text"  aria-hidden="true">Oui</div>`
     : '<div class="text"  aria-hidden="true">Non</div>';
 
-
+    const API_URL = environment.apiUrl + "/codes"
 @Component({
   selector: 'kt-customers-solde',
   templateUrl: './customers-solde.component.html',
@@ -74,6 +77,10 @@ export class CustomersSoldeComponent implements OnInit {
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ["", "", ""];
   gridObj: any;
   dataviewObj: any;
+
+  grid: any;
+  gridService: GridService;
+  
 user: any
 domain: any
   constructor(
@@ -81,6 +88,7 @@ domain: any
     private router: Router,
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
+    private http: HttpClient,
     private addressService: AddressService,
     private customerService: CustomerService
   ) {
@@ -95,9 +103,16 @@ domain: any
 
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
-    this.gridObj = angularGrid.slickGrid; // grid object
     this.dataview = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid;
+    this.gridService = angularGrid.gridService;
   }
+  // mvGridReady(angularGrid: AngularGridInstance) {
+  //   this.angularGrid = angularGrid;
+  //   this.dataview = angularGrid.dataView;
+  //   this.grid = angularGrid.slickGrid;
+  //   this.gridService = angularGrid.gridService;
+  // }
   prepareGrid() {
     this.columnDefinitions = [
     
@@ -160,6 +175,17 @@ domain: any
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        filter: {
+
+         
+          // collectionAsync: this.elem,
+          collectionAsync:  this.http.get(`${API_URL}/class`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+         
+         
+           model: Filters.multipleSelect,
+          
+         },
         grouping: {
           getter: "cm_class",
           formatter: (g) =>
@@ -337,6 +363,9 @@ domain: any
 
   printpdf() {
      
+    console.log(this.dataset)
+    console.log(this.dataview.getFilteredItems())
+    const data = this.dataview.getFilteredItems()
         
     
     console.log("pdf");
@@ -378,8 +407,8 @@ const date = new Date()
     doc.setFontSize(10);
     let total = 0
     let totalqty = 0
-    for (let j = 0; j < this.dataset.length; j++) {
-   let mts =  String(  Number(this.dataset[j].cm_balance).toLocaleString("en-US", {
+    for (let j = 0; j < data.length; j++) {
+   let mts =  String(  Number(data[j].cm_balance).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }))
@@ -428,30 +457,30 @@ const date = new Date()
         doc.line(10, i - 5, 10, i);
         doc.text(String("00" + Number(j+1)).slice(-2), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].cm_addr, 25, i - 1);
+        doc.text(data[j].cm_addr, 25, i - 1);
         doc.line(50, i - 5, 50, i);
-        doc.text(String(this.dataset[j].address.ad_name), 52, i - 1);
+        doc.text(String(data[j].address.ad_name), 52, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].cm_class) , 134, i - 1);
+        doc.text(String(data[j].cm_class) , 134, i - 1);
         doc.line(150, i - 5, 150, i);
         doc.text(mnsolde , 204, i - 1,{ align: "right" });
         doc.line(205, i - 5, 205, i);
         doc.line(10, i , 205, i);
-      //   doc.text(String(this.dataset[j].bkh_addr), 72, i - 1);
+      //   doc.text(String(data[j].bkh_addr), 72, i - 1);
       //   doc.line(95, i - 5, 95, i);
-      //  if(this.dataset[j].chr01 != null) { doc.text(this.dataset[j].chr01, 97, i - 1);} else {doc.text(this.dataset[j].bkh_addr, 97, i - 1)}
+      //  if(data[j].chr01 != null) { doc.text(data[j].chr01, 97, i - 1);} else {doc.text(data[j].bkh_addr, 97, i - 1)}
       //   doc.line(120, i - 5, 120, i);
-      //   doc.text(String((this.dataset[j].bkh_type)), 122, i - 1 );
+      //   doc.text(String((data[j].bkh_type)), 122, i - 1 );
       //   doc.line(130, i - 5, 130, i);
-      //   doc.text(String(this.dataset[j].bkh_effdate) , 153, i - 1, { align: "right" });
+      //   doc.text(String(data[j].bkh_effdate) , 153, i - 1, { align: "right" });
       //   doc.line(155, i - 5, 155, i);
-      //   doc.text(String(Number(this.dataset[j].bkh_balance).toFixed(2)) , 178, i - 1,{ align: "right" });
+      //   doc.text(String(Number(data[j].bkh_balance).toFixed(2)) , 178, i - 1,{ align: "right" });
       //   doc.line(180, i - 5, 180, i);
-      //   doc.text(String(Number(this.dataset[j].bkh_amt).toFixed(2)), 203, i - 1, { align: "right" });
+      //   doc.text(String(Number(data[j].bkh_amt).toFixed(2)), 203, i - 1, { align: "right" });
       //   doc.line(205, i - 5, 205, i);
          
         i = i + 5;
-        total = total + Number(this.dataset[j].cm_balance)
+        total = total + Number(data[j].cm_balance)
        }
       // doc.line(10, i-5, 205, i-5);
        

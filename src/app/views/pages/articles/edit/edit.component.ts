@@ -46,7 +46,8 @@ import {
   TaxeService,
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
-
+import { environment } from "../../../../../environments/environment"
+const API_URL = environment.apiUrl + "/uploads/"
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter: Formatter = (
   row,
@@ -185,7 +186,7 @@ export class EditComponent implements OnInit {
 
   sctForm: FormGroup;
   sctForm1: FormGroup;
-
+srcimage: String
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -283,9 +284,10 @@ export class EditComponent implements OnInit {
     this.loadingSubject.next(true)
     this.activatedRoute.params.subscribe((params) => {
         const id = params.id
-        this.itemService.getOne(id).subscribe((response: any)=>{
+        this.itemService.getOneFile(id).subscribe((response: any)=>{
           this.itemEdit = response.data
-                  console.log(this.itemEdit.pt_promo)
+       this.srcimage = API_URL +  this.itemEdit.pt_drwg_loc
+                  console.log(this.itemEdit.pt_drwg_loc)
           //this.sctService.getByOne({sct_part: this.itemEdit.pt_part, sct_sim: 'STD-CG'}).subscribe((response: any)=>{
             //this.sct1Edit = response.data
                 
@@ -411,7 +413,15 @@ export class EditComponent implements OnInit {
   }
   
 */
+uploadFile(event) {
+  if (event.target.files.length > 0) {
+    const file = event.target.files[0];
+    this.form1.get("attach").setValue(file);
+  console.log("file.name",file.name)
 
+
+  }
+}
 
   // init code
   initCode() {
@@ -424,137 +434,126 @@ export class EditComponent implements OnInit {
       this.form1 = this.form1FB.group({
   
         pt_part: [this.itemEdit.pt_part,Validators.required],
-        pt_upc: [this.itemEdit.pt_upc],
-        pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
-        pt_desc2: [this.itemEdit.pt_desc2],
-        pt_um: [this.itemEdit.pt_um,Validators.required],
-        pt_prod_line: [this.itemEdit.pt_prod_line,Validators.required],
-        pt_part_type: [this.itemEdit.pt_part_type,Validators.required],
+        pt_desc1: [this.itemEdit.pt_desc1 ,Validators.required],
+        pt_um: [this.itemEdit.pt_um ,Validators.required],
+        pt_desc2: [this.itemEdit.pt_desc2 ],
+        pt_prod_line: [this.itemEdit.pt_prod_line ,Validators.required],
+        pt_part_type: [this.itemEdit.pt_part_type ,Validators.required],
         pt_draw: [this.itemEdit.pt_draw,Validators.required],
-        pt_status: [this.itemEdit.pt_status,Validators.required],
-        // pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
-        pt_group: [this.itemEdit.pt_group],
-        pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
-        // pt_drwg_size: [this.itemEdit.pt_drwg_size],
-        // pt_promo: [this.itemEdit.pt_promo],
-        // pt_break_cat: [this.itemEdit.pt_break_cat],
-        // pt_rev: [this.itemEdit.pt_rev],
-        pt_abc: [this.itemEdit.pt_abc,Validators.required],
-        pt_avg_int: [this.itemEdit.pt_avg_int],
-        pt_lot_ser: [this.itemEdit.pt_lot_ser],
-        pt_cyc_int: [this.itemEdit.pt_cyc_int],
-        pt_site: [this.itemEdit.pt_site,Validators.required],
-        pt_shelflife: [this.itemEdit.pt_shelflife],
-        pt_loc: [this.itemEdit.pt_loc,Validators.required],
-        pt_sngl_lot: [this.itemEdit.pt_sngl_lot],
-        pt_loc_type: [this.itemEdit.pt_loc_type],
-        pt_critical: [this.itemEdit.pt_critical],
-        pt_auto_lot: [this.itemEdit.pt_auto_lot],
-        pt_rctpo_status: [this.itemEdit.pt_rctpo_status],
-        pt_rctpo_active: [this.itemEdit.pt_rctpo_active],
-        pt_lot_grp: [this.itemEdit.pt_lot_grp],
-        pt_rctwo_status: [this.itemEdit.pt_rctwo_status],
-        pt_rctwo_active: [this.itemEdit.pt_rctwo_active],
-        pt_article: [this.itemEdit.pt_article],
-
+        pt_status: [this.itemEdit.pt_status ,Validators.required],
+        pt_rev: [this.itemEdit.pt_rev ],
+        pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp ],
+        pt_group: [this.itemEdit.pt_group ],
+       // pt_drwg_loc: [this.itemEdit.pt_drwg_loc ],
+        pt_drwg_size: [this.itemEdit.pt_drwg_size ],
+        pt_promo: [this.itemEdit.pt_promo ],
+        
+        pt_abc: [this.itemEdit.pt_abc ,Validators.required],
+        pt_avg_int: [this.itemEdit.pt_avg_int ],
+        pt_lot_ser: [this.itemEdit.pt_lot_ser ],
+        pt_cyc_int: [this.itemEdit.pt_cyc_int ],
+        pt_site: [this.itemEdit.pt_site ,Validators.required],
+        pt_shelflife: [this.itemEdit.pt_shelflife ],
+        pt_loc: [this.itemEdit.pt_loc ,Validators.required],
+        pt_sngl_lot: [this.itemEdit.pt_sngl_lot ],
+        pt_loc_type: [this.itemEdit.pt_loc_type ],
+        pt_critical: [this.itemEdit.pt_critical ],
+        pt_auto_lot: [this.itemEdit.pt_auto_lot ],
+        pt_rctpo_status: [this.itemEdit.pt_rctpo_status ],
+        pt_rctpo_active: [this.itemEdit.pt_rctpo_active ],
+        pt_lot_grp: [this.itemEdit.pt_lot_grp ],
+        pt_rctwo_status: [this.itemEdit.pt_rctwo_status ],
+        pt_rctwo_active: [this.itemEdit.pt_rctwo_active ],
+        pt_article: [this.itemEdit.pt_article ],
+        attach: [this.itemEdit.pt_drwg_loc,],
+        
       })
 
 
 
 
       this.form2 = this.form2FB.group({
-        pt_ship_wt: [this.itemEdit.pt_ship_wt],
-        pt_ship_wt_um: [this.itemEdit.pt_ship_wt_um],
-        // pt_fr_class: [this.itemEdit.pt_fr_class],  removed from html
-        // pt_net_wt: [this.itemEdit.pt_net_wt],       switched to form5
-        // pt_net_wt_um: [this.itemEdit.pt_net_wt_um],  
-        // pt_size: [this.itemEdit.pt_size],
-        // pt_size_um: [this.itemEdit.pt_size_um],
-        // pt_drwg_size: [this.itemEdit.pt_drwg_size],
-        int03: [this.itemEdit.int03],
-        int04: [this.itemEdit.int04],
-        int05: [this.itemEdit.int05],
+        pt_ship_wt: [this.itemEdit.pt_ship_wt ],
+        pt_ship_wt_um: [this.itemEdit.pt_ship_wt_um ],
+        pt_net_wt: [this.itemEdit.pt_net_wt ],
+        pt_net_wt_um: [this.itemEdit.pt_net_wt_um ],
+        pt_fr_class: [this.itemEdit.pt_fr_class ],
+        pt_size: [this.itemEdit.pt_size ],
+        pt_size_um: [this.itemEdit.pt_size_um ],
+        pt_break_cat: [this.itemEdit.pt_break_cat ],
   
       })
 
       this.form3 = this.form3FB.group({
 
-      pt_ms: [this.itemEdit.pt_ms],
-      pt_buyer: [this.itemEdit.pt_buyer],
-      pt_phantom: [this.itemEdit.pt_phantom],
-      pt_plan_ord: [this.itemEdit.pt_plan_ord],
-      pt_dea: [this.itemEdit.pt_dea],
-      pt_vend: [this.itemEdit.pt_vend],
+        pt_ms: [this.itemEdit.pt_ms ],
+      pt_buyer: [this.itemEdit.pt_buyer ],
+      pt_phantom: [this.itemEdit.pt_phantom ],
+      pt_plan_ord: [this.itemEdit.pt_plan_ord ],
+      pt_vend: [this.itemEdit.pt_vend ],
 
-      pt_ord_min: [this.itemEdit.pt_ord_min],
-      pt_timefence: [this.itemEdit.pt_timefence],
-      pt_po_site: [this.itemEdit.pt_po_site],
-      pt_ord_max: [this.itemEdit.pt_ord_max],
-      pt_pm_code: [this.itemEdit.pt_pm_code],
-      pt_ord_mult: [this.itemEdit.pt_ord_mult],
-      pt_ord_pol: [this.itemEdit.pt_ord_pol],
-      pt_cfg_type: [this.itemEdit.pt_cfg_type],
-      pt_op_yield: [this.itemEdit.pt_op_yield],
-      pt_ord_qty: [this.itemEdit.pt_ord_qty],
-      pt_insp_rqd: [this.itemEdit.pt_insp_rqd],
-      pt_yield_pct: [this.itemEdit.pt_yield_pct],
-      pt_insp_lead: [this.itemEdit.pt_insp_lead],
-      pt_run: [this.itemEdit.pt_run],
-      pt_ord_per: [this.itemEdit.pt_ord_per],
-      pt_mfg_lead: [this.itemEdit.pt_mfg_lead],
-      pt_pur_lead: [this.itemEdit.pt_pur_lead],
-      pt_setup: [this.itemEdit.pt_setup],
-      pt_sfty_stk: [this.itemEdit.pt_sfty_stk],
-      pt_sfty_time: [this.itemEdit.pt_sfty_time],
-      pt_rop: [this.itemEdit.pt_rop],
-      pt_atp_family: [this.itemEdit.pt_atp_family],
-      pt_network: [this.itemEdit.pt_network],
-      pt_run_seq1: [this.itemEdit.pt_run_seq1],
-      pt_routing: [this.itemEdit.pt_routing],
-      pt_iss_pol: [this.itemEdit.pt_iss_pol],
-      pt_run_seq2: [this.itemEdit.pt_run_seq2],
-      pt_bom_code: [this.itemEdit.pt_bom_code],
-
+      pt_ord_min: [this.itemEdit.pt_ord_min ],
+      pt_timefence: [this.itemEdit.pt_timefence ],
+      pt_po_site: [this.itemEdit.pt_po_site ],
+      pt_ord_max: [this.itemEdit.pt_ord_max ],
+      pt_pm_code: [this.itemEdit.pt_pm_code ],
+      pt_ord_mult: [this.itemEdit.pt_ord_mult ],
+      pt_ord_pol: [this.itemEdit.pt_ord_pol ],
+      pt_cfg_type: [this.itemEdit.pt_cfg_type ],
+      pt_op_yield: [this.itemEdit.pt_op_yield ],
+      pt_ord_qty: [this.itemEdit.pt_ord_qty ],
+      pt_insp_rqd: [this.itemEdit.pt_insp_rqd ],
+      pt_yield_pct: [this.itemEdit.pt_yield_pct ],
+      pt_insp_lead: [this.itemEdit.pt_insp_lead ],
+      pt_run: [this.itemEdit.pt_run ],
+      pt_ord_per: [this.itemEdit.pt_ord_per ],
+      pt_mfg_lead: [this.itemEdit.pt_mfg_lead ],
+      pt_pur_lead: [this.itemEdit.pt_pur_lead ],
+      pt_setup: [this.itemEdit.pt_setup ],
+      pt_sfty_stk: [this.itemEdit.pt_sfty_stk ],
+      pt_sfty_time: [this.itemEdit.pt_sfty_time ],
+      pt_rop: [this.itemEdit.pt_rop ],
+      pt_atp_family: [this.itemEdit.pt_atp_family ],
+      pt_network: [this.itemEdit.pt_network ],
+      pt_run_seq1: [this.itemEdit.pt_run_seq1 ],
+      pt_routing: [this.itemEdit.pt_routing ],
+      pt_iss_pol: [this.itemEdit.pt_iss_pol ],
+      pt_run_seq2: [this.itemEdit.pt_run_seq2 ],
+      pt_bom_code: [this.itemEdit.pt_bom_code ],
       })
 
-
+      this.form4 = this.formBuilder.group({
+        pt_pur_price: [this.itemEdit.pt_pur_price ],
+        pt_price: [this.itemEdit.pt_price ],
+        pt_taxable: [this.itemEdit.pt_taxable ],
+        pt_taxc: [this.itemEdit.pt_taxc ,Validators.required],
+      });
+  
       this.form5 = this.form5FB.group({
-        pt_iss_pol: [this.itemEdit.pt_iss_pol],
-        pt_length: [this.itemEdit.pt_length],
-        pt_height: [this.itemEdit.pt_height],
-        pt_width: [this.itemEdit.pt_width],
-        pt_origin: [this.itemEdit.pt_origin],
-        pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
-        pt_model: [this.itemEdit.pt_model],
-        pt_break_cat: [this.itemEdit.pt_break_cat],
-        int01: [this.itemEdit.int01 ],
-        int02: [this.itemEdit.int02 ],
-        pt_promo: [this.itemEdit.pt_promo],
-        pt_rev: [this.itemEdit.pt_rev],
-        pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
-        pt_net_wt: [this.itemEdit.pt_net_wt],
-        pt_net_wt_um: [this.itemEdit.pt_net_wt_um],
-        pt_size: [this.itemEdit.pt_size],
-        pt_size_um: [this.itemEdit.pt_size_um]
+        pt_iss_pol: [this.itemEdit.pt_iss_pol ],
+      pt_length: [this.itemEdit.pt_length ],
+      pt_height: [this.itemEdit.pt_height ],
+      pt_width: [this.itemEdit.pt_width ],
+      pt_origin: [this.itemEdit.pt_origin ],
+     
+      pt_drwg_size: [this.itemEdit.pt_drwg_size ],
+      pt_model: [this.itemEdit.pt_model ],
+      
+      int01: [this.itemEdit.int01 ],
+      int02: [this.itemEdit.int02 ],
       });
 
-      this.form4 = this.form4FB.group({
-        pt_pur_price: [this.itemEdit.pt_pur_price],
-        pt_price: [this.itemEdit.pt_price],
-        pt_taxable: [this.itemEdit.pt_taxable],
-        pt_taxc: [this.itemEdit.pt_taxc],
-
-      })
+    
       this.form6 = this.form6FB.group({
         pt_loadpacking: [this.itemEdit.pt_loadpacking],
         pt_salepacking: [this.itemEdit.pt_salepacking],
-        pt_salable: [this.itemEdit.pt_salable],
-        pt_inventoryable: [this.itemEdit.pt_inventoryable],
-        pt_consignable: [this.itemEdit.pt_consignable],
-        pt_returnable: [this.itemEdit.pt_returnable],
-        pt_orderable: [this.itemEdit.pt_orderable],
-        pt_loadable: [this.itemEdit.pt_loadable],
-        pt_promotion: [this.itemEdit.pt_promotion],
+        pt_salable: [this.itemEdit.pt_salable ],
+        pt_inventoryable: [this.itemEdit.pt_inventoryable ],
+        pt_consignable: [this.itemEdit.pt_consignable ],
+        pt_returnable: [this.itemEdit.pt_returnable ],
+        pt_orderable: [this.itemEdit.pt_orderable ],
+        pt_loadable: [this.itemEdit.pt_loadable ],
+        pt_promotion: [this.itemEdit.pt_promotion ],
 
       })
 
@@ -660,16 +659,14 @@ export class EditComponent implements OnInit {
 
 prepareItem(): Item {
   const controls1 = this.form1.controls;
-  const controls2 = this.form2.controls;
-  const controls3 = this.form3.controls;
-  const controls4 = this.form4.controls;
-  const controls5 = this.form5.controls;
-  const controls6 = this.form6.controls;
+    const controls2 = this.form2.controls;
+    const controls3 = this.form3.controls;
+    const controls4 = this.form4.controls;
+    const controls5 = this.form5.controls;
+    const controls6 = this.form6.controls;
 
-  const _item = new Item();
-    _item.id = this.itemEdit.id;
+    const _item = new Item();
     _item.pt_part = controls1.pt_part.value;
-    _item.pt_upc = controls1.pt_upc.value;
     _item.pt_desc1 = controls1.pt_desc1.value;
     _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls1.pt_um.value;
@@ -677,13 +674,13 @@ prepareItem(): Item {
     _item.pt_part_type = controls1.pt_part_type.value;
     _item.pt_draw = controls1.pt_draw.value;
     _item.pt_status = controls1.pt_status.value;
-    // _item.pt_rev = controls1.pt_rev.value;
-    // _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
+    _item.pt_rev = controls1.pt_rev.value;
+    _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
     _item.pt_group = controls1.pt_group.value;
-    _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
-    // _item.pt_drwg_size = controls1.pt_drwg_size.value;
-    // _item.pt_promo = controls1.pt_promo.value;
-    // _item.pt_break_cat = controls1.pt_break_cat.value;
+   // _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
+    _item.pt_drwg_size = controls1.pt_drwg_size.value;
+    _item.pt_promo = controls1.pt_promo.value;
+    _item.pt_break_cat = controls2.pt_break_cat.value;
     _item.pt_abc = controls1.pt_abc.value;
     _item.pt_avg_int = controls1.pt_avg_int.value;
     _item.pt_lot_ser = controls1.pt_lot_ser.value;
@@ -704,16 +701,11 @@ prepareItem(): Item {
 
     _item.pt_ship_wt = controls2.pt_ship_wt.value;
     _item.pt_ship_wt_um = controls2.pt_ship_wt_um.value;
-    // _item.pt_fr_class = controls2.pt_fr_class.value; removed from html
-    // _item.pt_net_wt = controls2.pt_net_wt.value;     to controls5
-    // _item.pt_net_wt_um = controls2.pt_net_wt_um.value;  //
-    // _item.pt_size = controls2.pt_size.value;         //
-    // _item.pt_size_um = controls2.pt_size_um.value;   //
-    // _item.pt_drwg_size = controls2.pt_drwg_size.value; not used any more , changed with int05
-    _item.int03=controls2.int03.value;
-    _item.int04=controls2.int04.value;
-    _item.int05=controls2.int05.value;
-
+    _item.pt_net_wt = controls2.pt_net_wt.value;
+    _item.pt_net_wt_um = controls2.pt_net_wt_um.value;
+    _item.pt_fr_class = controls2.pt_fr_class.value;
+    _item.pt_size = controls2.pt_size.value;
+    _item.pt_size_um = controls2.pt_size_um.value;
 
     _item.pt_ms = controls3.pt_ms.value;
     _item.pt_buyer = controls3.pt_buyer.value;
@@ -746,7 +738,7 @@ prepareItem(): Item {
     _item.pt_network = controls3.pt_network.value;
     _item.pt_run_seq1 = controls3.pt_run_seq1.value;
     _item.pt_routing = controls3.pt_routing.value;
-    _item.pt_iss_pol = controls3.pt_iss_pol.value;
+    // _item.pt_iss_pol = controls3.pt_iss_pol.value;
     _item.pt_run_seq2 = controls3.pt_run_seq2.value;
     _item.pt_bom_code = controls3.pt_bom_code.value;
 
@@ -755,24 +747,19 @@ prepareItem(): Item {
     _item.pt_taxable = controls4.pt_taxable.value;
     _item.pt_taxc = controls4.pt_taxc.value;
 
+
     _item.pt_iss_pol   = controls5.pt_iss_pol.value;
     _item.pt_length    = controls5.pt_length.value;
     _item.pt_height    = controls5.pt_height.value;
     _item.pt_width     = controls5.pt_width.value;
     _item.pt_origin    = controls5.pt_origin.value;
-    _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
+    _item.pt_drwg_size = controls5.pt_drwg_size.value; 
     _item.pt_model     = controls5.pt_model.value;
-    _item.pt_break_cat = controls5.pt_break_cat.value;
+    
     _item.int01        = controls5.int01.value;
     _item.int02        = controls5.int02.value;
-    _item.pt_promo     = controls5.pt_promo.value;
-    _item.pt_break_cat = controls5.pt_break_cat.value;
-    _item.pt_rev       = controls5.pt_rev.value;
-    _item.pt_dsgn_grp  = controls5.pt_dsgn_grp.value;
-    _item.pt_net_wt    = controls5.pt_net_wt.value;
-    _item.pt_net_wt_um = controls5.pt_net_wt_um.value;
-    _item.pt_size      = controls5.pt_size.value;
-    _item.pt_size_um   = controls5.pt_size_um.value;
+
+
 
     _item.pt_salable = controls6.pt_salable.value;
     _item.pt_inventoryable = controls6.pt_inventoryable.value;
@@ -781,16 +768,24 @@ prepareItem(): Item {
     _item.pt_orderable = controls6.pt_orderable.value;
     _item.pt_loadable = controls6.pt_loadable.value;
     _item.pt_promotion = controls6.pt_promotion.value;
+
     _item.pt_loadpacking = controls6.pt_loadpacking.value;
     _item.pt_salepacking = controls6.pt_salepacking.value;
+
     return _item;
   }
 
 
 
   addItem(item: Item) {
+    const controls = this.form1.controls
     this.loadingSubject.next(true);
-    this.itemService.update(this.itemEdit.id, item).subscribe(
+    const formData: FormData = new FormData();
+    console.log(controls.attach.value)
+   
+    formData.append("file", this.form1.get("attach").value);
+    formData.append("data", JSON.stringify(item));
+    this.itemService.updateFile(this.itemEdit.id, formData).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(

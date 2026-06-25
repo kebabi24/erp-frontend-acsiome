@@ -242,7 +242,10 @@ export class InventoryTransactionService {
         return this.http.post(API_URL+'/rct-pocab', data, { headers: httpHeaders })
     }
     
- 
+    public getmfgDashboardData(start_date: any , end_date:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/mfgdashboard', {start_date, end_date},{ headers: httpHeaders })
+    }
   
   
   

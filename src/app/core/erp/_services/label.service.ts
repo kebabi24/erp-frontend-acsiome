@@ -66,6 +66,12 @@ export class LabelService {
 
     // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
   }
+  public getByObj(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/findbetween`, data, { headers: httpHeaders });
+
+    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  }
   public getByAll(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/findby`, data, { headers: httpHeaders });

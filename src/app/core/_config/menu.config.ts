@@ -45,6 +45,10 @@ export class MenuConfig {
               title: "Dashboard DD",
               page: "/dashboard/dd-dashboard",
             },
+            {
+              title: "Dashboard Production",
+              page: "/dashboard/mfg-dashboard",
+            },
           ],
         },
 
@@ -289,6 +293,14 @@ export class MenuConfig {
               title: "Répertoire Clients",
               page: "/customers/create-rep",
             },
+            {
+              title: "Paramétrage Clients",
+              page: "/customers/customer-settings",
+            },
+            {
+              title: "Liste Paramétrage Clients",
+              page: "/customers/customer-settings-list",
+            },
           ],
         },
         /**/
@@ -333,6 +345,14 @@ export class MenuConfig {
             {
               title: "Liste Soldes clients",
               page: "/customers/customers-solde",
+            },
+            {
+              title: "Paramétrage Clients",
+              page: "/customers/customer-settings",
+            },
+            {
+              title: "Liste Paramétrage Clients",
+              page: "/customers/customer-settings-list",
             },
           ],
         },

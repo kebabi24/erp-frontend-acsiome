@@ -46,9 +46,36 @@ export class MenuDDConfig {
                 title: "Dashboard DD",
                 page: "/dashboard/dd-dashboard",
               },
+              {
+                title: "Dashboard Production",
+                page: "/dashboard/mfg-dashboard",
+              },
             ],
           },
-  
+          {
+            title: "Gestion des Fournisseurs STD",
+            bullet: "dot",
+            icon: "flaticon-customer",
+            root: true,
+            submenu: [
+              {
+                title: "La liste des Fournisseurs",
+                page: "/providers/list",
+              },
+              {
+                title: "Ajouter Fournisseur ",
+                page: "/providers/create-std-provider",
+              },
+              {
+                title: "Paramétrage Fournisseur",
+                page: "/providers/provider-settings",
+              },
+              {
+                title: "Liste Paramétrage Fournisseur",
+                page: "/providers/provider-settings-list",
+              },
+            ],
+          },
           // CRM
             
           // PROMO
@@ -125,6 +152,14 @@ export class MenuDDConfig {
               {
                 title: "Importer Client Mobile",
                 page: "/customers/import-cust-mobile",
+              },
+              {
+                title: "Paramétrage Clients",
+                page: "/customers/customer-settings",
+              },
+              {
+                title: "Liste Paramétrage Clients",
+                page: "/customers/customer-settings-list",
               },
             ],
           },
@@ -817,6 +852,18 @@ export class MenuDDConfig {
               {
                 title: "Modification des charges",
                 page: "/financialcharge/update-forcast",
+              },
+            ],
+          },
+          {
+            title: "Gestion de Production",
+            root: true,
+            bullet: "dot",
+            icon: "flaticon2-quotation-mark",
+            submenu: [
+              {
+                title: "Liste des Palettes",
+                page: "/manufacturing/list-label",
               },
             ],
           },

@@ -65,7 +65,7 @@
 
 
             <div class="row">
-                <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                <angular-slickgrid class="col-12" gridHeight="300" gridId="gridMesure" [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
                     [gridOptions]="gridOptions" [dataset]="loadRequests"
                     (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"

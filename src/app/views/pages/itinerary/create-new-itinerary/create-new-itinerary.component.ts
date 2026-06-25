@@ -63,21 +63,20 @@ export class CreateNewItineraryComponent implements OnInit {
     this.itineraryForm = this.formBuilder.group({
       itinerary_code: [this.itinerary.itinerary_code, Validators.required],
       itinerary_name: [this.itinerary.itinerary_name, Validators.required],
-      itinerary_type: [{ value: this.itinerary.itinerary_type }, Validators.required],
-      itinerary_day: [{ value: this.itinerary.itinerary_day }, Validators.required],
-      customers: [{ value: this.itinerary.customers_name }, Validators.required],
+      itinerary_type: [this.itinerary.itinerary_type  ],
+      itinerary_day: [this.itinerary.itinerary_day],
       // roles : [{value : this.itinerary.roles}, Validators.required]
     });
   }
   onChangeCode() {
     const controls = this.itineraryForm.controls;
 
-    this.itineraryService.getOne(controls.itinerary_code.value).subscribe((res: any) => {
+    this.itineraryService.getByOne({itinerary_code :controls.itinerary_code.value}).subscribe((res: any) => {
       console.log("aa", res.data);
 
       if (res.data) {
         console.log(res.data.itinerary_name);
-        this.router.navigateByUrl(`/itinerary/edit-itinerary/${res.data.itinerary_code}`);
+        this.router.navigateByUrl(`/itinerary/edit-itinerary/${res.data.id}`);
         //console.log(res.data.id)
       }
     });

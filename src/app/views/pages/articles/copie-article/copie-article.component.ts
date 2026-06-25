@@ -309,7 +309,15 @@ export class CopieArticleComponent implements OnInit {
   }
 
 
+  uploadFile(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.form1.get("attach").setValue(file);
+    console.log("file.name",file.name)
 
+
+    }
+  }
 
 
  /* prepareGrid() {
@@ -426,7 +434,7 @@ export class CopieArticleComponent implements OnInit {
       this.form1 = this.form1FB.group({
   
         pt_part: [null,Validators.required],
-        pt_upc: [this.itemEdit.pt_upc],
+        // pt_upc: [this.itemEdit.pt_upc],
         pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
         pt_desc2: [this.itemEdit.pt_desc2],
         pt_um: [this.itemEdit.pt_um,Validators.required],
@@ -458,7 +466,7 @@ export class CopieArticleComponent implements OnInit {
         pt_rctwo_status: [this.itemEdit.pt_rctwo_status],
         pt_rctwo_active: [this.itemEdit.pt_rctwo_active],
         pt_article: [this.itemEdit.pt_article],
-
+        attach: [""],
       })
 
 
@@ -841,8 +849,14 @@ console.log(response.data)
    * @param _item: ItemModel
    */
   addItem(item: Item, sct1: CostSimulation, sct2: CostSimulation) {
+    const controls = this.form1.controls
     this.loadingSubject.next(true);
-    this.itemService.add(item).subscribe(
+    const formData: FormData = new FormData();
+    console.log(controls.attach.value)
+   
+    formData.append("file", this.form1.get("attach").value);
+    formData.append("data", JSON.stringify(item));
+    this.itemService.add(formData).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(

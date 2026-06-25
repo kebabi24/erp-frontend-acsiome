@@ -1,0 +1,189 @@
+<kt-portlet>
+    <kt-portlet-body [class]="'kt-portlet__body--fit'">
+      <!--div>
+        {{ time | async }}
+      </div-->
+  
+      
+        <form class="form" [formGroup]="dashboardForm">
+  
+            <div class="row" style="display: flex; justify-content:center" >
+              <div class="form-group col-3">
+                <label class="form-group">Date de début</label>
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-sm form-control-solid"  formControlName="start_date" 
+                        placeholder="jj-mm-aaaa" name="start_date" ngbDatepicker f
+                        #start_date="ngbDatepicker"   >
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" (click)="start_date.toggle()"  type="button">
+                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+  
+              </div>
+  
+              <div class="form-group col-3">
+                <label class="form-group">Date de fin</label>
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-sm form-control-solid"  formControlName="end_date" 
+                        placeholder="jj-mm-aaaa" name="end_date" ngbDatepicker f
+                        #end_date="ngbDatepicker"   >
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" (click)="end_date.toggle()"  type="button">
+                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+  
+              </div>
+  
+            
+  
+  
+              <div class="form-group col-3">
+                <label class="form-group">Réactualiser</label>
+                <div class="input-group input-group-sm">
+  
+                <button type="button"  (click)="updateData()" class="btn btn-sm btn-primary btn-elevate  col-lg-3">Réactualiser</button>
+                </div>
+            </div>  
+            <!--button (click)="imprimerContenu()">🖨️ Imprimer la page</button-->
+
+
+
+
+  
+          </div>
+  
+        </form>
+      
+        <div class="row" style="display: flex; justify-content:center">
+            <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+                <div class="number-card number-card-content3">
+                  <h1 class="number-card-number">{{GProd_amt}} DA</h1>
+                  <div class="number-card-dollars">CA Production Global</div>
+                  <div class="number-card-divider"></div>
+                  <div class="number-card-progress-wrapper">
+                    <div class="tagline number-card-currency"></div>
+                    
+                  </div>
+                </div>
+              </div>
+        
+            
+              <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+                <div class="number-card number-card-content4">
+                  <h1 class="number-card-number">{{GProd_qty}} UN</h1>
+                  <div class="number-card-dollars">QTE Production Global </div>
+                  <div class="number-card-divider"></div>
+                  <div class="number-card-progress-wrapper">
+                    <div class="tagline number-card-currency"></div>
+                    
+                  </div>
+                </div>
+              </div>
+        </div>
+     <div class="row">
+  
+        <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+          <div class="number-card number-card-content1">
+            <h1 class="number-card-number">{{Prod_amt}} DA</h1>
+            <div class="number-card-dollars">CA Production</div>
+            <div class="number-card-divider"></div>
+            <div class="number-card-progress-wrapper">
+              <div class="tagline number-card-currency"></div>
+              
+            </div>
+          </div>
+        </div>
+  
+      
+        <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+          <div class="number-card number-card-content1">
+            <h1 class="number-card-number">{{Prod_qty}} UN</h1>
+            <div class="number-card-dollars">QTE Production </div>
+            <div class="number-card-divider"></div>
+            <div class="number-card-progress-wrapper">
+              <div class="tagline number-card-currency"></div>
+              
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+            <div class="number-card number-card-content2">
+              <h1 class="number-card-number">{{Achat_amt}} DA</h1>
+              <div class="number-card-dollars">CA Achat</div>
+              <div class="number-card-divider"></div>
+              <div class="number-card-progress-wrapper">
+                <div class="tagline number-card-currency"></div>
+                
+              </div>
+            </div>
+          </div>
+    
+        
+          <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+            <div class="number-card number-card-content2">
+              <h1 class="number-card-number">{{Achat_qty}} UN</h1>
+              <div class="number-card-dollars">QTE Achat </div>
+              <div class="number-card-divider"></div>
+              <div class="number-card-progress-wrapper">
+                <div class="tagline number-card-currency"></div>
+                
+              </div>
+            </div>
+          </div>
+
+     </div>
+     <div class="row">
+        <div class="col-xl-6">
+            <kt-portlet [class]="'kt-portlet--height-fluid'">
+              <kt-portlet-header [title]="'CA par Fournisseur '">
+              </kt-portlet-header>
+              <kt-portlet-body>
+                <div id="chartdivN1" style="width: 100%; height: 450px"></div>
+              </kt-portlet-body>
+            </kt-portlet>
+        </div> 
+        <div class="col-xl-6">
+            <kt-portlet [class]="'kt-portlet--height-fluid'">
+              <kt-portlet-header [title]="'QTE par Fournisseur '">
+              </kt-portlet-header>
+              <kt-portlet-body>
+                <div id="chartdivN2" style="width: 100%; height: 450px"></div>
+              </kt-portlet-body>
+            </kt-portlet>
+        </div> 
+    
+     </div>
+     <div class="row">
+
+      
+
+        <div class="col-xl-6">
+          <kt-portlet [class]="'kt-portlet--height-fluid'">
+            <kt-portlet-header [title]="'CA par Type '">
+            </kt-portlet-header>
+            <kt-portlet-body>
+              <div id="chartdivN3" style="width: 100%; height: 350px"></div>
+            </kt-portlet-body>
+          </kt-portlet>
+        </div>
+        <div class="col-xl-6">
+            <kt-portlet [class]="'kt-portlet--height-fluid'">
+              <kt-portlet-header [title]="'QTE par Type '">
+              </kt-portlet-header>
+              <kt-portlet-body>
+                <div id="chartdivN4" style="width: 100%; height: 350px"></div>
+              </kt-portlet-body>
+            </kt-portlet>
+        </div>
+     </div>
+
+    </kt-portlet-body>
+  </kt-portlet>
+  

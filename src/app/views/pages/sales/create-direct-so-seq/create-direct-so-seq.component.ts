@@ -1588,26 +1588,7 @@ changeTax(){
         controls.so_taxable.setValue(item.address.ad_taxable || "");
       
         
-       
-        const cm_addr = item.cm_addr;
-     //   this.dataset = [];
-      this.customersService.getBy({ cm_addr: item.cm_bill }).subscribe(
-        (ressa: any) => {
-          console.log(ressa);
-          
-            this.error = false;
-            this.biller = ressa.data; 
-            //controls.ih_bill.setValue(dataa.cm_addr || "");
-            controls.namebill.setValue(ressa.data.address.ad_name || "");
-            
-            controls.so_curr.setValue(ressa.data.cm_curr || "");
-            controls.so_taxable.setValue(ressa.data.address.ad_taxable || "");
-            controls.so_cr_terms.setValue(ressa.data.cm_cr_terms || "");
-            
-        
-  
-  
-        this.deviseService.getBy({ cu_curr: ressa.data.cm_curr }).subscribe(
+        this.deviseService.getBy({ cu_curr: item.cm_curr }).subscribe(
           (res: any) => {
             console.log(res);
             const { data } = res;
@@ -1631,6 +1612,25 @@ changeTax(){
   
   
           })
+  
+       
+        const cm_addr = item.cm_addr;
+     //   this.dataset = [];
+      this.customersService.getBy({ cm_addr: item.cm_bill }).subscribe(
+        (ressa: any) => {
+          console.log(ressa);
+          
+            this.error = false;
+            this.biller = ressa.data; 
+            //controls.ih_bill.setValue(dataa.cm_addr || "");
+            controls.namebill.setValue(ressa.data.address.ad_name || "");
+            
+            controls.so_curr.setValue(ressa.data.cm_curr || "");
+            controls.so_taxable.setValue(ressa.data.address.ad_taxable || "");
+            controls.so_cr_terms.setValue(ressa.data.cm_cr_terms || "");
+            
+        
+  
   
   
         })  
@@ -3506,6 +3506,7 @@ printpdf(nbr) {
   doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
 
   doc.setFontSize(10);
+  console.log(this.curr)
   let mt = NumberToLetters(Number(controls.ttc.value).toFixed(2), this.curr.cu_desc);
 
   if (mt.length > 85) {

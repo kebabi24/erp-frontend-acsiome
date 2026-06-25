@@ -36,7 +36,7 @@
                                 <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group " id="code" >Client:</label>
-                                        <input type="text" (change)="onChangeCode()"
+                                        <input type="text" (change)="onChangeCode()" id="ad_addr"
                                             [className]="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="ad_addr">
                                         <div *ngIf="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched)"
@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="form-group col-4">
                                         <label class="form-group ">Nom:</label>
-                                            <input type="text"
+                                            <input type="text" id="ad_name"
                                                 [className]="addressForm.controls['ad_name'].errors && (addressForm.controls['ad_name'].dirty || addressForm.controls['ad_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 formControlName="ad_name">
                                             <div *ngIf="addressForm.controls['ad_name'].errors && (addressForm.controls['ad_name'].dirty || addressForm.controls['ad_name'].touched)"

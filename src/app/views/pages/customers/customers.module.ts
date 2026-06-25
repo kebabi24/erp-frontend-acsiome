@@ -67,6 +67,9 @@ import { CreateStdCustomerComponent } from './create-std-customer/create-std-cus
 import { CreateCustomerImmobilierComponent } from './create-customer-immobilier/create-customer-immobilier.component';
 import { CustomersSoldeComponent } from './customers-solde/customers-solde.component';
 import { ImportCustMobileComponent } from './import-cust-mobile/import-cust-mobile.component';
+import { CustomerSettingsComponent } from './customer-settings/customer-settings.component';
+import { CustomerSettingsEditComponent } from './customer-settings-edit/customer-settings-edit.component';
+import { CustomerSettingsListComponent } from './customer-settings-list/customer-settings-list.component';
 const routes: Routes = [
   {
       path: "",
@@ -138,6 +141,18 @@ const routes: Routes = [
             path: "import-cust-mobile",
             component: ImportCustMobileComponent,
           },
+          { 
+            path: "customer-settings",
+            component: CustomerSettingsComponent,
+          },
+          { 
+            path: "customer-settings-list",
+            component: CustomerSettingsListComponent,
+          },
+          { 
+            path: "customer-settings-edit/:id",
+            component: CustomerSettingsEditComponent,
+          },
       ],
   },
 ]
@@ -160,6 +175,9 @@ const routes: Routes = [
         CreateCustomerImmobilierComponent,
         CustomersSoldeComponent,
         ImportCustMobileComponent,
+        CustomerSettingsComponent,
+        CustomerSettingsEditComponent,
+        CustomerSettingsListComponent,
     ],
     imports: [
         CommonModule,

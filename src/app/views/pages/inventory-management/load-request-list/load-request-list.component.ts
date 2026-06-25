@@ -304,7 +304,7 @@ export class LoadRequestListComponent implements OnInit {
   
         this.gridOptions = {
           enableAutoResize:true,
-          autoHeight:true,
+          // autoHeight:true,
           enableColumnPicker: true,
           enableCellNavigation: true,
           enableRowSelection: true,

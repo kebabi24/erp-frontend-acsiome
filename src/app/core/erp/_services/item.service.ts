@@ -41,6 +41,10 @@ export class ItemService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
     }
+    public getOneFile(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/file/${id}`, { headers: httpHeaders })
+    }
     public getOneDet(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/det/${id}`, { headers: httpHeaders })
@@ -191,6 +195,10 @@ export class ItemService {
     public updateDet(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/updated/${id}`, data, { headers: httpHeaders })
+    }
+    public updateFile(id: Number, data:any) {
+        const headers = { "Content-Type": "multipart/form-data" }; 
+        return this.http.put(`${API_URL}/upfile/${id}`, data, )
     }
     public getByJob(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

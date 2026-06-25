@@ -428,6 +428,9 @@ export class CreateInvoiceIhComponent implements OnInit {
       filterable: false,
       //type: FieldType.float,
       formatter: Formatters.checkbox,
+      editor: {
+        model: Editors.checkbox,
+      },
      
     },
     {
@@ -809,20 +812,33 @@ let ind =  1
 //   }
   console.log("hnahna", this.iharray)
           if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
-          this.router.navigateByUrl("/sales/create-invoice");
+          this.router.navigateByUrl("/sales/create-invoice-ih");
           this.reset()
         }
       );
   }
  
   
-
+  onChangeTAX() {
+    const controls = this.ihForm.controls;
+    const tax = controls.ith_taxable.value;
+    
+      for (var i = 0; i < this.ihdataset.length; i++) {
+        console.log("here",tax)
+        let updateItem = this.gridServiceih.getDataItemByRowIndex(i);
+    
+            updateItem.itdh_taxable = tax ;
+            this.gridServiceih.updateItem(updateItem);
+      };
+    this.calculatetot();
+    }
 
   onChangeCust() {
     const controls = this.ihForm.controls;
     const cm_addr = controls.ith_cust.value;
     
     this.dataset = [];
+    this.ihdataset= [];
     this.customersService.getBy({ cm_addr }).subscribe(
       (res: any) => {
         console.log(res);
@@ -1031,7 +1047,7 @@ let ind =  1
     const controls = this.ihForm.controls
     console.log(this.user.usrd_profile)
     this.sequenceService
-        .getBy({seq_seq: controls.ith_category.value, seq_type: 'IV'})
+        .getBy({seq_seq: controls.ith_category.value,seq_profile: this.user.usrd_profile, seq_type: 'IV'})
         .subscribe((response: any) => {
             console.log(response)
             if (response.data.length == 0) {
@@ -1396,7 +1412,7 @@ prepareGrid1() {
   // fill the dataset with your data
  
   this.sequenceService
-      .getBy({seq_type: 'IV'})
+      .getBy({seq_type: 'IV',seq_profile: this.user.usrd_profile})
       .subscribe((response: any) => (this.sequences = response.data))
      
 }
@@ -1424,6 +1440,7 @@ handleSelectedRowsChanged2(e, args) {
      
       const cm_addr = item.cm_addr;
       this.dataset = [];
+      this.ihdataset= [];
     this.customersService.getBy({ cm_addr: item.cm_bill }).subscribe(
       (ressa: any) => {
         console.log(ressa);
@@ -1534,7 +1551,8 @@ prepareGrid2() {
       field: "address.ad_taxable",
       sortable: true,
       filterable: true,
-      type: FieldType.string,
+      type: FieldType.boolean,
+       formatter: Formatters.checkmark,
     },
     {
       id: "ad_taxc",
@@ -1543,6 +1561,7 @@ prepareGrid2() {
       sortable: true,
       filterable: true,
       type: FieldType.string,
+     
     },
   ];
 
@@ -1748,24 +1767,30 @@ printpdf(nbr) {
   var img = new Image()
   img.src = "./assets/media/logos/company.png";
   img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, "png", 160, 5, 50, 30);
-  doc.setFontSize(9);
+  doc.addImage(img, "png", 5, 5, 50, 30);
+  doc.setFont('times','bold')
+  doc.setFontSize(10);
   if (this.domain.dom_name != null) {
-    doc.text(this.domain.dom_name, 10, 10);
+    doc.text(this.domain.dom_name, 100, 10);
   }
-  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-  doc.line(10, 32, 200, 32);
-  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
-  doc.line(10, 40, 200, 40);
+  let tel1 =  (this.domain.dom_tel1 != null) ? this.domain.dom_tel1 : ""
+  let tel2 =  (this.domain.dom_tel2 != null) ? this.domain.dom_tel2 : ""
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 100, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 100, 20);
+  if (tel1!= "" || tel2 != "") doc.text("Tél : " + tel1 + " / " + tel2, 100, 25);
+  
+  doc.setFontSize(8);
+  doc.line(2, 32, 208, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "      NIF : " + this.domain.dom_nif +  "      AI : " + this.domain.dom_ai + "      NIS : " + this.domain.dom_nis + "      Compte Bancaire :" + this.domain.dom_bank1 + " N° : " + this.domain.dom_rib1, 10, 37);
+  doc.line(2, 40, 208, 40);
+  doc.setFont('times','normal')
   doc.setFontSize(12);
   doc.text( 'Facture N°: ' + nbr  , 70, 45);
   doc.setFontSize(8);
   
   doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
   doc.text('Date : ' + dateinv, 150 , 50 )
-  doc.text('Mode Paiement : ' + terms, 150 , 55 )
+  // doc.text('Mode Paiement : ' + terms, 150 , 55 )
   
   doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
   doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
@@ -1796,30 +1821,38 @@ printpdf(nbr) {
   doc.text('THT', 181 , 88.5);
   doc.line(200, 85, 200, 90);
   var i = 95;
+  var tax = ""
   doc.setFontSize(6);
   for (let j = 0; j < this.iharray.length  ; j++) {
-    
+   
+    if (controlss.ith_taxable.value == true) { tax = this.iharray[j].itdh_taxc} else { tax = "00"}
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
 img.src = "./assets/media/logos/companylogo.png";
-doc.addImage(img, "png", 160, 5, 50, 30);
-doc.setFontSize(9);
-if (this.domain.dom_name != null) {
-  doc.text(this.domain.dom_name, 10, 10);
-}
-if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    doc.line(10, 32, 200, 32);
-    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
-    doc.line(10, 40, 200, 40);
-      doc.setFontSize(12);
+doc.addImage(img, "png", 5, 5, 50, 30);
+  doc.setFont('times','bold')
+  doc.setFontSize(10);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 100, 10);
+  }
+  let tel1 =  (this.domain.dom_tel1 != null) ? this.domain.dom_tel1 : ""
+  let tel2 =  (this.domain.dom_tel2 != null) ? this.domain.dom_tel2 : ""
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 100, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 100, 20);
+  if (tel1!= "" || tel2 != "") doc.text("Tél : " + tel1 + " / " + tel2, 100, 25);
+  
+  doc.setFontSize(8);
+  doc.line(2, 32, 208, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "      NIF : " + this.domain.dom_nif +  "      AI : " + this.domain.dom_ai + "      NIS : " + this.domain.dom_nis + "      Compte Bancaire :" + this.domain.dom_bank1 + " N° : " + this.domain.dom_rib1, 10, 37);
+  doc.line(2, 40, 208, 40);
+  doc.setFont('times','normal')
+  doc.setFontSize(12);
       doc.text( 'N° Facture : ' + nbr  , 70, 45);
       doc.setFontSize(8);
      // console.log(this.customer.address.ad_misc2_id)
       doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
       doc.text('Date : ' + dateinv, 150 , 50 )
-      doc.text('Mode Paiement : ' + terms, 150 , 55 )
+      // doc.text('Mode Paiement : ' + terms, 150 , 55 )
       doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
       doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
       if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
@@ -1874,7 +1907,7 @@ console.log("this.iharray[j].desc",this.iharray)
       doc.line(130, i - 5, 130, i );
       doc.text( String(Number(this.iharray[j].itdh_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
       doc.line(150, i - 5, 150, i );
-      doc.text(String(this.iharray[j].itdh_taxc) + "%" , 153 , i  - 1);
+      doc.text(String(tax) + "%" , 153 , i  - 1);
       doc.line(160, i - 5 , 160, i );
       doc.text(String(Number(this.iharray[j].itdh_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
       doc.line(170, i - 5 , 170, i );
@@ -1919,7 +1952,7 @@ console.log("this.iharray[j].desc",this.iharray)
     doc.line(130, i - 5, 130, i );
     doc.text( String(Number(this.iharray[j].itdh_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
     doc.line(150, i - 5, 150, i );
-    doc.text(String(this.iharray[j].itdh_taxc) + "%" , 153 , i  - 1);
+    doc.text(String(tax) + "%" , 153 , i  - 1);
     doc.line(160, i - 5 , 160, i );
     doc.text(String(Number(this.iharray[j].itdh_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
     doc.line(170, i - 5 , 170, i );
@@ -1996,8 +2029,10 @@ let ttc = replaceAll(tttc,","," ")
    
         doc.text( "Arretée la présente facture a la somme de :" + mt1  , 20, i + 53)
         doc.text(  mt2  , 20, i + 60)
+        doc.text('Mode Paiement : ' + terms, 20 , i + 67 )
       } else {
         doc.text( "Arretée la présente facture a la somme de :" + mt  , 20, i + 53)
+        doc.text('Mode Paiement : ' + terms, 20 , i + 60 )
 
       }
     // window.open(doc.output('bloburl'), '_blank');
