@@ -23,30 +23,30 @@ export class MenuConfig {
         // },
         { section: "MENUS GENERALS" },
 
-        {
-          title: "Dashboard",
-          bullet: "dot",
-          icon: "flaticon-dashboard",
-          root: true,
-          submenu: [
-            {
-              title: "Dashboard",
-              page: "/dashboard/manager-dashboard",
-            },
-            {
-              title: "Dashboard Commercial",
-              page: "/dashboard/sales-dashboard",
-            },
-            {
-              title: "Dashboard CRM",
-              page: "/dashboard/crm-dashboard",
-            },
-            {
-              title: "Dashboard DD",
-              page: "/dashboard/dd-dashboard",
-            },
-          ],
-        },
+        // {
+        //   title: "Dashboard",
+        //   bullet: "dot",
+        //   icon: "flaticon-dashboard",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Dashboard",
+        //       page: "/dashboard/manager-dashboard",
+        //     },
+        //     {
+        //       title: "Dashboard Commercial",
+        //       page: "/dashboard/sales-dashboard",
+        //     },
+        //     {
+        //       title: "Dashboard CRM",
+        //       page: "/dashboard/crm-dashboard",
+        //     },
+        //     {
+        //       title: "Dashboard DD",
+        //       page: "/dashboard/dd-dashboard",
+        //     },
+        //   ],
+        // },
 
         // {
         //   title: "POS",
@@ -197,51 +197,52 @@ export class MenuConfig {
         //   ],
         // },
 
-        {
-          title: "Gestion des Fournisseurs",
-          bullet: "dot",
-          icon: "flaticon2-group",
-          root: true,
-          submenu: [
-            {
-              title: "La liste des achats par Fournisseur",
-              page: "/providers/itembyproviderlist",
-            },
-            {
-              title: "Activité Fournisseur",
-              page: "/providers/provider-activities",
-            },
-            {
-              title: "Chiffre d'affaire par Fournisseur",
-              page: "/providers/provider-calist",
-            },
-            {
-              title: "La liste des Fournisseurs",
-              page: "/providers/list",
-            },
-            {
-              title: "Ajouter Fournisseurs",
-              page: "/providers/create-std-provider",
-            },
-            {
-              title: "Répertoire Fournisseurs",
-              page: "/providers/create-rep",
-            },
-            {
-              title: "Répertoire Fournisseurs formateur",
-              page: "/providers/create-rep-job",
-            },
-            {
-              title: "Liste Répertoire Fournisseurs",
-              page: "/providers/list-rep",
-            },
+        // {
+        //   title: "Gestion des Fournisseurs",
+        //   bullet: "dot",
+        //   icon: "flaticon2-group",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "La liste des Fournisseurs",
+        //       page: "/providers/list",
+        //     },
+        //     {
+        //       title: "Ajouter Fournisseurs",
+        //       page: "/providers/create-std-provider",
+        //     },
+        //     // {
+        //     //   title: "La liste des achats par Fournisseur",
+        //     //   page: "/providers/itembyproviderlist",
+        //     // },
+        //     // {
+        //     //   title: "Activité Fournisseur",
+        //     //   page: "/providers/provider-activities",
+        //     // },
+        //     // {
+        //     //   title: "Chiffre d'affaire par Fournisseur",
+        //     //   page: "/providers/provider-calist",
+        //     // },
+            
+        //     {
+        //       title: "Répertoire Fournisseurs",
+        //       page: "/providers/create-rep",
+        //     },
+        //     // {
+        //     //   title: "Répertoire Fournisseurs formateur",
+        //     //   page: "/providers/create-rep-job",
+        //     // },
+        //     {
+        //       title: "Liste Répertoire Fournisseurs",
+        //       page: "/providers/list-rep",
+        //     },
             
            
-          ],
-        },
+        //   ],
+        // },
         /**/
         {
-          title: "Gestion des Fournisseurs STD",
+          title: "Gestion des Fournisseurs ",
           bullet: "dot",
           icon: "flaticon-customer",
           root: true,
@@ -255,11 +256,11 @@ export class MenuConfig {
               page: "/providers/provider-settings-list",
             },
             {
-              title: "La liste des Fournisseurs STD",
+              title: "La liste des Fournisseurs ",
               page: "/providers/list-std-provider",
             },
             {
-              title: "Ajouter Fournisseur STD",
+              title: "Ajouter Fournisseur ",
               page: "/providers/create-std-provider",
             }
           ],
@@ -282,10 +283,10 @@ export class MenuConfig {
               title: "Ajouter Clients STD",
               page: "/customers/create-std-customer",
             },
-            {
-              title: "Ajouter Clients immobilier",
-              page: "/customers/create-customer-immobilier",
-            },
+            // {
+            //   title: "Ajouter Clients immobilier",
+            //   page: "/customers/create-customer-immobilier",
+            // },
             {
               title: "Répertoire Clients",
               page: "/customers/create-rep",
@@ -293,50 +294,50 @@ export class MenuConfig {
           ],
         },
         /**/
-        {
-          title: "Gestion des Clients",
-          bullet: "dot",
-          icon: "flaticon-customer",
-          root: true,
-          submenu: [
-            {
-              title: "La liste des Clients",
-              page: "/customers/customer-list",
-            },
-            {
-              title: "Ajouter Clients",
-              page: "/customers/customer-create",
-            },
-            {
-              title: "Répertoire Clients",
-              page: "/customers/create-rep",
-            },
-            {
-              title: "Liste Répertoire Fournisseurs",
-              page: "/customers/list-rep",
-            },
-            {
-              title: "La liste des ventes par clients",
-              page: "/customers/caby-itemlist",
-            },
-            {
-              title: "Activité clients",
-              page: "/customers/Customer-activitylist",
-            },
-            {
-              title: "Soldes clients",
-              page: "/customers/Customer-soldelist",
-            },
-            {
-              title: "Chiffre d'affaires par clients",
-              page: "/customers/Customer-calist",
-            },
-            {
-              title: "Liste Soldes clients",
-              page: "/customers/customers-solde",
-            },
-          ],
-        },
+        // {
+        //   title: "Gestion des Clients",
+        //   bullet: "dot",
+        //   icon: "flaticon-customer",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "La liste des Clients",
+        //       page: "/customers/customer-list",
+        //     },
+        //     {
+        //       title: "Ajouter Clients",
+        //       page: "/customers/customer-create",
+        //     },
+        //     {
+        //       title: "Répertoire Clients",
+        //       page: "/customers/create-rep",
+        //     },
+        //     {
+        //       title: "Liste Répertoire Fournisseurs",
+        //       page: "/customers/list-rep",
+        //     },
+        //     {
+        //       title: "La liste des ventes par clients",
+        //       page: "/customers/caby-itemlist",
+        //     },
+        //     {
+        //       title: "Activité clients",
+        //       page: "/customers/Customer-activitylist",
+        //     },
+        //     {
+        //       title: "Soldes clients",
+        //       page: "/customers/Customer-soldelist",
+        //     },
+        //     {
+        //       title: "Chiffre d'affaires par clients",
+        //       page: "/customers/Customer-calist",
+        //     },
+        //     {
+        //       title: "Liste Soldes clients",
+        //       page: "/customers/customers-solde",
+        //     },
+        //   ],
+        // },
         // {
         //   title: "Gestion des clients mobile",
         //   bullet: "dot",
@@ -558,27 +559,27 @@ export class MenuConfig {
         //     },
         //   ],
         // },
-        {
-          title: "Gestion Standard des Produits",
-          bullet: "dot",
-          icon: "flaticon2-box-1",
-          root: true,
-          submenu: [
-            {
-              title: "Liste des Produits",
-              page: "/articles/list",
-            },
-            {
-              title: "Modification des Produits",
-              page: "/articles/list-std-update",
-            },
-            {
-              title: "Ajouter un Produit",
-              page: "/articles/create-std-item",
-            },
+        // {
+        //   title: "Gestion Standard des Produits",
+        //   bullet: "dot",
+        //   icon: "flaticon2-box-1",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Liste des Produits",
+        //       page: "/articles/list",
+        //     },
+        //     {
+        //       title: "Modification des Produits",
+        //       page: "/articles/list-std-update",
+        //     },
+        //     {
+        //       title: "Ajouter un Produit",
+        //       page: "/articles/create-std-item",
+        //     },
             
-          ]
-        },
+        //   ]
+        // },
         {
           title: "Gestion des articles",
           bullet: "dot",
@@ -637,10 +638,10 @@ export class MenuConfig {
               title: "Génerer Materiel par Modèle",
               page: "/articles/create-materiel-mod",
             },
-            {
-              title: "Génerer appartement par Modèle",
-              page: "/articles/create-immobilier-mod",
-            },
+            // {
+            //   title: "Génerer appartement par Modèle",
+            //   page: "/articles/create-immobilier-mod",
+            // },
             {
               title: "Génerer PF par Modèle",
               page: "/articles/create-pf-mod",
@@ -649,14 +650,14 @@ export class MenuConfig {
               title: "MAINT Cout Article",
               page: "/articles/edit-cost",
             },
-            {
-              title: "Créer une page de produits",
-              page: "/articles/page",
-            },
-            {
-              title: "Modification Prix Pour DD",
-              page: "/articles/update-price-dd",
-            },
+            // {
+            //   title: "Créer une page de produits",
+            //   page: "/articles/page",
+            // },
+            // {
+            //   title: "Modification Prix Pour DD",
+            //   page: "/articles/update-price-dd",
+            // },
 
             {
               title: "Gestion des Modèles",
@@ -678,10 +679,10 @@ export class MenuConfig {
                   title: "Ajouter Un Modèle Materiel",
                   page: "/articles/create-mod-materiel",
                 },
-                {
-                  title: "Ajouter Un Modèle d'appartement",
-                  page: "/articles/create-mod-immobilier",
-                },
+                // {
+                //   title: "Ajouter Un Modèle d'appartement",
+                //   page: "/articles/create-mod-immobilier",
+                // },
                 {
                   title: "Ajouter Un Modèle PF",
                   page: "/articles/create-mod-pf",
@@ -798,10 +799,10 @@ export class MenuConfig {
               page: "/inventory-transaction/iss-unp-globalprint",
             },
             
-            {
-              title: "déclaration réalisation  ",
-              page: "/inventory-transaction/unplanified-recept",
-            },
+            // {
+            //   title: "Réception non planifiée ",
+            //   page: "/inventory-transaction/unplanified-recept",
+            // },
             
             {
               title: "Réception non Planifiée Etiquetage",
@@ -819,10 +820,10 @@ export class MenuConfig {
               title: "Réception Echantillon",
               page: "/inventory-transaction/echantillon-receipt-cab",
             },
-            {
-              title: "Réception Biens Etiquetage",
-              page: "/inventory-transaction/asset-receive-cab",
-            },
+            // {
+            //   title: "Réception Biens Etiquetage",
+            //   page: "/inventory-transaction/asset-receive-cab",
+            // },
             {
               title: "Imprimer Bon de Réception non planifiée",
               page: "/inventory-transaction/rct-unp-print",
@@ -959,10 +960,10 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon2-shopping-cart",
           submenu: [
-            {
-              title: "Demande d'achats",
-              page: "/purchasing/create-req",
-            },
+            // {
+            //   title: "Demande d'achats",
+            //   page: "/purchasing/create-req",
+            // },
             {
               title: "Création Demande d'achat",
               page: "/purchasing/create-oa-service",
@@ -1005,14 +1006,14 @@ export class MenuConfig {
               page: "/purchasing/create-po",
             },
             
-            {
-              title: "Simulateur des commandes",
-              page: "/purchasing/create-oa",
-            },
-            {
-              title: "Simulateur des commandes Embalage",
-              page: "/purchasing/create-oa-em",
-            },
+            // {
+            //   title: "Simulateur des commandes",
+            //   page: "/purchasing/create-oa",
+            // },
+            // {
+            //   title: "Simulateur des commandes Embalage",
+            //   page: "/purchasing/create-oa-em",
+            // },
             {
               title: "Impression Bon de commande",
               page: "/purchasing/print-po",
@@ -1022,7 +1023,7 @@ export class MenuConfig {
               page: "/purchasing/po-list",
             },
             {
-              title: "Edit Status BC",
+              title: "Edit Statut commande",
               page: "/purchasing/edit-status-po",
             },
             {
@@ -1079,14 +1080,14 @@ export class MenuConfig {
             //   title: "Liste des Commandes Clients Céramique",
             //   page: "/sales/list-so-ceram",
             // },
-            {
-              title: "Fiche de Voeu",
-              page: "/sales/create-so-immobilier",
-            },
-            {
-              title: "Commande Clients Bare Code",
-              page: "/sales/create-so-bc",
-            },
+            // {
+            //   title: "Fiche de Voeu",
+            //   page: "/sales/create-so-immobilier",
+            // },
+            // {
+            //   title: "Commande Clients Bare Code",
+            //   page: "/sales/create-so-bc",
+            // },
             {
               title: "Modification des Commandes",
               page: "/sales/list-so-edit",
@@ -1120,47 +1121,47 @@ export class MenuConfig {
               title: "ajouter Commande Client",
               page: "/sales/create-direct-invoice",
             },
-            {
-              title: "ajouter Commande Client immobilier",
-              page: "/sales/create-so-immobilier",
-            },
-            {
-              title: "Versement Client",
-              page: "/sales/create-payment-cust",
-            },
+            // {
+            //   title: "ajouter Commande Client immobilier",
+            //   page: "/sales/create-so-immobilier",
+            // },
+            // {
+            //   title: "Versement Client",
+            //   page: "/sales/create-payment-cust",
+            // },
             
-            {
-              title: "régler ordre de versement",
-              page: "/sales/payment-psh",
-            },
-            {
-              title: "Decision d'affectation",
-              page: "/sales/decision-affectation",
-            },
-            {
-              title: "cloture solde",
-              page: "/sales/cloture-solde",
-            },
-            {
-              title: "attestation de reservation",
-              page: "/sales/attestation-reservation",
-            },
-            {
-              title: "PV de réception",
-              page: "/sales/create-pv-reception",
-            },
-            {
-              title: "Enquete de satisfaction",
-              page: "/training/enquete-satisfacation",
-            },
-            {
-              title: "Remise des clés",
-              page: "/sales/remise-des-cles",
-            },
-            {
-              title: "Controle actes",
-              page: "/sales/controle-acte",
-            },
+            // {
+            //   title: "régler ordre de versement",
+            //   page: "/sales/payment-psh",
+            // },
+            // {
+            //   title: "Decision d'affectation",
+            //   page: "/sales/decision-affectation",
+            // },
+            // {
+            //   title: "cloture solde",
+            //   page: "/sales/cloture-solde",
+            // },
+            // {
+            //   title: "attestation de reservation",
+            //   page: "/sales/attestation-reservation",
+            // },
+            // {
+            //   title: "PV de réception",
+            //   page: "/sales/create-pv-reception",
+            // },
+            // {
+            //   title: "Enquete de satisfaction",
+            //   page: "/training/enquete-satisfacation",
+            // },
+            // {
+            //   title: "Remise des clés",
+            //   page: "/sales/remise-des-cles",
+            // },
+            // {
+            //   title: "Controle actes",
+            //   page: "/sales/controle-acte",
+            // },
             {
               title: "Paiement des Commande",
               page: "/sales/payment-so",
@@ -1270,30 +1271,30 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon2-delivery-package",
           submenu: [
-            {
-              title: "Recette Vendeur",
-              page: "/account-receivable/create-vendor-payment",
-            },
-            {
-              title: "Recette Vendeur Détaillée",
-              page: "/account-receivable/create-vendor-payment-detail",
-            },
-            {
-              title: "Recette Role Détaillée",
-              page: "/account-receivable/create-role-payment-detail",
-            },
-            {
-              title: "Liste des Recettes vendeurs",
-              page: "/account-receivable/list-vendor-payment",
-            },
-            {
-              title: "Liste des Recettes Par Caisse",
-              page: "/account-receivable/list-global-vendor-payment",
-            },
-            {
-              title: "Situation Caisse Détaillée",
-              page: "/account-receivable/list-bank-detail",
-            },
+            // {
+            //   title: "Recette Vendeur",
+            //   page: "/account-receivable/create-vendor-payment",
+            // },
+            // {
+            //   title: "Recette Vendeur Détaillée",
+            //   page: "/account-receivable/create-vendor-payment-detail",
+            // },
+            // {
+            //   title: "Recette Role Détaillée",
+            //   page: "/account-receivable/create-role-payment-detail",
+            // },
+            // {
+            //   title: "Liste des Recettes vendeurs",
+            //   page: "/account-receivable/list-vendor-payment",
+            // },
+            // {
+            //   title: "Liste des Recettes Par Caisse",
+            //   page: "/account-receivable/list-global-vendor-payment",
+            // },
+            // {
+            //   title: "Situation Caisse Détaillée",
+            //   page: "/account-receivable/list-bank-detail",
+            // },
             {
               title: "Situation des Caisses",
               page: "/account-receivable/list-caisse",
@@ -1375,16 +1376,16 @@ export class MenuConfig {
               title: "Maint des Paiement",
               page: "/account-receivable/create-account-receivable",
             },
-            {
-              title: "Paiement par Projet",
-              page: "/project/create-project-payment",
-            },
+            // {
+            //   title: "Paiement par Projet",
+            //   page: "/project/create-project-payment",
+            // },
             {
               title: "Liste des Paiement",
               page: "/account-receivable/list-payment",
             },
             {
-              title: "Paiement à Rapproché",
+              title: "Paiement à Rapprocher",
               page: "/account-receivable/list-payment-rap",
             },
             {
@@ -1416,7 +1417,7 @@ export class MenuConfig {
               page: "/account-payable/create-payment",
             },
             {
-              title: "Paiement à Rapproché",
+              title: "Paiement à Rapprocher",
               page: "/account-payable/list-payment-rap",
             },
             {
@@ -1448,14 +1449,14 @@ export class MenuConfig {
               title: "Création programme Thermoformage",
               page: "/manufacturing/create-order-pf",
             },
-            {
-              title: "Création des OFs à partir des Commandes",
-              page: "/manufacturing/create-wo-so",
-            },
-            {
-              title: "Création des OFs Semi-Finis",
-              page: "/manufacturing/create-wo-sf",
-            },
+            // {
+            //   title: "Création des OFs à partir des Commandes",
+            //   page: "/manufacturing/create-wo-so",
+            // },
+            // {
+            //   title: "Création des OFs Semi-Finis",
+            //   page: "/manufacturing/create-wo-sf",
+            // },
             {
               title: "List des OFs Broyage",
               page: "/manufacturing/list-wo-br",
@@ -1649,22 +1650,22 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Gestion des Contrats",
-          root: true,
-          bullet: "dot",
-          icon: "flaticon2-contract",
-          submenu: [
-            {
-              title: "La liste des Contrats",
-              page: "/deal/list-deal",
-            },
-            {
-              title: "Ajouter un Contrat",
-              page: "/deal/create-deal",
-            },
-          ],
-        },
+        // {
+        //   title: "Gestion des Contrats",
+        //   root: true,
+        //   bullet: "dot",
+        //   icon: "flaticon2-contract",
+        //   submenu: [
+        //     {
+        //       title: "La liste des Contrats",
+        //       page: "/deal/list-deal",
+        //     },
+        //     {
+        //       title: "Ajouter un Contrat",
+        //       page: "/deal/create-deal",
+        //     },
+        //   ],
+        // },
         {
           title: "Gestion des Employés",
           root: true,
@@ -2128,10 +2129,10 @@ export class MenuConfig {
               title: "Liste des Ecritures ",
               page: "/general-accounting/list-gl",
             },
-            {
-              title: "G50",
-              page: "/general-accounting/list-g50",
-            },
+            // {
+            //   title: "G50",
+            //   page: "/general-accounting/list-g50",
+            // },
           ],
         },
 
@@ -2549,63 +2550,63 @@ export class MenuConfig {
               ],
             },
 
-            {
-              title: "Paramétrages de Transport",
-              bullet: "dot",
-              icon: "flaticon-settings-1",
-              root: true,
-              submenu: [
-                {
-                  title: "Ajouter Code Frais Transport",
-                  page: "/transport/create-cost",
-                },
-                {
-                  title: "Edit Code Frais Transport",
-                  page: "/transport/list-edit-cost",
-                },
-                {
-                  title: "Liste des Codes Frais Transport",
-                  page: "/transport/list-cost",
-                },
+            // {
+            //   title: "Paramétrages de Transport",
+            //   bullet: "dot",
+            //   icon: "flaticon-settings-1",
+            //   root: true,
+            //   submenu: [
+            //     {
+            //       title: "Ajouter Code Frais Transport",
+            //       page: "/transport/create-cost",
+            //     },
+            //     {
+            //       title: "Edit Code Frais Transport",
+            //       page: "/transport/list-edit-cost",
+            //     },
+            //     {
+            //       title: "Liste des Codes Frais Transport",
+            //       page: "/transport/list-cost",
+            //     },
 
-                {
-                  title: "Ajouter Liste Frais Transport",
-                  page: "/transport/create-costlist",
-                },
-                {
-                  title: "Edit Liste Frais Transport",
-                  page: "/transport/list-edit-costlist",
-                },
-                {
-                  title: "Liste des Liste Frais Transport",
-                  page: "/transport/list-costlist",
-                },
-              ],
-            },
-            {
-              title: "Paramétrages POS",
-              bullet: "dot",
-              icon: "flaticon-settings-1",
-              root: true,
-              submenu: [
-                {
-                  title: "Listes des Plateformes",
-                  page: "/pos-settings/list-delivery",
-                },
-                {
-                  title: "Ajouter une Plateforme",
-                  page: "/pos-settings/create-delivery",
-                },
-                {
-                  title: "Ajouter une catégorie",
-                  page: "/pos-settings/create-category",
-                },
-                {
-                  title: "Liste des catégories",
-                  page: "/pos-settings/list-category",
-                },
-              ],
-            },
+            //     {
+            //       title: "Ajouter Liste Frais Transport",
+            //       page: "/transport/create-costlist",
+            //     },
+            //     {
+            //       title: "Edit Liste Frais Transport",
+            //       page: "/transport/list-edit-costlist",
+            //     },
+            //     {
+            //       title: "Liste des Liste Frais Transport",
+            //       page: "/transport/list-costlist",
+            //     },
+            //   ],
+            // },
+            // {
+            //   title: "Paramétrages POS",
+            //   bullet: "dot",
+            //   icon: "flaticon-settings-1",
+            //   root: true,
+            //   submenu: [
+            //     {
+            //       title: "Listes des Plateformes",
+            //       page: "/pos-settings/list-delivery",
+            //     },
+            //     {
+            //       title: "Ajouter une Plateforme",
+            //       page: "/pos-settings/create-delivery",
+            //     },
+            //     {
+            //       title: "Ajouter une catégorie",
+            //       page: "/pos-settings/create-category",
+            //     },
+            //     {
+            //       title: "Liste des catégories",
+            //       page: "/pos-settings/list-category",
+            //     },
+            //   ],
+            // },
             {
               title: "Paramétrages des imprimantes",
               bullet: "dot",
@@ -2627,59 +2628,59 @@ export class MenuConfig {
               ],
             },
 
-            {
-              title: "Paramétrages Mobile",
-              bullet: "dot",
-              icon: "flaticon-interface-1",
-              root: true,
-              submenu: [
-                {
-                  title: "Résultat de la visite",
-                  page: "/mobile-settings/visit-result",
-                },
-                {
-                  title: "Méthode de paiement",
-                  page: "/mobile-settings/payment-method",
-                },
-                {
-                  title: "Motif d'annulation",
-                  page: "/mobile-settings/cancelation-reason",
-                },
-                {
-                  title: "Liste de prix",
-                  page: "/mobile-settings/price-list",
-                },
-              ],
-            },
-            {
-              title: "Parametrage des Formation",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon-settings-1",
-              submenu: [
-                {
-                  title: "Type de Formation",
-                  page: "/training/create-training-type",
-                },
-                {
-                  title: "Domaine de Formation",
-                  page: "/training/create-training-domain",
-                },
-                {
-                  title: "Liste des Domaines de Formation",
-                  page: "/training/list-domain",
-                },
-                {
-                  title: "Rubrique de Formation",
-                  page: "/training/create-training-section",
-                },
-                {
-                  title: "Liste des Domaines de Formation",
-                  page: "/training/list-section",
-                },
+            // {
+            //   title: "Paramétrages Mobile",
+            //   bullet: "dot",
+            //   icon: "flaticon-interface-1",
+            //   root: true,
+            //   submenu: [
+            //     {
+            //       title: "Résultat de la visite",
+            //       page: "/mobile-settings/visit-result",
+            //     },
+            //     {
+            //       title: "Méthode de paiement",
+            //       page: "/mobile-settings/payment-method",
+            //     },
+            //     {
+            //       title: "Motif d'annulation",
+            //       page: "/mobile-settings/cancelation-reason",
+            //     },
+            //     {
+            //       title: "Liste de prix",
+            //       page: "/mobile-settings/price-list",
+            //     },
+            //   ],
+            // },
+            // {
+            //   title: "Parametrage des Formation",
+            //   root: true,
+            //   bullet: "dot",
+            //   icon: "flaticon-settings-1",
+            //   submenu: [
+            //     {
+            //       title: "Type de Formation",
+            //       page: "/training/create-training-type",
+            //     },
+            //     {
+            //       title: "Domaine de Formation",
+            //       page: "/training/create-training-domain",
+            //     },
+            //     {
+            //       title: "Liste des Domaines de Formation",
+            //       page: "/training/list-domain",
+            //     },
+            //     {
+            //       title: "Rubrique de Formation",
+            //       page: "/training/create-training-section",
+            //     },
+            //     {
+            //       title: "Liste des Domaines de Formation",
+            //       page: "/training/list-section",
+            //     },
                
-              ],
-            },
+            //   ],
+            // },
             {
               title: "Configuration Module",
               page: "/config/maint-config",

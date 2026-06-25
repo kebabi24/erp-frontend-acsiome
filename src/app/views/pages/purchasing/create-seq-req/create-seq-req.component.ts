@@ -36,10 +36,10 @@ import {
     MessageType,
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
-import { SequenceService, Sequence, UsersService ,CodeService} from "../../../../core/erp"
+import { SequenceService, Sequence, UsersService ,CodeService,ItemService} from "../../../../core/erp"
 
 @Component({
-  selector: 'kt-create-seq-req',
+  selector: 'kt-create-seq-req', 
   templateUrl: './create-seq-req.component.html',
   styleUrls: ['./create-seq-req.component.scss']
 })
@@ -69,6 +69,16 @@ export class CreateSeqReqComponent implements OnInit {
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
   mvdataset: any[];
+
+  ptangularGrid: AngularGridInstance;
+  ptgrid: any;
+  ptgridService: GridService;
+  ptdataView: any;
+  ptcolumnDefinitions: Column[];
+  ptgridOptions: GridOption;
+  ptdataset: any[];
+
+
   row_number;
 
   transacts: []
@@ -76,6 +86,10 @@ export class CreateSeqReqComponent implements OnInit {
   gridOptions4: GridOption = {}
   gridObj4: any
   angularGrid4: AngularGridInstance
+  columnDefinitions5: Column[] = []
+  gridOptions5: GridOption = {}
+  gridObj5: any
+  angularGrid5: AngularGridInstance
 
 
     level = 1
@@ -90,6 +104,7 @@ export class CreateSeqReqComponent implements OnInit {
         private userService: UsersService,
         private modalService: NgbModal,
         private codeService: CodeService,
+        private itemService:ItemService,
     ) {
         config.autoClose = true
     }
@@ -98,6 +113,7 @@ export class CreateSeqReqComponent implements OnInit {
         this.loadingSubject.next(false)
         this.createForm()
         this.initmvGrid();
+        this.initptGrid();
     }
 
     handleSelectedRowsChanged(e, args) {
@@ -358,8 +374,9 @@ export class CreateSeqReqComponent implements OnInit {
 
         // tslint:disable-next-line:prefer-const
         for(let data of this.mvdataset) {delete data.id}
+        for(let datapt of this.ptdataset) {delete datapt.id}
         let seq = this.prepareSeq()
-        this.addSeq(seq,this.mvdataset)
+        this.addSeq(seq,this.mvdataset,this.ptdataset)
     }
     /**
      * Returns object for saving
@@ -399,9 +416,9 @@ export class CreateSeqReqComponent implements OnInit {
      *
      * @param _Seq: seqModel
      */
-    addSeq(_seq: Sequence,detail:any) {
+    addSeq(_seq: Sequence,detail:any,part:any) {
         this.loadingSubject.next(true)
-        this.sequenceService.addS({seq:_seq,details:detail}).subscribe(
+        this.sequenceService.addSpt({seq:_seq,details:detail,parts:part}).subscribe(
             (reponse) => console.log("response", Response),
             (error) => {
                 this.layoutUtilsService.showActionNotification(
@@ -452,6 +469,25 @@ export class CreateSeqReqComponent implements OnInit {
             // this.row_number = args.row
             let element: HTMLElement = document.getElementById(
               "openItemsGrid"
+          ) as HTMLElement
+          element.click()
+    }
+    addNewPart() {
+      const controls = this.seqForm.controls
+      this.ptgridService.addItem(
+        {
+          id: this.ptdataset.length + 1,
+          usgseq_code: controls.seq_seq.value,
+          usgseq_service: null,
+          chr01: null,
+          
+        },
+        { position: "bottom" }
+      );
+      this.row_number = this.ptdataset.length - 1;
+            // this.row_number = args.row
+            let element: HTMLElement = document.getElementById(
+              "openPartsGrid"
           ) as HTMLElement
           element.click()
     }
@@ -526,6 +562,78 @@ export class CreateSeqReqComponent implements OnInit {
     };
 
     this.mvdataset = [];
+  }
+  ptGridReady(angularGrid: AngularGridInstance) {
+      this.ptangularGrid = angularGrid;
+      this.ptdataView = angularGrid.dataView;
+      this.ptgrid = angularGrid.slickGrid;
+      this.ptgridService = angularGrid.gridService;
+    }
+  initptGrid() {
+    this.ptcolumnDefinitions = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.ptangularGrid.gridService.deleteItem(args.dataContext);
+          }
+        },
+      },
+      {
+        id: "usgseq_service",
+        name: "Article",
+        field: "usgseq_service",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.text,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "ptid",
+        field: "cptid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          let element: HTMLElement = document.getElementById(
+            "openItemsGrid"
+          ) as HTMLElement;
+          element.click();
+        },
+      },
+      {
+        id: "chr01",
+        name: "Description",
+        field: "chr01",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.float,
+        editor: {
+          model: Editors.text,
+        },
+      },
+    ];
+
+    this.ptgridOptions = {
+      asyncEditorLoading: false,
+      editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+    };
+
+    this.ptdataset = [];
   }
   handleSelectedRowsChanged4(e, args) {
     let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
@@ -630,6 +738,111 @@ prepareGrid4() {
 open4(content) {
    
     this.prepareGrid4()
+    this.modalService.open(content, { size: "lg" })
+}
+  handleSelectedRowsChanged5(e, args) {
+    let updateItem = this.ptgridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObj5) {
+      args.rows.map((idx) => {
+        const item = this.gridObj5.getDataItem(idx);
+        const index = this.ptdataset.findIndex(detaill=>{
+          return detaill.usgseq_service == item.pt_part
+       })
+       if (index == -1) {
+        console.log(item);
+        updateItem.usgseq_service = item.pt_part;
+        updateItem.chr01 = item.pt_desc1;
+        
+        this.ptgridService.updateItem(updateItem);
+       } 
+       else {
+        alert("article déja affecté")
+       }
+      });
+    }
+  }
+  angularGridReady5(angularGrid: AngularGridInstance) {
+    this.angularGrid5 = angularGrid
+    this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+
+prepareGrid5() {
+    this.columnDefinitions5 = [
+        // {
+        //     id: "id",
+        //     field: "id",
+        //     excludeFromColumnPicker: true,
+        //     excludeFromGridMenu: true,
+        //     excludeFromHeaderMenu: true,
+
+        //     minWidth: 50,
+        //     maxWidth: 50,
+        // },
+        // {
+        //     id: "id",
+        //     name: "id",
+        //     field: "id",
+        //     sortable: true,
+        //     minWidth: 80,
+        //     maxWidth: 80,
+        // },
+        // {
+        //     id: "code_fldname",
+        //     name: "Champs",
+        //     field: "code_fldname",
+        //     sortable: true,
+        //     filterable: true,
+        //     type: FieldType.string,
+        // },
+     
+        {
+            id: "pt_part",
+            name: "Code",
+            field: "pt_part",
+            sortable: true,
+            width: 80,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "pt_desc1",
+            name: "Description",
+            field: "pt_desc1",
+            sortable: true,
+            width: 200,
+            filterable: true,
+            type: FieldType.string,
+        },
+    ]
+
+    this.gridOptions5 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+    this.itemService
+        .getBy({  })
+        .subscribe((response: any) => (this.transacts = response.data))
+}
+open5(content) {
+   
+    this.prepareGrid5()
     this.modalService.open(content, { size: "lg" })
 }
 }

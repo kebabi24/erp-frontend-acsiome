@@ -186,7 +186,7 @@ httpOptions = this.httpUtils.getHTTPHeaders()
                       else {
 
                         this.indexd = args.dataContext.id
-                        this.field = args.dataContext.code_fldname
+                        //this.field = args.dataContext.code_fldname
                         let element: HTMLElement = document.getElementById("openDeletesGrid") as HTMLElement;
                         element.click();
                       }
@@ -276,7 +276,7 @@ httpOptions = this.httpUtils.getHTTPHeaders()
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
-                  formatter: myCustomCheckboxFormatter,
+                  // formatter: myCustomCheckboxFormatter,
                   editor: {
                     model: Editors.singleSelect,
                     // enableRenderHtml: true,
@@ -325,17 +325,17 @@ httpOptions = this.httpUtils.getHTTPHeaders()
     }
 
 
-    this.codeService.getBy({code_desc:"EMP"}).subscribe(
-      (response: any) => {
-        this.dataset = response.data
+    // this.codeService.getBy({code_fldname:this.code,code_desc:"EMP"}).subscribe(
+    //   (response: any) => {
+    //     this.dataset = response.data
         
-      },
-      (error) => {
-        this.dataset = []
+    //   },
+    //   (error) => {
+    //     this.dataset = []
     
-      },
-      () => {}
-      )
+    //   },
+    //   () => {}
+    //   )
     
 
   }
@@ -456,6 +456,24 @@ angularGridReady(angularGrid: AngularGridInstance) {
 // }
 
 addNewItemS() {
+   this.field = 'emp_upper'
+  this.code = 'emp_upper'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EMP"}).subscribe(
+      (response: any) => {
+        this.datasettr = response.data
+          console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        this.dataViewtr.setItems(this.datasettr)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -481,13 +499,30 @@ addNewItemS() {
     },
     { position: "top" }
   );
-  this.field = 'emp_upper'
+ 
   
 }
 addNewItemD() {
   var maxObj = null;
       var iddd = 0;
-  this.field = 'emp_upper'    
+  this.field = 'emp_upper'  
+  this.code = 'emp_job'  
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EMP"}).subscribe(
+      (response: any) => {
+        this.datasettr = response.data
+          console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        this.dataViewtr.setItems(this.datasettr)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   if (this.dataset.length > 0) {
     maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -517,6 +552,23 @@ addNewItemP() {
   var maxObj = null;
       var iddd = 0;
       this.field = 'emp_job'
+      this.code = 'emp_level'
+      this.codeService.getBy({code_fldname:this.code,code_desc:"EMP"}).subscribe(
+      (response: any) => {
+        this.datasettr = response.data
+          console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        this.dataViewtr.setItems(this.datasettr)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   if (this.dataset.length > 0) {
     maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -546,6 +598,23 @@ addNewItemN() {
   var maxObj = null;
       var iddd = 0;
       this.field = 'emp_level'
+      this.code = 'emp_spec'
+      this.codeService.getBy({code_fldname:this.code,code_desc:"EMP"}).subscribe(
+      (response: any) => {
+        this.datasettr = response.data
+          console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        this.dataViewtr.setItems(this.datasettr)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   if (this.dataset.length > 0) {
     maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -607,7 +676,7 @@ onSelectedRowsChanged(e,args) {
   const index = args.rows;
   
   this.code = this.gridService.getDataItemByRowIndex(index).code_value
-  this.field = this.gridService.getDataItemByRowIndex(index).code_fldname
+  // this.field = this.gridService.getDataItemByRowIndex(index).code_fldname
   console.log(this.field, this.code)
   // this.itemService.getByOne(
   //   {pt_group: this.group},
@@ -629,7 +698,7 @@ this.updateData()
 updateData(){
 
   this.codeService.getBy(
-    {chr01: this.code,code_desc:'EMP'},
+    {code_fldname: this.code,code_desc:'EMP'},
     ).subscribe(
     (response: any) => {
       

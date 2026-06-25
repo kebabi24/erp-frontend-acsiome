@@ -305,6 +305,7 @@ autorisation:boolean;
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if(this.printable == true && args.dataContext.printed != true){
+            this.printable = false;
           this.itemsService.getByOne({pt_part:args.dataContext.tr_part }).subscribe( 
             (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type + ' QUALITE ' + reponse.data.pt_rev
                               this.miclaise = reponse.data.pt_article
@@ -312,7 +313,7 @@ autorisation:boolean;
                               if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
                                 const controls = this.woForm.controls;
                                 this.printbuttonState = true;
-                                this.printable = false;
+                                
                                 const _lb = new Label();
                                 (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
                                 // _lb.lb_rmks = controls.tr_rmks.value;

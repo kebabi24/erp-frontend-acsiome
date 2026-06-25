@@ -53,7 +53,7 @@ import { MatDialog } from "@angular/material/dialog"
 
 import { Code, CodeService } from "../../../../core/erp"
 
-@Component({
+@Component({ 
   selector: 'kt-part-settings', 
   templateUrl: './part-settings.component.html',
   styleUrls: ['./part-settings.component.scss']
@@ -134,7 +134,7 @@ export class PartSettingsComponent implements OnInit {
           ],
           code_desc: [{ value: this.code.code_desc, }],
          dec01: [{ value: this.code.dec01,  }],
-          
+           
       })
   }
   onAlertClose($event) {
@@ -147,11 +147,63 @@ export class PartSettingsComponent implements OnInit {
       this.isTerms = true
     controls.code_desc.enable()
     controls.dec01.enable()
+    this.codeService
+      .getBy({ code_fldname: controls.code_fldname.value })
+      .subscribe((response: any) => (this.check_form = response.data))
     } else {
-      this.isTerms = false
-    controls.code_desc.disable()
-    controls.dec01.disable()
+      this.isTerms = true
+    controls.code_desc.enable()
+    controls.dec01.enable()
+    if(controls.code_fldname.value == 'pt_fr_class') {
+        this.check_form = []
+        this.codeService
+      .getBy({ code_fldname: 'pt_prod_line' })
+      .subscribe((response: any) => (this.check_form = response.data))
     }
+    else{
+        if(controls.code_fldname.value == 'pt_part_type') {
+        this.check_form = []
+        this.codeService
+        .getBy({ code_fldname: 'pt_fr_class' })
+        .subscribe((response: any) => (this.check_form = response.data))
+       }
+       else{
+        if(controls.code_fldname.value == 'pt_draw') {
+        this.check_form = []
+        this.codeService
+        .getBy({ code_fldname: 'pt_part_type' })
+        .subscribe((response: any) => (this.check_form = response.data))
+        }
+        else{
+        if(controls.code_fldname.value == 'pt_group') {
+        this.check_form = []
+        this.codeService
+        .getBy({ code_fldname: 'pt_draw' })
+        .subscribe((response: any) => (this.check_form = response.data))
+        }
+        else{
+        if(controls.code_fldname.value == 'pt_rev') {
+        this.check_form = []
+        this.codeService
+        .getBy({ code_fldname: 'pt_group' })
+        .subscribe((response: any) => (this.check_form = response.data))
+        }
+        else{
+        if(controls.code_fldname.value == 'pt_break_cat') {
+        this.check_form = []
+        this.codeService
+        .getBy({ code_fldname: 'pt_part_type' })
+        .subscribe((response: any) => (this.check_form = response.data))
+        }
+       }
+       }
+       }
+       }
+
+    }
+
+    }
+    
     this.codeService.getBy({code_fldname: controls.code_fldname.value}).subscribe(
         (response: any) => {
             this.dataset = response.data
@@ -165,6 +217,7 @@ export class PartSettingsComponent implements OnInit {
   }
   onChangeCode() {
       const controls = this.codeForm.controls
+      controls.dec01.setValue(0)
       this.codeService
           .getBy({
               code_value: controls.code_value.value,
@@ -221,7 +274,8 @@ export class PartSettingsComponent implements OnInit {
       _code.code_fldname = controls.code_fldname.value
       _code.code_value = controls.code_value.value
       _code.code_cmmt = controls.code_cmmt.value
-      _code.code_desc = controls.code_desc.value
+      _code.code_desc = 'ARTICLES'
+      _code.chr01 = controls.code_desc.value
       _code.dec01 = controls.dec01.value
      
       return _code
@@ -254,8 +308,8 @@ export class PartSettingsComponent implements OnInit {
                   true
               )
               this.loadingSubject.next(false)
-              // this.router.navigateByUrl("/code-mstr/codes-list")
-              this.reset()
+              this.router.navigateByUrl("/articles/part-settings-list");
+              
           }
       )
   }

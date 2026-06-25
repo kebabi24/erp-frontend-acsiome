@@ -15,6 +15,20 @@ const myCustomStringFormatter: Formatter = (row: number, cell: number, value: an
     return `<div class="text"  aria-hidden="${value}" style="font-size:14px; font-weight: bold;" >${value}</div>`
   }
 }
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value=="BIGBAG"){
+    return `<div class="text"  aria-hidden="BIGBAG">BIGBAG</div>`
+  }
+  if (value=="CARTON"){
+    return `<div class="text"  aria-hidden="CARTON">CARTON</div>`
+  }
+  if (value=="AUCUN"){
+    return `<div class="text"  aria-hidden="AUCUN">AUCUN</div>`
+  }
+  
+
+
+}
 @Component({  
   selector: 'kt-epi-create-classification',
   encapsulation: ViewEncapsulation.None,
@@ -164,7 +178,7 @@ field:any
                       else {
 
                         this.indexd = args.dataContext.id
-                        this.field = args.dataContext.code_fldname
+                        // this.field = args.dataContext.code_fldname
                         console.log(this.dataView.getIdxById(args.dataContext.id))
                         let element: HTMLElement = document.getElementById("openDeletesGrid") as HTMLElement;
                         element.click();
@@ -213,9 +227,18 @@ field:any
                     if(args.dataContext.etat_service != true){
                        this.addToUpdatedIds(args.dataContext.id)
                     }
+                    const chr1 = this.columnDefinitions.find(c => c.id === 'chr01');
+                    this.codeService.getByField({code_fldname:this.field}).subscribe(
+                      newData => {
+                                  if (chr1 && chr1.editor) {
+                                    (chr1.editor as any).collection = newData;
+                                  }
+                                }
+                    );
                     //  this.dataView.getItemById(args.dataContext.id)
                     // console.log(Object.keys(this.dataView))
                   },
+                  
               },
               {
                   id: "code_cmmt",
@@ -243,16 +266,16 @@ field:any
                   name: "Lié à",
                   field: "chr01",
                   sortable: true,
-                  
-                  editor: {
-                           model: Editors.singleSelect,
-                           // enableRenderHtml: true,
-                           collectionAsync:this.codeService.getByField({code_fldname: this.field,code_desc:"EPI"})
-                          },
                   minWidth: 100,
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
+                  editor: {
+                           model: Editors.singleSelect,
+                           // enableRenderHtml: true,
+                           collectionAsync:this.codeService.getByField({code_fldname: this.field})
+                          },
+                  
                   onCellChange: (e: Event, args: OnEventArgs) => {
                     if(args.dataContext.etat_service != true){
                       this.addToUpdatedIds(args.dataContext.id)
@@ -296,22 +319,22 @@ field:any
     }
 
 
-    this.codeService.getBy({code_desc:"EPI"}).subscribe(
-      (response: any) => {
-        this.dataset = response.data
-          console.log(this.dataset)
-       // this.dataset.push();
-        // this.grid.invalidate();
-        // this.grid.render();
-        // this.dataView.refresh()
-        //this.dataView.setItems(this.dataset)
-      },
-      (error) => {
-        this.dataset = []
+    // this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+    //   (response: any) => {
+    //     this.dataset = response.data
+    //       console.log(this.dataset)
+    //    // this.dataset.push();
+    //     // this.grid.invalidate();
+    //     // this.grid.render();
+    //     // this.dataView.refresh()
+    //     //this.dataView.setItems(this.dataset)
+    //   },
+    //   (error) => {
+    //     this.dataset = []
     
-      },
-      () => {}
-      )
+    //   },
+    //   () => {}
+    //   )
     
 
   }
@@ -432,7 +455,27 @@ angularGridReady(angularGrid: AngularGridInstance) {
 // }
 
 addNewItemF() {
-  this.field = "pt_prod_line"
+  this.field = "epi_prod_line"
+  this.code = 'epi_prod_line'
+this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
+
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -448,7 +491,7 @@ addNewItemF() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_prod_line",
+      code_fldname:"epi_prod_line",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -460,7 +503,26 @@ addNewItemF() {
   );
 }
 addNewItemS() {
-  this.field = "pt_part_type"
+  this.field = "epi_prod_line"
+  this.code = 'epi_part_type'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -476,7 +538,7 @@ addNewItemS() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_part_type",
+      code_fldname:"epi_part_type",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -488,7 +550,26 @@ addNewItemS() {
   );
 }
 addNewItemG() {
-  this.field = "pt_group"
+  this.field = "epi_part_type"
+  this.code = 'epi_group'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -504,7 +585,7 @@ addNewItemG() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_group",
+      code_fldname:"epi_group",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -516,7 +597,26 @@ addNewItemG() {
   );
 }
 addNewItemA() {
-  this.field = "pt_draw"
+  this.field = "epi_group"
+  this.code = 'epi_draw'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -532,7 +632,7 @@ addNewItemA() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_draw",
+      code_fldname:"epi_draw",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -544,7 +644,26 @@ addNewItemA() {
   );
 }
 addNewItemM() {
-  this.field = "pt_model"
+  this.field = "epi_draw"
+  this.code = 'epi_model'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -560,7 +679,7 @@ addNewItemM() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_model",
+      code_fldname:"epi_model",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -572,7 +691,26 @@ addNewItemM() {
   );
 }
 addNewItemT() {
-  this.field = "pt_rev"
+  this.field = "epi_group"
+   this.code = 'epi_rev'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -588,7 +726,7 @@ addNewItemT() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_rev",
+      code_fldname:"epi_rev",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -600,7 +738,26 @@ addNewItemT() {
   );
 }
 addNewItemC() {
-  this.field = "pt_break_cat"
+  this.field = "epi_model"
+  this.code = 'epi_break_cat'
+  this.codeService.getBy({code_fldname:this.code,code_desc:"EPI"}).subscribe(
+      (response: any) => {
+        
+        this.datasettr = response.data
+       this.dataViewtr.setItems(this.datasettr)
+          // console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.datasettr = []
+    
+      },
+      () => {}
+      )
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -616,7 +773,7 @@ addNewItemC() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
-      code_fldname:"pt_break_cat",
+      code_fldname:"epi_break_cat",
       code_value:"", 
       code_cmmt: "", 
       etat_service:true,
@@ -663,10 +820,10 @@ onSelectedRowsChanged(e,args) {
   const index = args.rows;
   
   this.code = this.gridService.getDataItemByRowIndex(index).code_value
-  this.field = this.gridService.getDataItemByRowIndex(index).code_fldname
+  //this.field = this.gridService.getDataItemByRowIndex(index).code_fldname
   console.log(this.field, this.code)
   // this.itemService.getByOne(
-  //   {pt_group: this.group},
+  //   {epi_group: this.group},
   //   ).subscribe(
   //   (response: any) => {
   //     console.log(response.data)
@@ -685,7 +842,7 @@ this.updateData()
 updateData(){
 console.log("hereeeeeeeeeeeeeeeeee")
   this.codeService.getBy(
-    {chr01: this.code,code_desc:'EPI'},
+    {code_fldname: this.code,code_desc:'EPI'},
     ).subscribe(
     (response: any) => {
       console.log(response.data)
@@ -733,7 +890,7 @@ prepareGridtr() {
         {
             id: "code_cmmt",
             name: "Désignation",
-            field: "code_cmmt",
+            field: "code_cmmt", 
             sortable: true,
             minWidth: 100,
             maxWidth: 350,

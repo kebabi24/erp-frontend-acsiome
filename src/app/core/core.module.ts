@@ -20,6 +20,7 @@ import {
   ToggleDirective
 } from './_base/layout';
 
+
 @NgModule({
   imports: [CommonModule],
   declarations: [
@@ -39,6 +40,7 @@ import {
     GetObjectPipe,
     SafePipe,
     FirstLetterPipe,
+    Menuedelweiss.ConfigComponent,
   ],
   exports: [
     // directives

@@ -996,7 +996,7 @@ console.log("controls.rqm_vend.value",controls.rqm_rqby_userid.value)
         // fill the dataset with your data
         
         this.itemsService
-            .getBy ({pt_buyer:controls.rqm_category.value })
+            .getByseq ({seq:controls.rqm_category.value })
             .subscribe((response: any) => (this.items = response.data))
          
     }

@@ -463,11 +463,19 @@
 
         <div class="row col-lg-12">
             <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter une Ligne</button>
+            
+        </div>
+        <div class="row col-lg-12">
+            <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewPart()">Ajouter un article</button>
+            
         </div>
         <br>
         <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+            <angular-slickgrid class="col-6" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
             [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+        </angular-slickgrid>
+        <angular-slickgrid class="col-6" gridHeight="300" gridId="plageptGrid" [columnDefinitions]="ptcolumnDefinitions"
+            [gridOptions]="ptgridOptions" [dataset]="ptdataset" (onAngularGridCreated)="ptGridReady($event)">
         </angular-slickgrid>
         </div>
         </form>
@@ -598,6 +606,32 @@
             </div>
         </ng-template>
         <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+            modal</button>
+
+    </div>
+     <div>
+        <ng-template #content5 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choisir article</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                        [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions5" [dataset]="transacts">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+        <button hidden id="openPartsGrid" class="btn btn-primary" (click)="open5(content5)">Launch demo
             modal</button>
 
     </div>

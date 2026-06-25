@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'créer un EPI'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'créer un Article'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -33,24 +33,40 @@
 
                                 <div class="row">
                                     <div class="form-group col-1">
-                                        <label class="form-group ">Famille :</label>
+                                        <label class="form-group ">Catégorie :</label>
 
-                                        <div class="input-group input-group-sm">
+                                        <select
+                                            [className]="form1.controls['pt_prod_line'].errors && (form1.controls['pt_prod_line'].dirty || form1.controls['pt_prod_line'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                            formControlName="pt_prod_line" id="exampleSelectscat" (change)="onChangeprodline()">
+                                             <option value=""></option>
+                                            <option *ngFor="let elem of pt_prod_line" [value]="elem.code_value">
+                                                {{elem.code_value}}</option>
 
-                                            <input type="text"
-                                                [className]="form1.controls['pt_prod_line'].errors && (form1.controls['pt_prod_line'].dirty || form1.controls['pt_prod_line'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="pt_prod_line" 
-                                                aria-describedby="basic-addon2">
-                                            
-                                        </div>
+                                        </select>
+                                        <div *ngIf="form1.controls['pt_prod_line'].errors && (form1.controls['pt_prod_line'].dirty || form1.controls['pt_prod_line'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Sous-famille:</label>
+                                        <label class="form-group ">Classe:</label>
+
+                                        <select
+                                            [className]="form1.controls['pt_fr_class'].errors && (form1.controls['pt_fr_class'].dirty || form1.controls['pt_fr_class'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                            formControlName="pt_fr_class" id="exampleSelectscat" (change)="onChangearticle()">
+                                             <option value=""></option>
+                                            <option *ngFor="let elem of pt_fr_class" [value]="elem.code_value">
+                                                {{elem.code_value}}</option>
+
+                                        </select>
+                                        <div *ngIf="form1.controls['pt_fr_class'].errors && (form1.controls['pt_fr_class'].dirty || form1.controls['pt_fr_class'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Famille:</label>
 
                                         <select
                                             [className]="form1.controls['pt_part_type'].errors && (form1.controls['pt_part_type'].dirty || form1.controls['pt_part_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="pt_part_type" id="exampleSelectscat" (change)="onChangeparttype()">
-                                             
+                                             <option value=""></option>
                                             <option *ngFor="let elem of pt_part_type" [value]="elem.code_value">
                                                 {{elem.code_value}}</option>
 
@@ -59,26 +75,12 @@
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Groupe:</label>
-
-                                        <select
-                                            [className]="form1.controls['pt_group'].errors && (form1.controls['pt_group'].dirty || form1.controls['pt_group'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                            formControlName="pt_group" id="exampleSelectscat" (change)="onChangegroup()">
-                                            
-                                            <option *ngFor="let elem of pt_group" [value]="elem.code_value">
-                                                {{elem.code_value}}</option>
-
-                                        </select>
-                                        <div *ngIf="form1.controls['pt_group'].errors && (form1.controls['pt_group'].dirty || form1.controls['pt_group'].touched)"
-                                            class="invalid-feedback">Ce Champs est obligatoire</div>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Article:</label>
+                                        <label class="form-group ">Sous-famille:</label>
 
                                         <select
                                             [className]="form1.controls['pt_draw'].errors && (form1.controls['pt_draw'].dirty || form1.controls['pt_draw'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="pt_draw" id="exampleSelectscat" (change)="onChangedraw()">
-                                            
+                                            <option value=""></option>
                                             <option *ngFor="let elem of pt_draw" [value]="elem.code_value">
                                                 {{elem.code_value}}</option>
 
@@ -87,29 +89,28 @@
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Modèle:</label>
-                                         <div class="input-group input-group-sm">
+                                        <label class="form-group ">Groupe:</label>
 
-                                            <input type="text"
-                                                [className]="form1.controls['pt_model'].errors && (form1.controls['pt_model'].dirty || form1.controls['pt_model'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="pt_model" 
-                                                aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" (click)=openmod(contentmod)>
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                            <!-- <div *ngIf="form1.controls['pt_model'].errors && (form1.controls['pt_model'].dirty || form1.controls['pt_model'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div> -->
+                                        <select
+                                            [className]="form1.controls['pt_group'].errors && (form1.controls['pt_group'].dirty || form1.controls['pt_group'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                            formControlName="pt_group" id="exampleSelectscat" (change)="onChangegroup()">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of pt_group" [value]="elem.code_value">
+                                                {{elem.code_value}}</option>
 
-                                        </div>
+                                        </select>
+                                        <div *ngIf="form1.controls['pt_group'].errors && (form1.controls['pt_group'].dirty || form1.controls['pt_group'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
+                                    
+                                    
                                     <div class="form-group col-1">
-                                        <label class="form-group ">Taille:</label>
+                                        <label class="form-group ">Nature:</label>
 
                                         <select
                                             [className]="form1.controls['pt_rev'].errors && (form1.controls['pt_rev'].dirty || form1.controls['pt_rev'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                            formControlName="pt_rev" id="exampleSelectscat" (change)="onChangearticle()">
-                                            
+                                            formControlName="pt_rev" id="exampleSelectscat" (change)="onChangerev()">
+                                            <option value=""></option>
                                             <option *ngFor="let elem of pt_rev" [value]="elem.code_value">
                                                 {{elem.code_value}}</option>
 
@@ -123,7 +124,7 @@
                                         <select
                                             [className]="form1.controls['pt_break_cat'].errors && (form1.controls['pt_break_cat'].dirty || form1.controls['pt_break_cat'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="pt_break_cat" id="exampleSelectscat" (change)="onChangecolor()">
-                                            
+                                            <option value=""></option>
                                             <option *ngFor="let elem of pt_break_cat" [value]="elem.code_value">
                                                 {{elem.code_value}}</option>
 
@@ -213,6 +214,85 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
+                                        <label class="form-group ">Longueur :</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="number" class="form-control form-control-solid"
+                                                formControlName="pt_length" aria-describedby="basic-addon2"
+                                                >
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Largeur :</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="number" class="form-control form-control-solid"
+                                                formControlName="pt_width" aria-describedby="basic-addon2"
+                                                >
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Hauteur :</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="number" class="form-control form-control-solid"
+                                                formControlName="pt_height" aria-describedby="basic-addon2"
+                                                >
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Dimension :</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="number" class="form-control form-control-solid"
+                                                formControlName="pt_size" aria-describedby="basic-addon2"
+                                                >
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Poids :</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="number" class="form-control form-control-solid"
+                                                formControlName="pt_net_wt" aria-describedby="basic-addon2"
+                                                >
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-2">
+              <label class="form-group">Date de développement:</label>
+              <div class="input-group input-group-sm">
+                <input class="form-control form-control-sm form-control-solid" formControlName="pt_added" placeholder="jj-mm-aaaa" name="pt_added" ngbDatepicker f #pt_added="ngbDatepicker" />
+                <div class="input-group-append">
+                  <button class="btn btn-primary" (click)="pt_added.toggle()" type="button">
+                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Cliché :</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid"
+                                                formControlName="pt_promo" aria-describedby="basic-addon2"
+                                                disabled>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
                                         <label class="form-group ">Origine :</label>
                                         <div class="input-group input-group-sm">
 
@@ -222,7 +302,7 @@
                                             
                                         </div>
                                     </div>
-<div class="form-group col-2">
+                                    <div class="form-group col-2">
                                         <label class="form-group ">Statut :</label>
                                         <div class="input-group input-group-sm">
 
@@ -232,9 +312,6 @@
                                             
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    
                                     
                                    
                                    
@@ -467,4 +544,5 @@
 
     </div>
 </kt-portlet>
+
 

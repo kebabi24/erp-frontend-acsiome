@@ -180,25 +180,25 @@ export class CreateModMpComponent implements OnInit {
     config.autoClose = true;
     
     this.codeService
-      .getBy({ code_fldname: "pt_prod_line",code_desc:'PLASTIQUE' })
+      .getBy({ code_fldname: "pt_part_type",code_desc:'MP' })
       .subscribe((response: any) => (this.mod_prod_line = response.data));
+    // this.codeService
+    //   .getBy({ code_fldname: "pt_part_type",code_desc:'PLASTIQUE' })
+    //   .subscribe((response: any) => (this.mod_part_type = response.data));
     this.codeService
-      .getBy({ code_fldname: "pt_part_type",code_desc:'PLASTIQUE' })
-      .subscribe((response: any) => (this.mod_part_type = response.data));
-    this.codeService
-      .getBy({ code_fldname: "pt_draw",code_desc:'PLASTIQUE' })
+      .getBy({ code_fldname: "pt_draw",code_desc:'MP' })
       .subscribe((response: any) => (this.mod_draw = response.data));
     this.codeService
-      .getBy({ code_fldname: "pt_group", code_desc: 'PLASTIQUE' })
+      .getBy({ code_fldname: "pt_group", code_desc: 'MP' })
       .subscribe((response: any) => (this.mod_group = response.data));  
     this.codeService
-      .getBy({ code_fldname: "pt_dsgn_grp",code_desc:'PLASTIQUE' })
+      .getBy({ code_fldname: "pt_dsgn_grp",code_desc:'MP' })
       .subscribe((response: any) => (this.mod_dsgn_grp = response.data));
     this.codeService
-      .getBy({ code_fldname: "pt_origin",code_desc:'PLASTIQUE' })
+      .getBy({ code_fldname: "pt_origin",code_desc:'MP' })
       .subscribe((response: any) => (this.mod_origin = response.data));  
     this.codeService
-      .getBy({ code_fldname: "pt_drwg_loc",code_desc:'PLASTIQUE' })
+      .getBy({ code_fldname: "pt_drwg_loc",code_desc:'MP' })
       .subscribe((response: any) => (this.mod_drwg_loc = response.data));
       
   }
@@ -226,7 +226,7 @@ export class CreateModMpComponent implements OnInit {
     this.code = new Code();
     this.form1 = this.formBuilder.group({
       mod_prod_line: [{value :this.itemModel.mod_prod_line },Validators.required ],
-      mod_part_type: [{value :this.itemModel.mod_part_type }, Validators.required ],
+      mod_part_type: [{value :this.itemModel.mod_part_type } ],
       mod_draw: [{value :this.itemModel.mod_draw }, Validators.required],
       mod_group: [{value :this.itemModel.mod_group }, Validators.required],
       mod_code: [{value :this.itemModel.mod_code,disabled: !this.isExist }],
@@ -287,8 +287,8 @@ export class CreateModMpComponent implements OnInit {
     
     this.itemModelService
         .getByOne({
-              mod_prod_line: controls.mod_prod_line.value,
-              mod_part_type : controls.mod_part_type.value,
+              mod_prod_line: 'MP',
+              mod_part_type : controls.mod_prod_line.value,
               mod_draw: controls.mod_draw.value,
               mod_group:controls.mod_group.value
         })
@@ -305,10 +305,10 @@ export class CreateModMpComponent implements OnInit {
             let code_type : any;
             let code_group: any;
             this.codeService.getBy({ code_fldname: 'pt_draw',code_value: controls.mod_draw.value }).subscribe((drawresponse: any) => {code_draw = drawresponse.data[0].chr01
-              this.codeService.getBy({ code_fldname: 'pt_part_type',code_value: controls.mod_part_type.value }).subscribe((typeresponse: any) => {code_type = typeresponse.data[0].chr01
+              this.codeService.getBy({ code_fldname: 'pt_part_type',code_value: controls.mod_prod_line.value }).subscribe((typeresponse: any) => {code_type = typeresponse.data[0].chr01
                 this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls.mod_group.value }).subscribe((coderesponse: any) => {code_group = coderesponse.data[0].chr01
-                  controls.mod_code.setValue(controls.mod_prod_line.value + code_type + code_draw +  code_group  )
-                  controls.mod_desc.setValue(controls.mod_draw.value + ' ' + controls.mod_part_type.value + ' ' + controls.mod_group.value )
+                  controls.mod_code.setValue( code_type + code_draw +  code_group  )
+                  controls.mod_desc.setValue(controls.mod_draw.value + ' ' + controls.mod_prod_line.value + ' ' + controls.mod_group.value )
                   controls.mod_um.setValue('KG')
                 });
               });
@@ -362,7 +362,7 @@ export class CreateModMpComponent implements OnInit {
             this.codeService.getBy({ code_fldname: 'pt_draw',code_value: controls.mod_draw.value }).subscribe((drawresponse: any) => {code_draw = drawresponse.data[0].chr01
               this.codeService.getBy({ code_fldname: 'pt_part_type',code_value: controls.mod_part_type.value }).subscribe((typeresponse: any) => {code_type = typeresponse.data[0].chr01
                 this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls.mod_group.value }).subscribe((coderesponse: any) => {code_group = coderesponse.data[0].chr01
-                  controls.mod_code.setValue(controls.mod_prod_line.value + code_type + code_draw +  code_group )
+                  controls.mod_code.setValue( code_type + code_draw +  code_group )
                   controls.mod_desc.setValue(controls.mod_draw.value + ' ' + controls.mod_part_type.value + ' ' + controls.mod_group.value )
                   controls.mod_um.setValue('KG')
                 });
@@ -411,7 +411,7 @@ export class CreateModMpComponent implements OnInit {
             this.codeService.getBy({ code_fldname: 'pt_draw',code_value: controls.mod_draw.value }).subscribe((drawresponse: any) => {code_draw = drawresponse.data[0].chr01
               this.codeService.getBy({ code_fldname: 'pt_part_type',code_value: controls.mod_part_type.value }).subscribe((typeresponse: any) => {code_type = typeresponse.data[0].chr01
                 this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls.mod_group.value }).subscribe((coderesponse: any) => {code_group = coderesponse.data[0].chr01
-                  controls.mod_code.setValue(controls.mod_prod_line.value + code_type + code_draw +  code_group  )
+                  controls.mod_code.setValue( code_type + code_draw +  code_group  )
                   controls.mod_desc.setValue(controls.mod_draw.value + ' ' + controls.mod_part_type.value + ' ' + controls.mod_group.value )
                   controls.mod_um.setValue('KG')
                 });
@@ -441,8 +441,8 @@ export class CreateModMpComponent implements OnInit {
     
     this.itemModelService
         .getByOne({
-              mod_prod_line: controls.mod_prod_line.value,
-              mod_part_type : controls.mod_part_type.value,
+              // mod_prod_line: controls.mod_prod_line.value,
+              mod_part_type : controls.mod_prod_line.value,
               mod_draw: controls.mod_draw.value,
               mod_group:controls.mod_group.value
         })
@@ -461,7 +461,7 @@ export class CreateModMpComponent implements OnInit {
             this.codeService.getBy({ code_fldname: 'pt_draw',code_value: controls.mod_draw.value }).subscribe((drawresponse: any) => {code_draw = drawresponse.data[0].chr01
               this.codeService.getBy({ code_fldname: 'pt_part_type',code_value: controls.mod_part_type.value }).subscribe((typeresponse: any) => {code_type = typeresponse.data[0].chr01
                 this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls.mod_group.value }).subscribe((coderesponse: any) => {code_group = coderesponse.data[0].chr01
-                  controls.mod_code.setValue(controls.mod_prod_line.value + code_type + code_draw +  code_group )
+                  controls.mod_code.setValue(code_type + code_draw +  code_group )
                   controls.mod_desc.setValue(controls.mod_draw.value + ' ' + controls.mod_part_type.value + ' ' + controls.mod_group.value )
                   controls.mod_um.setValue('KG')
                 });
@@ -539,8 +539,8 @@ export class CreateModMpComponent implements OnInit {
     _itemModel.mod_code = controls1.mod_code.value;
     _itemModel.mod_desc = controls1.mod_desc.value;
     _itemModel.mod_um = controls1.mod_um.value;
-    _itemModel.mod_prod_line = controls1.mod_prod_line.value;
-    _itemModel.mod_part_type = controls1.mod_part_type.value;
+    _itemModel.mod_prod_line = 'MP';
+    _itemModel.mod_part_type = controls1.mod_prod_line.value;
     _itemModel.mod_draw = controls1.mod_draw.value;
     _itemModel.mod_group = controls1.mod_group.value;
     _itemModel.mod_dsgn_grp = controls1.mod_dsgn_grp.value;
@@ -612,11 +612,11 @@ export class CreateModMpComponent implements OnInit {
       this.hasFormErrors1 = true
       return;
     }
-    if(controls1.mod_part_type.value == null){
-      this.message = 'Veuillez choisir un type article'
-      this.hasFormErrors1 = true
-      return;
-    }
+    // if(controls1.mod_part_type.value == null){
+    //   this.message = 'Veuillez choisir un type article'
+    //   this.hasFormErrors1 = true
+    //   return;
+    // }
     if(controls1.mod_prod_line.value == null){
       this.message = 'Veuillez choisir une famille'
       this.hasFormErrors1 = true

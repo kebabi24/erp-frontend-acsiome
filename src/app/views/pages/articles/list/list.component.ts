@@ -117,15 +117,15 @@ export class ListComponent implements OnInit {
         sortable: true,
         minWidth: 50,
       },
-      {
-        id: "image",
-        name: "Image",
-        field: "pt_drwg_loc",
-        sortable: true,
-        filterable: true,
-        formatter: myCustomimageFormatter,
-        minWidth: 100,
-      },
+      // {
+      //   id: "image",
+      //   name: "Image",
+      //   field: "pt_drwg_loc",
+      //   sortable: true,
+      //   filterable: true,
+      //   formatter: myCustomimageFormatter,
+      //   minWidth: 100,
+      // },
       {
         id: "pt_part",
         name: "Code Produit",
@@ -165,7 +165,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_prod_line",
-        name: "Famille",
+        name: "Categorie",
         field: "pt_prod_line",
         sortable: true,
         filterable: true,
@@ -173,14 +173,29 @@ export class ListComponent implements OnInit {
         minWidth: 100,
         grouping: {
           getter: 'pt_prod_line',
-          formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `Categorie: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
+      },
+      {
+        id: "pt_fr_class",
+        name: "Classe",
+        field: "pt_fr_class",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.text,
+        minWidth: 80,
+        grouping: {
+          getter: 'pt_fr_class',
+          formatter: (g) => `Classe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregateCollapsed: true,
           collapsed: true,
         }
       },
       {
         id: "pt_part_type",
-        name: "Type",
+        name: "Famille",
         field: "pt_part_type",
         sortable: true,
         filterable: true,
@@ -188,7 +203,7 @@ export class ListComponent implements OnInit {
         minWidth: 100,
         grouping: {
           getter: 'pt_part_type',
-          formatter: (g) => `type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregateCollapsed: true,
           collapsed: true,
         }
@@ -225,35 +240,19 @@ export class ListComponent implements OnInit {
         }
       },
       {
-        id: "pt_origin",
-        name: "Origin",
-        field: "pt_origin",
+        id: "pt_rev",
+        name: "Qualité",
+        field: "pt_rev",
         sortable: true,
         filterable: true,
-        // type: FieldType.text,
+        type: FieldType.text,
         minWidth: 80,
         grouping: {
-          getter: 'pt_origin',
-          formatter: (g) => `Origine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregateCollapsed: false,
-          collapsed: false,
+          getter: 'pt_rev',
+          formatter: (g) => `Qualité: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
         }
-      },
-      {
-        id: "pt_size",
-        name: "Surface",
-        field: "pt_size",
-        sortable: true,
-        filterable: true,
-        minWidth: 80,
-        grouping: {
-          getter: 'pt_size',
-          formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-        // type: FieldType.text,
-        // resizeAlwaysRecalculateWidth:true
       },
       {
         id: "pt_break_cat",
@@ -271,15 +270,102 @@ export class ListComponent implements OnInit {
         // type: FieldType.text,
         // resizeAlwaysRecalculateWidth:true
       },
-      // {
-      //   id: "pt_promo",
-      //   name: "Logo",
-      //   field: "pt_promo",
-      //   sortable: true,
-      //   filterable: true,
-      //   type: FieldType.string,
-      //   minWidth: 100,
-      // },
+      {
+        id: "pt_length",
+        name: "Longueur",
+        field: "pt_height",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.number,
+        minWidth: 80,
+        // grouping: {
+        //   getter: 'pt_origin',
+        //   formatter: (g) => `Origine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        //   aggregateCollapsed: false,
+        //   collapsed: false,
+        // }
+      },
+      {
+        id: "pt_width",
+        name: "Largeur",
+        field: "pt_width",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.number,
+        minWidth: 80,
+        // grouping: {
+        //   getter: 'pt_origin',
+        //   formatter: (g) => `Origine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        //   aggregateCollapsed: false,
+        //   collapsed: false,
+        // }
+      },
+      {
+        id: "pt_height",
+        name: "Hauteur",
+        field: "pt_height",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.number,
+        minWidth: 80,
+        // grouping: {
+        //   getter: 'pt_origin',
+        //   formatter: (g) => `Origine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        //   aggregateCollapsed: false,
+        //   collapsed: false,
+        // }
+      },
+      
+      {
+        id: "pt_size",
+        name: "Dimension",
+        field: "pt_size",
+        sortable: true,
+        filterable: true,
+        minWidth: 80,
+        grouping: {
+          getter: 'pt_size',
+          formatter: (g) => `Dimension: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+        // type: FieldType.text,
+        // resizeAlwaysRecalculateWidth:true
+      },
+      {
+        id: "pt_net_wt",
+        name: "Poids",
+        field: "pt_net_wt",
+        sortable: true,
+        filterable: true,
+        minWidth: 80,
+        grouping: {
+          getter: 'pt_net_wt',
+          formatter: (g) => `Poids: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+        // type: FieldType.text,
+        // resizeAlwaysRecalculateWidth:true
+      },
+      {
+        id: "pt_promo",
+        name: "Cliché",
+        field: "pt_promo",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        minWidth: 100,
+      },
+      {
+        id: "pt_added",
+        name: "Date développement",
+        field: "pt_added",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        minWidth: 100,
+      },
       // {
       //   id: "pt_dsgn_grp",
       //   name: "Forme Géometrique",
@@ -390,30 +476,16 @@ export class ListComponent implements OnInit {
       //   // type: FieldType.text,
       //   minWidth: 80,
       // },
-      {
-        id: "pt_status",
-        name: "Statut",
-        field: "pt_status",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-      },
-      {
-        id: "pt_rev",
-        name: "Qualité",
-        field: "pt_rev",
-        sortable: true,
-        filterable: true,
-        type: FieldType.text,
-        minWidth: 80,
-        grouping: {
-          getter: 'pt_rev',
-          formatter: (g) => `Qualité: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregateCollapsed: true,
-          collapsed: true,
-        }
-      },
+      // {
+      //   id: "pt_status",
+      //   name: "Statut",
+      //   field: "pt_status",
+      //   sortable: true,
+      //   filterable: true,
+      //   // type: FieldType.text,
+      //   minWidth: 80,
+      // },
+     
       // {
       //   id: "pt_drwg_size",
       //   name: "Unité/Sachet",
@@ -432,21 +504,7 @@ export class ListComponent implements OnInit {
       //   type: FieldType.number,
       //   minWidth: 80,
       // },
-      {
-        id: "pt_article",
-        name: "Modele",
-        field: "pt_article",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-        grouping: {
-          getter: 'pt_article',
-          formatter: (g) => `Modèle: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregateCollapsed: true,
-          collapsed: true,
-        }
-      },
+      
 
      
       {
@@ -518,7 +576,7 @@ export class ListComponent implements OnInit {
           enableSorting: true,
           enableAutoResize: true,
           
-          rowHeight: 100,
+          // rowHeight: 100,
           exportOptions: {
             sanitizeDataExport: true
           },

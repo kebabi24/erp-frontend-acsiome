@@ -936,9 +936,12 @@ prepareGrid3() {
 
       // fill the dataset with your data
       
-      this.itemsService
-          .getBy ({pt_buyer: controls.rqm_category.value })
-          .subscribe((response: any) => (this.items = response.data))
+    //   this.itemsService
+    //       .getBy ({pt_buyer: controls.rqm_category.value }) 
+    //       .subscribe((response: any) => (this.items = response.data))
+    this.itemsService
+            .getByseq ({seq:controls.rqm_category.value })
+            .subscribe((response: any) => (this.items = response.data))
        
   }
   open4(content) {

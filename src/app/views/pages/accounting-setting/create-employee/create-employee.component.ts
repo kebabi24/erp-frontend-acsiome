@@ -43,7 +43,7 @@ import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
 const API_URL = environment.apiUrl + "/jobs"
 import { jsPDF } from "jspdf";
-@Component({
+@Component({ 
   selector: 'kt-create-employee',  
   templateUrl: './create-employee.component.html',
   styleUrls: ['./create-employee.component.scss']

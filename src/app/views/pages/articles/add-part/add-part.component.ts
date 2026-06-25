@@ -104,11 +104,11 @@ const myCustomCheckmarkFormatter: Formatter = (
 };
 
  @Component({
-  selector: 'kt-create-epi-mod',
-  templateUrl: './create-epi-mod.component.html',
-  styleUrls: ['./create-epi-mod.component.scss']
+  selector: 'kt-add-part',
+  templateUrl: './add-part.component.html',
+  styleUrls: ['./add-part.component.scss']
 })
-export class CreateEpiModComponent implements OnInit {
+export class AddPartComponent implements OnInit {
 
   item: Item;
   hasFormErrors1 = false;
@@ -141,12 +141,13 @@ export class CreateEpiModComponent implements OnInit {
   angularGridprov: AngularGridInstance;
 
   // selects
+  pt_prod_line:any;
   pt_part_type: any;
   pt_break_cat: any;
   pt_draw: any;
   pt_rev: any;
   pt_group: any;
-  pt_article:any;
+  
   pt_buyer :any;
   pt_drwg_loc: any[] = [];
   pt_drwg_size: any[] = [];
@@ -248,24 +249,9 @@ export class CreateEpiModComponent implements OnInit {
     this.prepareGrid();
     this.prepareGrid2();
     this.codeService
-      .getBy({ code_fldname: "epi_break_cat",code_desc:'EPI' })
-      .subscribe((response: any) => (this.pt_break_cat = response.data));
+      .getBy({ code_fldname: "pt_prod_line" })
+      .subscribe((response: any) => (this.pt_prod_line = response.data));
     
-//     this.codeService
-//       .getBy({ code_fldname: "epi_group" })
-//       .subscribe((response: any) => (this.pt_group = response.data));
-// this.codeService
-//       .getBy({ code_fldname: "epi_article" })
-//       .subscribe((response: any) => (this.pt_article = response.data));
-      this.codeService
-      .getBy({ code_fldname: "epi_part_type" })
-      .subscribe((response: any) => (this.pt_part_type = response.data));
-      // this.codeService
-      // .getBy({ code_fldname: "epi_draw" })
-      // .subscribe((response: any) => (this.pt_draw = response.data));
-      this.codeService
-      .getBy({ code_fldname: "epi_rev" })
-      .subscribe((response: any) => (this.pt_rev = response.data));
 
   }
   ngOnInit(): void {
@@ -274,21 +260,14 @@ export class CreateEpiModComponent implements OnInit {
     this.loadingSubject.next(false);
     this.createForm();
     this.codeService
-    .getBy({ code_fldname: "articles/create-epi-mod" })
+    .getBy({ code_fldname: "articles/add-part" })
     .subscribe((response: any) => {
       const { data } = response;
      this.docs = data; 
      if(response.data.length != 0){this.exist = true} 
     });
     const controls1 = this.form1.controls
-    this.itemService
-    .getBy({ pt_prod_line: "EPI" })
-    .subscribe((response: any) => {
-      const { data } = response;
-      
-     if(response.data.length == 0){controls1.pt_part.setValue('EPI00001')}
-     else{controls1.pt_part.setValue('EPI' + String("00000" + Number(response.data.length + 1)).slice(-5))} 
-    });
+    
     controls1.pt_um.setValue('UN')
     controls1.pt_status.setValue('ACTIF')
   }
@@ -402,12 +381,12 @@ export class CreateEpiModComponent implements OnInit {
     this.loadingSubject.next(false);
     this.item = new Item();
     this.form1 = this.formBuilder.group({
-      pt_prod_line: [{ value: 'EPI',disabled:true},Validators.required],
+      pt_prod_line: [{ value: this.item.pt_prod_line,},Validators.required],
+      pt_fr_class:[{value: this.item.pt_fr_class,},Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type,},Validators.required],
       pt_draw: [{ value: this.item.pt_draw, },Validators.required],
-      pt_rev: [ this.item.pt_rev],
       pt_group: [{value: this.item.pt_group,},Validators.required ],
-      pt_model:['' ],
+      pt_rev: [ this.item.pt_rev],
       pt_break_cat:[{value: this.item.pt_break_cat,},Validators.required ],
       
 
@@ -420,6 +399,14 @@ export class CreateEpiModComponent implements OnInit {
       pt_plan_ord: [{ value: this.item.pt_plan_ord, disabled: !this.isExist }],
       pt_dea: [{ value: this.item.pt_dea, disabled: !this.isExist }],
       
+      pt_length: [{ value: this.item.pt_length, disabled: !this.isExist }],
+      pt_width: [{ value: this.item.pt_width }],
+      pt_height: [{ value: this.item.pt_height, disabled: !this.isExist }],
+      pt_size: [{ value: this.item.pt_size, disabled: !this.isExist }],
+      pt_net_wt: [{ value: this.item.pt_net_wt, disabled: !this.isExist }],
+
+      pt_added :[{ value: this.item.pt_added, disabled: !this.isExist }],
+      pt_promo: [{ value: this.item.pt_promo, disabled: !this.isExist }],
       pt_bom_code: [{ value: this.item.pt_bom_code, disabled: !this.isExist }],
       pt_origin: [{ value: this.item.pt_origin, disabled: !this.isExist }],
       
@@ -431,37 +418,10 @@ export class CreateEpiModComponent implements OnInit {
      
          
     });
-    
-   
-   
-
-    
-   
     this.sct1 = new CostSimulation();
-    // this.sctForm = this.formBuilder.group({
-    //   sct_mtl_tl: [0],
-    //   sct_mtl_ll: [0],
-    //   sct_lbr_tl: [0],
-    //   sct_lbr_ll: [0],
-    //   sct_bdn_tl: [0],
-    //   sct_bdn_ll: [0],
-    //   sct_ovh_tl: [0],
-    //   sct_ovh_ll: [0],
-    //   sct_sub_tl: [0],
-    //   sct_sub_ll: [0],
-    // });
-    // this.sctForm1 = this.formBuilder.group({
-    //   sct_mtl_tl: [0],
-    //   sct_mtl_ll: [0],
-    //   sct_lbr_tl: [0],
-    //   sct_lbr_ll: [0],
-    //   sct_bdn_tl: [0],
-    //   sct_bdn_ll: [0],
-    //   sct_ovh_tl: [0],
-    //   sct_ovh_ll: [0],
-    //   sct_sub_tl: [0],
-    //   sct_sub_ll: [0],
-    // });
+    this.sct2 = new CostSimulation();
+   
+  
   }
 
 
@@ -473,12 +433,12 @@ export class CreateEpiModComponent implements OnInit {
     
     
 //     let index = this.pt_group.findIndex(x => x.code_value == controls1.pt_group.value); 
-//     console.log(controls1.pt_article.value)
+//     console.log(controls1.pt_fr_class.value)
 //     this.codedesc = this.pt_group[index].code_desc
 //     const codecmmt = this.pt_group[index].code_cmmt
 //     this.itemService
 //         .getByOne({
-//             pt_article: controls1.pt_article.value,
+//             pt_fr_class: controls1.pt_fr_class.value,
 //             pt_group: controls1.pt_group.value,
             
 //         })
@@ -490,7 +450,7 @@ export class CreateEpiModComponent implements OnInit {
 //             } else {
              
 //               controls1.pt_group.enable()
-//               controls1.pt_article.disable()
+//               controls1.pt_fr_class.disable()
               
 
 //             }
@@ -507,7 +467,7 @@ export class CreateEpiModComponent implements OnInit {
 //   const codecmmt = this.pt_rev[index].code_cmmt
 //   this.itemService
 //       .getByOne({
-//         pt_article: controls1.pt_article.value,
+//         pt_fr_class: controls1.pt_fr_class.value,
 //         
 //         pt_rev:controls1.pt_rev.value,
 //         pt_group:controls1.pt_group.value
@@ -540,40 +500,79 @@ controls1.pt_desc1.enable()
  controls1.pt_plan_ord.enable() 
   
 }
+onChangeprodline() {
+  const controls1 = this.form1.controls
+  controls1.pt_price.setValue(0)
+  controls1.pt_length.setValue(0)
+  controls1.pt_width.setValue(0)
+  controls1.pt_height.setValue(0)
+  controls1.pt_size.setValue(0)
+  controls1.pt_net_wt.setValue(0)
+ controls1.pt_prod_line.disable()
+ this.codeService
+      .getBy({ code_fldname: "pt_fr_class",code_desc:'ARTICLES',chr01:controls1.pt_prod_line.value })
+      .subscribe((response: any) => (this.pt_fr_class = response.data)); 
+ 
+}
 onChangearticle() {
   const controls1 = this.form1.controls
   
- controls1.pt_model.disable()
-  
-}
-onChangegroup() {
-  const controls1 = this.form1.controls
-  
- controls1.pt_group.disable()
  this.codeService
-      .getBy({ code_fldname: "epi_draw",chr01:controls1.pt_group.value })
-      .subscribe((response: any) => (this.pt_draw = response.data)); 
-if(controls1.pt_group.value == 'CHAUSSURE') {this.codeService
-      .getBy({ code_fldname: "epi_rev",chr01:controls1.pt_group.value })
-      .subscribe((response: any) => (this.pt_rev = response.data));   }   
-}
-onChangedraw() {
-  const controls1 = this.form1.controls
+      .getBy({ code_fldname: "pt_part_type",code_desc:'ARTICLES',chr01:controls1.pt_fr_class.value })
+      .subscribe((response: any) => (this.pt_part_type = response.data)); 
   
- controls1.pt_draw.disable()
-  //  this.codeService
-  //     .getBy({code_fldname:'epi_rev',code_desc:'EPI',chr01:controls1.pt_draw.value})
-  //     .subscribe((response: any) => (this.datamod = response.data))
 }
 onChangeparttype() {
   const controls1 = this.form1.controls
   
- controls1.pt_part_type.disable()
  this.codeService
-      .getBy({ code_fldname: "epi_group",chr01:controls1.pt_part_type.value })
-      .subscribe((response: any) => (this.pt_group = response.data)); 
+      .getBy({ code_fldname: "pt_draw",code_desc:'ARTICLES',chr01:controls1.pt_part_type.value })
+      .subscribe((response: any) => (this.pt_draw = response.data)); 
  
 }
+onChangedraw() {
+  const controls1 = this.form1.controls
+  
+   this.codeService
+      .getBy({code_fldname:'pt_group',code_desc:'ARTICLES',chr01:controls1.pt_draw.value})
+      .subscribe((response: any) => (this.pt_group = response.data))
+}
+onChangegroup() {
+  const controls1 = this.form1.controls
+  
+ this.codeService
+      .getBy({ code_fldname: "pt_rev",code_desc:'ARTICLES',chr01:controls1.pt_group.value })
+      .subscribe((response: any) => (this.pt_rev = response.data)); 
+   
+}
+onChangerev() {
+  const controls1 = this.form1.controls
+  
+ this.codeService
+      .getBy({ code_fldname: "pt_break_cat",code_desc:'ARTICLES' })
+      .subscribe((response: any) => (this.pt_break_cat = response.data)); 
+ 
+ controls1.pt_part.enable()
+ controls1.pt_desc1.enable()
+ controls1.pt_um.enable()
+ controls1.pt_desc2.enable()
+ controls1.pt_price.enable()
+ controls1.pt_plan_ord.enable()
+ controls1.pt_dea.enable()
+ controls1.pt_length.enable()
+ controls1.pt_width.enable()
+ controls1.pt_height.enable()
+ controls1.pt_size.enable()
+ controls1.pt_net_wt.enable()
+ controls1.pt_promo.enable()
+ controls1.pt_origin.enable()
+ controls1.pt_added.enable()
+
+   
+}
+
+
+
 onAlertClose($event) {
   this.hasFormErrors1 = false;
   this.isExist = false;
@@ -644,12 +643,18 @@ onAlertClose($event) {
     _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
     _item.pt_plan_ord = controls1.pt_plan_ord.value;
     _item.pt_dea = controls1.pt_dea.value;
+    _item.pt_length = controls1.pt_length.value;
+    _item.pt_width = controls1.pt_width.value;
+    _item.pt_height = controls1.pt_height.value;
+    _item.pt_size = controls1.pt_size.value;
+    _item.pt_net_wt = controls1.pt_net_wt.value;
+    
     _item.pt_group = controls1.pt_group.value;
-  //  _item.pt_buyer = this.pt_buyer;
+    _item.pt_promo = controls1.pt_promo.value;
     _item.pt_abc = 'C';
     _item.pt_site = '1000';
     _item.pt_loc = 'EMPL PLAST2';
-    // _item.pt_article = controls1.pt_article.value;
+    _item.pt_fr_class = controls1.pt_fr_class.value;
     _item.pt_price = controls1.pt_price.value;
     _item.pt_origin = controls1.pt_origin.value;
     _item.pt_bom_code = controls1.pt_bom_code.value;
@@ -659,9 +664,9 @@ onAlertClose($event) {
     _item.pt_pm_code = 'P';
     _item.pt_ord_qty = 1;
     _item.pt_drwg_loc = 'INTERNE'
-    _item.pt_added = new Date()
+    _item.pt_added = controls1.pt_added.value
     _item.pt_rev = controls1.pt_rev.value;
-    _item.pt_model = controls1.pt_model.value;
+    
     return _item;
   }
   

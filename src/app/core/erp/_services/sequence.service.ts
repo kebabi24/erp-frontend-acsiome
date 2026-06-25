@@ -29,6 +29,10 @@ export class SequenceService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/S`, data, { headers: httpHeaders })
     }
+    public addSpt(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/Spt`, data, { headers: httpHeaders })
+    }
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
