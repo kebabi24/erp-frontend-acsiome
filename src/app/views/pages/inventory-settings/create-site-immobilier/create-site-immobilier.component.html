@@ -1,0 +1,338 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un site'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="siteForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce Code existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Site: *</label>
+                        <input type="text" (change)="onChangeCode()"
+                        [className]="siteForm.controls['si_site'].errors && (siteForm.controls['si_site'].dirty || siteForm.controls['si_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_site">
+                            <div *ngIf="siteForm.controls['si_site'].errors && (siteForm.controls['si_site'].dirty || siteForm.controls['si_site'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                     </div>
+
+                </div>
+
+                <div class="row">
+                
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_desc'].errors && (siteForm.controls['si_desc'].dirty || siteForm.controls['si_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_desc">
+                    <div *ngIf="siteForm.controls['si_desc'].errors && (siteForm.controls['si_desc'].dirty || siteForm.controls['si_desc'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-1">
+                        <label class="form-group"> Nombre de Blocs: *</label>
+                        <input type="number"
+                        [className]="siteForm.controls['int01'].errors && (siteForm.controls['int01'].dirty || siteForm.controls['int01'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="int01">
+                    <div *ngIf="siteForm.controls['int01'].errors && (siteForm.controls['int01'].dirty || siteForm.controls['int01'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-1">
+                        <label class="form-group"> Nombre de Niveaux: *</label>
+                        <input type="number"
+                        [className]="siteForm.controls['int02'].errors && (siteForm.controls['int02'].dirty || siteForm.controls['int02'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="int02">
+                    <div *ngIf="siteForm.controls['int02'].errors && (siteForm.controls['int02'].dirty || siteForm.controls['int02'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                
+                    <div class="form-group col-2">
+                        <label class="form-group">Acte de propriété/session: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_cust'].errors && (siteForm.controls['si_cust'].dirty || siteForm.controls['si_cust'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_cust">
+                    <div *ngIf="siteForm.controls['si_cust'].errors && (siteForm.controls['si_cust'].dirty || siteForm.controls['si_cust'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Permis de construire: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_user1'].errors && (siteForm.controls['si_user1'].dirty || siteForm.controls['si_user1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_user1">
+                    <div *ngIf="siteForm.controls['si_user1'].errors && (siteForm.controls['si_user1'].dirty || siteForm.controls['si_user1'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Conformité: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_user2'].errors && (siteForm.controls['si_user2'].dirty || siteForm.controls['si_user2'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_user2">
+                    <div *ngIf="siteForm.controls['si_user2'].errors && (siteForm.controls['si_user2'].dirty || siteForm.controls['si_user2'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                
+                    <div class="form-group col-2">
+                        <label class="form-group">Agence: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_db'].errors && (siteForm.controls['si_db'].dirty || siteForm.controls['si_db'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_db">
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">N° Compte Bancaire: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_gl_set'].errors && (siteForm.controls['si_gl_set'].dirty || siteForm.controls['si_gl_set'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_gl_set">
+                    </div>
+                    
+                </div>
+
+                <!-- <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Entité: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="si_entity" (change)="changeEntity('si_entity')"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openentity(contententity,'si_entity')">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+                    </div>
+                </div> -->
+                <!-- <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Client :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="si_cust"  (change)="onChangeCust()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open2(content2)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>     -->
+                <div class="row">
+
+                    <div class="form-group col-2">
+
+                        <label class="form-group"> Site Principale: *</label>
+                            <span class="switch switch-icon ">
+                                <label>
+                                    <input type="checkbox" name="Permanent" formControlName="si_default" 
+                                        class="form-control form-control-sm form-control-solid">
+                                    <span></span>
+                                </label>
+                            </span>
+                    </div>
+
+
+
+                </div>
+
+                   
+                <!-- <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Status par Défaut: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="si_status"  (change)="changeStatus('si_status')"
+                                    aria-describedby="basic-addon2" >
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openstatus(contentstatus,'si_status')">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+                    </div>
+
+                    
+                    <div class="form-group col-2">
+
+                        <label class="form-group"> Création Automatique: *</label>
+                            <span class="switch switch-icon ">
+                                <label>
+                                    <input type="checkbox" name="Permanent" formControlName="si_auto_loc" 
+                                        class="form-control form-control-sm form-control-solid">
+                                    <span></span>
+                                </label>
+                            </span>
+                    </div>
+
+
+
+                </div> -->
+
+                <!-- <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Compte Ecart Transfert: </label>
+
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="si_xfer_acct" (change)="changeAcct('si_xfer_acct')"
+                                    aria-describedby="basic-addon2" >
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open3(content3,'si_xfer_acct')">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+                    </div>   
+                    <div class="form-group col-2">
+                        <label class="form-group">Sous Compte: </label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="si_xfer_sub"
+                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Centre de Cout: </label>
+                        <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="si_xfer_cc"
+                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                        </div>
+                        
+                    </div>
+                </div> -->
+                <!-- <div class="row">    
+                    <div class="form-group col-2">
+                            <label class="form-group"> Transfert De Propriété: *</label>
+                            <span class="switch switch-icon ">
+                                <label>
+                                    <input type="checkbox" name="Transfert" formControlName="si_xfer_ownership"
+                                        class="form-control form-control-sm form-control-solid">
+                                    <span></span>
+                                </label>
+                            </span>
+                    </div>
+
+                </div> -->
+            </form>
+        </div>
+
+
+        <div>
+            <ng-template #contentstatus let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Status</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitionsstatus"
+                            (onAngularGridCreated)="angularGridReadystatus($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedstatus($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsstatus" [dataset]="datastatus">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Compte </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="data">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contententity let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir une Entite</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridentity"
+                            [columnDefinitions]="columnDefinitionsentity"
+                            (onAngularGridCreated)="angularGridReadyentity($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedentity($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsentity" [dataset]="dataentity">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Client</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="customers">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+    
+    </kt-portlet-body>
+</kt-portlet>

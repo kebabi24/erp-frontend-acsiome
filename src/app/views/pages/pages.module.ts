@@ -23,10 +23,11 @@ import { PosCafetteComponent } from "./pos-cafette/pos-cafette.component";
 import { MobileSettingsComponent } from "./mobile-settings/mobile-settings.component";
 import { SupervisionComponent } from "./supervision/supervision.component";
 import { SettingPrintersComponent } from './setting-printers/setting-printers.component';
+import { CreateDirectInvoiceImmobilierComponent } from './create-direct-invoice-immobilier/create-direct-invoice-immobilier.component';
 
 
 @NgModule({
-  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent, SettingPrintersComponent],
+  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent, SettingPrintersComponent, CreateDirectInvoiceImmobilierComponent],
   exports: [],
   imports: [CommonModule, HttpClientModule, FormsModule, CoreModule, PartialsModule, AngularSlickgridModule.forRoot(), MailModule, ECommerceModule, UserManagementModule, ProvidersModule, /*TreeModule*/],
   providers: [],
