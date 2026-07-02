@@ -174,7 +174,7 @@ export class CreateDirectWoComponent implements OnInit {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             let idpal;
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
-            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
+            this.labelService.update({lb_actif : true},idpal).subscribe((res:any) =>{})
             this.angularGrid.gridService.deleteItem(args.dataContext);
             
           }
@@ -665,9 +665,9 @@ export class CreateDirectWoComponent implements OnInit {
         let tr = this.prepareTr();
         let wod = this.prepareWOD();
         this.addTR(this.trdataset, tr,this.dataset,wod);
-        this.labelService.addblob(_lb).subscribe((blob) => {
+        // this.labelService.addblob(_lb).subscribe((blob) => {
           Edelweiss.print3(lab, this.currentPrinter);
-        });
+        // });
         
         //   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
       }
@@ -1554,6 +1554,7 @@ onChangeCust(){}
                 if (this.lddet.ld_site != controls.wo_site.value) {
                   this.message = "Palette N'existe pas dans Ce Site";
                  // this.hasFormErrors = true;
+                 this.playAudio()
                  this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
                   return;
                   
@@ -1589,7 +1590,7 @@ onChangeCust(){}
                               this.codeService.getBy({ code_fldname: this.color, code_value: respopart.data.pt_break_cat,code_desc:'TOUS' }).subscribe((rescode: any) => {
                                 console.log(rescode);
                                 if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true ) {
-                                  this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
+                                  this.labelService.update({lb_actif : true},respopal.data.label.id).subscribe((res:any) =>{console.log('update label')})
                                   this.gridService.addItem(
                                     {
                                       id: this.dataset.length + 1,
@@ -1616,7 +1617,7 @@ onChangeCust(){}
                                   );
                                 } else {
                                   if(respopart.data.pt_break_cat == this.color){
-                                    this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
+                                    this.labelService.update({lb_actif : true},respopal.data.label.id).subscribe((res:any) =>{console.log('update label')})
                                   this.gridService.addItem(
                                     {
                                       id: this.dataset.length + 1,
@@ -1644,6 +1645,7 @@ onChangeCust(){}
                                   }
                                   else{
                                     this.message = "couleur ne correspond pas au produit broyé";
+                                    this.playAudio()
                                     this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
                                     //this.hasFormErrors = true;
                                     return;
@@ -1659,6 +1661,7 @@ onChangeCust(){}
                 }
               } else {
                 this.message = "Palette N'existe pas dans Ce Site";
+                this.playAudio()
                 this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
                   //this.hasFormErrors = true;
                   return;
@@ -1669,6 +1672,7 @@ onChangeCust(){}
         })
     } else {
       this.message = "Palette déjà scanée";
+      this.playAudio()
       this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
       //this.hasFormErrors = true;
       return;
@@ -1855,8 +1859,9 @@ onChangeCust(){}
       multiSelect: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
+      
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
         rowSelection: {
@@ -1968,8 +1973,8 @@ onChangeCust(){}
     doc.text("Lot N°            : " + this.prodlot, 20, 70);
     doc.text("N° BIGBAG         : " + this.nbpal, 20, 75);
   
-    doc.line(10, 85, 205, 85);
-    doc.line(10, 90, 205, 90);
+    doc.line(10, 85, 200, 85);
+    doc.line(10, 90, 200, 90);
     doc.line(10, 85, 10, 90);
     doc.text("LN", 12.5, 88.5);
     doc.line(20, 85, 20, 90);
@@ -1985,7 +1990,7 @@ onChangeCust(){}
     doc.line(170, 85, 170, 90);
     doc.text("N PAL", 172, 88.5);
     doc.line(185, 85, 185, 90);
-    doc.text("Heure", 192, 88.5);
+    doc.text("Heure", 188, 88.5);
     doc.line(200, 85, 200, 90);
     var i = 95;
     doc.setFontSize(6);
@@ -2029,8 +2034,8 @@ onChangeCust(){}
     doc.text("Lot N°            : " + this.prodlot, 20, 70);
     doc.text("N° BIGBAG         : " + this.nbpal, 20, 75);
   
-        doc.line(10, 85, 205, 85);
-        doc.line(10, 90, 205, 90);
+        doc.line(10, 85, 200, 85);
+        doc.line(10, 90, 200, 90);
         doc.line(10, 85, 10, 90);
         doc.text("LN", 12.5, 88.5);
         doc.line(20, 85, 20, 90);
@@ -2046,7 +2051,7 @@ onChangeCust(){}
         doc.line(170, 85, 170, 90);
         doc.text("N° pal", 172, 88.5);
         doc.line(185, 85, 185, 90);
-        doc.text("Heure", 192, 88.5);
+        doc.text("Heure", 188, 88.5);
         doc.line(200, 85, 200, 90);
         i = 95;
         doc.setFontSize(6);
@@ -2105,11 +2110,11 @@ onChangeCust(){}
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].tr_serial), 132, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_serial), 132, i - 1);
         doc.line(170, i - 5, 170, i);
-        doc.text(String(this.dataset[j].tr_ref), 173, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_ref), 173, i - 1, );
         doc.line(185, i - 5, 185, i);
-        doc.text(String(this.dataset[j].tr_program), 187, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_program), 187, i - 1, );
         doc.line(200, i - 5, 200, i);
         doc.line(10, i, 200, i);
         i = i + 5;
@@ -2118,11 +2123,11 @@ onChangeCust(){}
   
     
   
-    doc.line(130, i + 7, 200, i + 7);
-    doc.line(130, i + 14, 200, i + 14);
-    doc.line(130, i + 7, 130, i + 14);
-    doc.line(160, i + 7, 160, i + 14);
-    doc.line(205, i + 7, 205, i + 14);
+    // doc.line(130, i + 7, 200, i + 7);
+    // doc.line(130, i + 14, 200, i + 14);
+    // doc.line(130, i + 7, 130, i + 14);
+    // doc.line(160, i + 7, 160, i + 14);
+    // doc.line(205, i + 7, 205, i + 14);
     doc.setFontSize(10);
     doc.text("Validé par: " , 20, i + 22);
     doc.text("Note: " , 20, i + 32);
