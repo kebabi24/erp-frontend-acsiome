@@ -42,6 +42,10 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/rct-wo', data, { headers: httpHeaders })
     }
+    public addRCTWOISS(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/rctiss-wo', data, { headers: httpHeaders })
+    }
     public addRJCTWO(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/rjct-wo', data, { headers: httpHeaders })

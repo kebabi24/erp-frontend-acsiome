@@ -1,7 +1,7 @@
 <kt-portlet>
   <kt-portlet-header [sticky]="true" title="Broyage" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
       <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button-->
     </ng-container>
@@ -157,7 +157,7 @@
           <div class="form-group col-2">
             <label class="form-group">N° Palette :</label>
             <div class="input-group input-group-sm">
-              <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()" aria-describedby="basic-addon2" />
+              <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal(contentmsg)" aria-describedby="basic-addon2" />
             </div>
           </div>
         </div>
@@ -182,7 +182,7 @@
           <div class="form-group col-3">
             <label class="form-group">Poids: </label>
             <div class="input-group input-group-sm">
-              <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_chg" step="0.01" (change)="onChangeqty()"/>
+              <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_chg" step="0.01" (change)="onChangeqty(contentmsg)"/>
             </div>
           </div>
           <div class="form-group col-3">
@@ -200,7 +200,7 @@
           <div class="form-group col-3">
             <label class="form-group">Valider: </label>
             <div class="input-group input-group-sm">
-              <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2" [disabled]="validate">Valider</button>
+              <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2" id="submit">Valider</button>
             </div>
           </div>
         </div>
@@ -241,7 +241,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -261,7 +261,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -281,7 +281,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -300,7 +300,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -319,7 +319,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -343,7 +343,7 @@
               </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
               <button type="button" class="btn btn-primary" (click)="addit()" (click)="c('Close click')">Ok</button>
           </div>
       </ng-template>
@@ -367,10 +367,28 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
             <button type="button" class="btn btn-primary" (click)="addit2()" (click)="c('Close click')">Ok</button>
         </div>
     </ng-template>
 </div>
+<div>
+  <ng-template #contentmsg let-c="close"   let-d="dismiss" aria-hidden="true">
+    <div class="modal-header"  aria-hidden="true" >
+      <h4 class="modal-title">Erreur</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <span>{{message}}</span>
+    </div>
+    <div class="modal-footer">
+      
+      <button type="button" class="btn btn-primary" (click)="c('Close click')">OUI</button>
+    </div>
+  </ng-template>
+</div>
+
   </kt-portlet-body>
 </kt-portlet>

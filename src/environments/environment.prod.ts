@@ -9,7 +9,7 @@ export const environment = {
   // apiUrl: "http://10.10.3.6:4141/api/v1",
   
   //  apiUrl: "http://10.10.130.9:3001/api/v1",
-  apiUrl: "http://192.168.60.52:3001/api/v1", //cosider
+  apiUrl: "http://10.10.3.6:4141/api/v1", //cosider
   //  apiUrl: "http://192.168.1.252:3001/api/v1",
   //  apiUrl: "http://192.168.2.1:3001/api/v1",
   //  apiUrl: "http://105.98.96.17:3001/api/v1",
@@ -29,7 +29,7 @@ export const environment = {
   // key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ", 
 // key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$b7dhzjxkuGRbLPCGSXW3Yw",
 //key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$5o7vlPX75k71dFbmK2Bs1KK0RZV/V/l3KGL1GnQCoaU",
-  // local key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
+ // key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
   // key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$O5Ed72MwWBjV0QITSt3bag"
  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$Y1rdOurgRpPWagKn1En/X3ATJ2FfskmqvzdZLDMfFk4"
       

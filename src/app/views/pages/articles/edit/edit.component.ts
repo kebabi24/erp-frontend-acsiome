@@ -44,6 +44,7 @@ import {
   CostSimulation,
   CostSimulationService,
   TaxeService,
+  InventoryStatusService,
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
 import { environment } from "../../../../../environments/environment"
@@ -211,6 +212,7 @@ srcimage: String
     private sequenceService: SequenceService,
     private mesureService: MesureService,
     private taxService: TaxeService,
+    private inventoryStatusService: InventoryStatusService
   ) {
     config.autoClose = true;
     
@@ -642,10 +644,10 @@ uploadFile(event) {
       this.hasFormErrors4 = true;
       return;
     }
-    if (this.error) {
-      this.hasFormErrors1 = true;
-      return;
-    }
+    // if (this.error) {
+    //   this.hasFormErrors1 = true;
+    //   return;
+    // }
     // tslint:disable-next-line:prefer-const
     let item = this.prepareItem();
   //  let sct1 = this.prepareSct1();
@@ -874,18 +876,22 @@ goBack() {
 changeUm() {
   const controls = this.form1.controls; // chof le champs hada wesh men form rah
   const um_um = controls.pt_um.value;
-  this.mesureService.getBy({ um_um }).subscribe(
+  this.codeService.getByOne({ code_fldname:'pt_um',code_value:um_um }).subscribe(
     (res: any) => {
       const { data } = res;
+      console.log(data)
       if (!data) {
         this.layoutUtilsService.showActionNotification(
-          "cette unite de mesure n'existe pas!",
+          "cette Unite de mesure n'existe pas!",
           MessageType.Create,
           10000,
           true,
           true
         );
         this.error = true;
+        controls.pt_um.setValue(null)
+        document.getElementById("pt_um").focus();
+
       } else {
         this.error = false;
       }
@@ -894,21 +900,19 @@ changeUm() {
   );
 }
 
+
 changeSeq() {
   const controls = this.form3.controls; // chof le champs hada wesh men form rah
   const seq_seq = controls.pt_buyer.value;
   this.sequenceService.getBy({ seq_seq }).subscribe(
     (res: any) => {
       const { data } = res;
-      if (!data) {
-        this.layoutUtilsService.showActionNotification(
-          "cette sequence n'existe pas!",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+      if (res.data.length ==0) {
+        controls.pt_buyer.setValue(null);
+        document.getElementById("pt_buyer").focus();
+       alert("Cette Sequence n'existe pas")
         this.error = true;
+     
       } else {
         this.error = false;
       }
@@ -920,7 +924,7 @@ changeSeq() {
 changePl() {
   const controls = this.form1.controls; // chof le champs hada wesh men form rah
   const pl_prod_line = controls.pt_prod_line.value;
-  this.productLineService.getBy({ pl_prod_line }).subscribe(
+  this.productLineService.getByOne({ pl_prod_line }).subscribe(
     (res: any) => {
       const { data } = res;
       if (!data) {
@@ -932,6 +936,8 @@ changePl() {
           true
         );
         this.error = true;
+        controls.pt_prod_line.setValue(null)
+        document.getElementById("pt_prod_line").focus();
       } else {
         this.error = false;
       }
@@ -973,6 +979,15 @@ changeCode(field) {
           true
         );
         this.error = true;
+if(field == 'pt_status' ) {
+controls.pt_status.setValue(null)
+document.getElementById("pt_status").focus();
+}
+if(field == 'pt_dsgn_grp' ) {
+controls.pt_dsgn_grp.setValue(null)
+document.getElementById("pt_dsgn_grp").focus();
+}
+
       } else {
         this.error = false;
       }
@@ -980,10 +995,62 @@ changeCode(field) {
     (error) => console.log(error)
   );
 }
+
+changeStatus(field) {
+  const controls = this.form1.controls; // chof le champs hada wesh men form rah
+
+  let is_status: any;
+  if (field == "pt_rctpo_status") {
+    this.msg = " Status reception OA ";
+     is_status = controls.pt_rctpo_status.value;
+    
+  }
+  if (field == "pt_rctwo_status") {
+    this.msg = " Status Reception WO ";
+     is_status = controls.pt_rctwo_status.value;
+    
+  }
+
+  this.inventoryStatusService.getBy({is_status}).subscribe(
+    (res: any) => {
+      const { data } = res;
+      const message = "Ce code" + this.msg + " n'existe pas!";
+      if (!data.length) {
+        this.layoutUtilsService.showActionNotification(
+          message,
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.error = true;
+        if(field == 'pt_rctpo_status' ) {
+          controls.pt_status.setValue(null)
+          document.getElementById("pt_rctpo_status").focus();
+        }
+        if(field == 'pt_rctwo_status' ) {
+          controls.pt_dsgn_grp.setValue(null)
+          document.getElementById("pt_rctwo_status").focus();
+        }
+        
+      } else {
+        this.error = false;
+      }
+    },
+    (error) => console.log(error)
+  );
+}
+
+
+
+
+
+
+
 changeSite() {
   const controls = this.form1.controls; // chof le champs hada wesh men form rah
   const si_site = controls.pt_site.value;
-  this.siteService.getBy({ si_site }).subscribe(
+  this.siteService.getByOne({ si_site }).subscribe(
     (res: any) => {
       const { data } = res;
 
@@ -996,6 +1063,8 @@ changeSite() {
           true
         );
         this.error = true;
+        controls.pt_site.setValue(null)
+        document.getElementById("pt_site").focus();
       } else {
         this.error = false;
       }
@@ -1003,15 +1072,16 @@ changeSite() {
     (error) => console.log(error)
   );
 }
+
 changeProvider() {
   const controls = this.form3.controls; // chof le champs hada wesh men form rah
   const vd_addr = controls.pt_vend.value;
   this.providerService.getBy({ vd_addr }).subscribe(
     (res: any) => {
-      console.log(res);
+      console.log(res.data);
       const { data } = res;
 
-      if (!data) {
+      if (res.data.length == 0) {
         this.layoutUtilsService.showActionNotification(
           "ce fournisseur n'existe pas!",
           MessageType.Create,
@@ -1020,6 +1090,8 @@ changeProvider() {
           true
         );
         this.error = true;
+        controls.pt_site.setValue(null)
+        document.getElementById("pt_vend").focus();
       } else {
         this.error = false;
       }
@@ -1033,7 +1105,7 @@ changeLoc() {
   const loc_loc = controls.pt_loc.value;
   const loc_site = controls.pt_site.value;
 
-  this.locationService.getBy({ loc_loc, loc_site }).subscribe(
+  this.locationService.getByOne({ loc_loc, loc_site }).subscribe(
     (res: any) => {
       const { data } = res;
 
@@ -1046,6 +1118,8 @@ changeLoc() {
           true
         );
         this.error = true;
+        controls.pt_loc.setValue(null)
+        document.getElementById("pt_loc").focus();
       } else {
         this.error = false;
       }

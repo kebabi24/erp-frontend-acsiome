@@ -14,7 +14,7 @@ import { MatDialog } from "@angular/material/dialog";
 
 import { User, UsersService, SiteService, ProjectService, EmployeService, LocationService, AffectEmpService, BomService } from "../../../../core/erp";
 import { Sensibilisation } from "../../../../core/erp";
-import { MenuConfig } from "../../../../core/_config/menu.config";
+
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -67,7 +67,7 @@ export class IdentificationComponent implements OnInit {
 
   constructor(config: NgbDropdownConfig, private userFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private projectService: ProjectService, private employeesService: EmployeService, private siteService: SiteService, private affectEmployees: AffectEmpService, private bomService: BomService, private modalService: NgbModal) {
     config.autoClose = true;
-    console.log(new MenuConfig().defaults);
+  
   }
 
   ngOnInit(): void {

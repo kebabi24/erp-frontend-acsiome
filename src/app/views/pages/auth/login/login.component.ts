@@ -151,6 +151,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
             .subscribe(
                 (res: any) => {
+                    console.log("hhhhhhhhhhhhereeeeeeeeeeeeeeeeee")
                     const {
                         data: { user, token , domain},
 					} = res

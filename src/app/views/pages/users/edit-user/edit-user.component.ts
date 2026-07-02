@@ -29,7 +29,7 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import { User, UsersService } from "../../../../core/erp"
-import { MenuConfig } from '../../../../core/_config/menu.config'
+
 import {
     NgbModal,
     NgbActiveModal,

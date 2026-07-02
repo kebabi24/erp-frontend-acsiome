@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 
 import { User, UsersService, SiteService, ProjectService, EmployeService, LocationService, AffectEmpService, WorkOrderService, QualityControlService, PurchaseOrderService, LocationDetailService, ItemService } from "../../../../core/erp";
-import { MenuConfig } from "../../../../core/_config/menu.config";
+
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { Sensibilisation } from "../../../../core/erp";
 import * as _ from "lodash";

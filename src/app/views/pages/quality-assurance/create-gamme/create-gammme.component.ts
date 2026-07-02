@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 
 import { User, UsersService, SiteService, ProjectService, EmployeService, LocationService, AffectEmpService, WorkOrderService, QualityControlService, ItemService, ToolService, WorkCenterService } from "../../../../core/erp";
-import { MenuConfig } from "../../../../core/_config/menu.config";
+
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -104,7 +104,7 @@ export class CreateGammeComponent implements OnInit {
 
           ) {
     config.autoClose = true;
-    console.log(new MenuConfig().defaults);
+    
   }
 
   ngOnInit(): void {

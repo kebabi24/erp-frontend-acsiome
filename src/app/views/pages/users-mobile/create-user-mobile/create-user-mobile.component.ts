@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 
 import { User, UserMobile, UsersMobileService, UsersService } from "../../../../core/erp";
-import { MenuConfig } from "../../../../core/_config/menu.config";
+
 import { MenuMobileConfig } from "../../../../core/_config/menuMobile.config";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 

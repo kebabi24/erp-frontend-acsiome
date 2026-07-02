@@ -87,6 +87,7 @@ export class ItemService {
     public getByNot(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findnot`,data, { headers: httpHeaders })
+    }
     public getByseq(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findseq`,data, { headers: httpHeaders })

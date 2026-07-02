@@ -40,7 +40,7 @@ import {
     GetObjectPipe,
     SafePipe,
     FirstLetterPipe,
-    Menuedelweiss.ConfigComponent,
+   
   ],
   exports: [
     // directives

@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 
 import { User, UsersService, SiteService } from "../../../../core/erp";
-import { MenuConfig } from "../../../../core/_config/menu.config";
+
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -43,7 +43,7 @@ export class CreateUserComponent implements OnInit {
   error = false;
   constructor(config: NgbDropdownConfig, private userFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private userService: UsersService, private siteService: SiteService, private modalService: NgbModal) {
     config.autoClose = true;
-    console.log(new MenuConfig().defaults);
+    
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();

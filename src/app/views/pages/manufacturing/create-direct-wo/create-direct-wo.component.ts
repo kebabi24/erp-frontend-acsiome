@@ -349,6 +349,7 @@ export class CreateDirectWoComponent implements OnInit {
       (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
         this.message = "veuillez verifier la connexion";
+        
         this.hasFormErrors = true;
         return;
       }
@@ -445,16 +446,21 @@ export class CreateDirectWoComponent implements OnInit {
   }
   //reste form
   reset() {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+          input.removeAttribute("disabled");
     this.globalState = false
-    this.validate = false
+    // this.validate = false
     this.workOrder = new WorkOrder();
-    this.createForm();
-    this.getProductColors();
-    this.getProductTypes();
-    // this.dataset = [];
-    // this.trdataset = [];
+    // this.createForm();
+    // this.getProductColors();
+    // this.getProductTypes();
+    // // this.dataset = [];
+    // // this.trdataset = [];
 
-    this.hasFormErrors = false;
+    // this.hasFormErrors = false;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigateByUrl("/manufacturing/create-direct-wo");
+    });
   }
 
   onChangeCode() {
@@ -467,10 +473,12 @@ export class CreateDirectWoComponent implements OnInit {
         const { data } = response;
         if (!data) {
           this.message = "site n'existe pas";
+         
           this.hasFormErrors = true;
-          return;
+         
           controls.wo_site.setValue("");
           document.getElementById("site").focus();
+          return;
         }
       });
   }
@@ -563,10 +571,11 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   onSubmit() {
-    
-    this.validate = true;
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+    input?.setAttribute('disabled', '');
+    //this.validate = true;
     const controls = this.woForm.controls;
-    let tr = this.prepareTr();
+  
     this.trdataset = [];
     this.prodqty = controls.wo_qty_comp.value
     this.prodlot = controls.wo_serial.value
@@ -574,11 +583,17 @@ export class CreateDirectWoComponent implements OnInit {
       this.hasFormErrors = true;
       this.message = "la quantité est erronée";
       
-      this.globalState = false;return;
+      this.globalState = false;
+      input.removeAttribute("disabled");
+      
+      return;
+      
     }
     if (this.dataset.length == 0) {
       this.hasFormErrors = true;
       this.message = "Verifier la liste des consomation";
+     
+      input.removeAttribute("disabled");
       
       return;
     }
@@ -647,7 +662,9 @@ export class CreateDirectWoComponent implements OnInit {
           tr_user2: controls.wo_user2.value,
         });
         console.log(this.trdataset);
-        this.addTR(this.trdataset, tr);
+        let tr = this.prepareTr();
+        let wod = this.prepareWOD();
+        this.addTR(this.trdataset, tr,this.dataset,wod);
         this.labelService.addblob(_lb).subscribe((blob) => {
           Edelweiss.print3(lab, this.currentPrinter);
         });
@@ -655,9 +672,7 @@ export class CreateDirectWoComponent implements OnInit {
         //   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
       }
     );
-    let wod = this.prepareWOD();
-    this.addWod(this.dataset, wod);
-    this.reset();
+  
   })
   
       
@@ -696,14 +711,20 @@ export class CreateDirectWoComponent implements OnInit {
    *
    * @param _it: it
    */
-  addTR(detail: any, it) {
+  addTR(detail: any, it,woddetail,wod) {
+    const controls = this.woForm.controls
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
     }
+    for (let wodata of woddetail) {
+      delete wodata.id;
+      delete wodata.cmvid;
+      wodata.tr_site = controls.wo_site.value;
+    }
     this.loadingSubject.next(true);
 
-    this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
+    this.inventoryTransactionService.addRCTWOISS({ detail, it,woddetail,wod }).subscribe(
       (reponse: any) => console.log(reponse), 
       (error) => {this.loadingSubject.next(false);
         this.message = "la transaction n'a pas ete enregistré, veuillez verifier votre connexion";
@@ -711,7 +732,12 @@ export class CreateDirectWoComponent implements OnInit {
                   return;
         
       },
-      () => {this.printpdf(this.nof),this.globalState = false; 
+      () => {
+        
+        // let wod = this.prepareWOD();
+        // this.addWod(this.dataset, wod);
+        
+        this.printpdf(this.nof),this.globalState = false; 
         this.dataset = []
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
@@ -780,7 +806,7 @@ export class CreateDirectWoComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 500, false, false);
         this.loadingSubject.next(false);
-
+this.reset()
       
       }
     );
@@ -1486,14 +1512,15 @@ onChangeCust(){}
       //   const { data } = response;
       console.log(response.data);
       if (response.data == null) {
-         
+        this.message = "Gamme n'existe pas";
+        this.hasFormErrors = true
         controls.wo_routing.setValue(null);
         document.getElementById("wo_routing").focus();
       }
     });
   }
 
-  onChangePal() {
+  onChangePal(contentmsg) {
     /*kamel palette*/
     const controls = this.woForm.controls;
     const ref = controls.ref.value;
@@ -1513,7 +1540,10 @@ onChangeCust(){}
       this.workOrderService.getByOne({ wo_nbr: this.nof }).subscribe((res: any) => {
         if (res.data.wo_status == "C" ){
           this.message = "Quantité pour cet OF est superieure à la quantité prévue";
-            this.hasFormErrors = true;
+            //this.hasFormErrors = true;
+            this.playAudio()
+            this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
+
             return;
             }
         else {
@@ -1523,7 +1553,8 @@ onChangeCust(){}
               if (this.lddet != null) {
                 if (this.lddet.ld_site != controls.wo_site.value) {
                   this.message = "Palette N'existe pas dans Ce Site";
-                  this.hasFormErrors = true;
+                 // this.hasFormErrors = true;
+                 this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
                   return;
                   
                 } else {
@@ -1534,7 +1565,8 @@ onChangeCust(){}
                     if (data) {
                       this.stat = null;
                       this.message = "mouvement interdit dans cet emplacement";
-                  this.hasFormErrors = true;
+                  //this.hasFormErrors = true;
+                  this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
                   return;
                     } else {
                       this.stat = this.lddet.ld_status;
@@ -1546,7 +1578,8 @@ onChangeCust(){}
                             this.codeService.getBy({code_fldname:this.type,code_value:respopart.data.pt_draw}).subscribe((coderesp:any) => {if(coderesp.data!=null){this.ok_types = true}})
                             if(this.ok_types == false){
                             this.message = "type ne correspond pas au produit broyé";
-                            this.hasFormErrors = true;
+                         //   this.hasFormErrors = true;
+                         this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
                             return}
                           } else { 
                             this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
@@ -1611,7 +1644,8 @@ onChangeCust(){}
                                   }
                                   else{
                                     this.message = "couleur ne correspond pas au produit broyé";
-                                    this.hasFormErrors = true;
+                                    this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
+                                    //this.hasFormErrors = true;
                                     return;
                                   }
                                 }
@@ -1625,7 +1659,8 @@ onChangeCust(){}
                 }
               } else {
                 this.message = "Palette N'existe pas dans Ce Site";
-                  this.hasFormErrors = true;
+                this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
+                  //this.hasFormErrors = true;
                   return;
                 //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
               }
@@ -1634,7 +1669,8 @@ onChangeCust(){}
         })
     } else {
       this.message = "Palette déjà scanée";
-      this.hasFormErrors = true;
+      this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
+      //this.hasFormErrors = true;
       return;
     }
     controls.ref.setValue(null);
@@ -1866,7 +1902,7 @@ onChangeCust(){}
     this.hasFormErrors = false;
     // this.globalState=false
   }
-  onChangeqty() {
+  onChangeqty(contentmsg) {
     
     const controls = this.woForm.controls;
     const qty= Number(controls.wo_qty_chg.value)
@@ -1878,6 +1914,7 @@ onChangeCust(){}
     if(controls.wo_qty_chg.value > this.seuil || controls.wo_qty_chg.value < 0){
       controls.wo_qty_chg.setValue(0)
       this.message = "la quantité que vous avez saisi est erroné";
+      this.modalService.open(contentmsg, {backdrop: 'static',  size: "lg" });
     this.hasFormErrors = true;
     return;}
     else{
@@ -2245,4 +2282,11 @@ onChangeCust(){}
     if(controls.adduser2.value == true){this.adduser = false}
     else {this.adduser = true,controls.wo_user2.setValue(null); this.emps2=[]}
   }
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/media/error/error.mp3";
+    audio.load();
+    audio.play();
+  }
+
 }

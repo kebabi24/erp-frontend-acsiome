@@ -23,7 +23,7 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import { UserMobile, UsersMobileService } from "../../../../core/erp"
-import { MenuConfig } from '../../../../core/_config/menu.config'
+
 import { MenuMobileConfig } from '../../../../core/_config/menuMobile.config'
 import {
   NgbModal,

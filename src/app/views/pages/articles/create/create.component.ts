@@ -716,14 +716,16 @@ export class CreateComponent implements OnInit {
       );
 
       this.hasFormErrors1 = true;
+      console.log(this.hasFormErrors1)
       return;
     }
     if (this.form2.invalid) {
       Object.keys(controls2).forEach((controlName) =>
         controls2[controlName].markAsTouched()
       );
-
+      
       this.hasFormErrors2 = true;
+      console.log(this.hasFormErrors2)
       return;
     }
     if (this.form3.invalid) {
@@ -732,6 +734,7 @@ export class CreateComponent implements OnInit {
       );
 
       this.hasFormErrors3 = true;
+      console.log(this.hasFormErrors3)
       return;
     }
     if (this.form4.invalid) {
@@ -740,6 +743,7 @@ export class CreateComponent implements OnInit {
       );
 
       this.hasFormErrors4 = true;
+      console.log(this.hasFormErrors4)
       return;
     }
     if (this.form5.invalid) {
@@ -748,6 +752,7 @@ export class CreateComponent implements OnInit {
       );
 
       this.hasFormErrors5 = true;
+      console.log(this.hasFormErrors5)
       return;
     }
     if (this.form6.invalid) {
@@ -756,12 +761,13 @@ export class CreateComponent implements OnInit {
       );
 
       this.hasFormErrors6 = true;
+      console.log(this.hasFormErrors6)
       return;
     }
-    if (this.error) {
-      this.hasFormErrors1 = true;
-      return;
-    }
+    // if (this.error) {
+    //   this.hasFormErrors1 = true;
+    //   return;
+    // }
     // tslint:disable-next-line:prefer-const
     let item = this.prepareItem();
     let sct1 = this.prepareSct1();
@@ -1016,18 +1022,22 @@ export class CreateComponent implements OnInit {
   changeUm() {
     const controls = this.form1.controls; // chof le champs hada wesh men form rah
     const um_um = controls.pt_um.value;
-    this.mesureService.getBy({ um_um }).subscribe(
+    this.codeService.getByOne({ code_fldname:'pt_um',code_value:um_um }).subscribe(
       (res: any) => {
         const { data } = res;
+        console.log(data)
         if (!data) {
           this.layoutUtilsService.showActionNotification(
-            "cette unite de mesure n'existe pas!",
+            "cette Unite de mesure n'existe pas!",
             MessageType.Create,
             10000,
             true,
             true
           );
           this.error = true;
+          controls.pt_um.setValue(null)
+          document.getElementById("pt_um").focus();
+
         } else {
           this.error = false;
         }
@@ -1047,7 +1057,7 @@ export class CreateComponent implements OnInit {
           document.getElementById("pt_buyer").focus();
          alert("Cette Sequence n'existe pas")
           this.error = true;
-          this.error = true;
+       
         } else {
           this.error = false;
         }
@@ -1059,7 +1069,7 @@ export class CreateComponent implements OnInit {
   changePl() {
     const controls = this.form1.controls; // chof le champs hada wesh men form rah
     const pl_prod_line = controls.pt_prod_line.value;
-    this.productLineService.getBy({ pl_prod_line }).subscribe(
+    this.productLineService.getByOne({ pl_prod_line }).subscribe(
       (res: any) => {
         const { data } = res;
         if (!data) {
@@ -1071,6 +1081,8 @@ export class CreateComponent implements OnInit {
             true
           );
           this.error = true;
+          controls.pt_prod_line.setValue(null)
+          document.getElementById("pt_prod_line").focus();
         } else {
           this.error = false;
         }
@@ -1112,6 +1124,15 @@ export class CreateComponent implements OnInit {
             true
           );
           this.error = true;
+if(field == 'pt_status' ) {
+  controls.pt_status.setValue(null)
+  document.getElementById("pt_status").focus();
+}
+if(field == 'pt_dsgn_grp' ) {
+  controls.pt_dsgn_grp.setValue(null)
+  document.getElementById("pt_dsgn_grp").focus();
+}
+
         } else {
           this.error = false;
         }
@@ -1148,6 +1169,15 @@ export class CreateComponent implements OnInit {
             true
           );
           this.error = true;
+          if(field == 'pt_rctpo_status' ) {
+            controls.pt_status.setValue(null)
+            document.getElementById("pt_rctpo_status").focus();
+          }
+          if(field == 'pt_rctwo_status' ) {
+            controls.pt_dsgn_grp.setValue(null)
+            document.getElementById("pt_rctwo_status").focus();
+          }
+          
         } else {
           this.error = false;
         }
@@ -1165,7 +1195,7 @@ export class CreateComponent implements OnInit {
   changeSite() {
     const controls = this.form1.controls; // chof le champs hada wesh men form rah
     const si_site = controls.pt_site.value;
-    this.siteService.getBy({ si_site }).subscribe(
+    this.siteService.getByOne({ si_site }).subscribe(
       (res: any) => {
         const { data } = res;
 
@@ -1178,6 +1208,8 @@ export class CreateComponent implements OnInit {
             true
           );
           this.error = true;
+          controls.pt_site.setValue(null)
+          document.getElementById("pt_site").focus();
         } else {
           this.error = false;
         }
@@ -1191,10 +1223,10 @@ export class CreateComponent implements OnInit {
     const vd_addr = controls.pt_vend.value;
     this.providerService.getBy({ vd_addr }).subscribe(
       (res: any) => {
-        console.log(res);
+        console.log(res.data);
         const { data } = res;
 
-        if (!data) {
+        if (res.data.length == 0) {
           this.layoutUtilsService.showActionNotification(
             "ce fournisseur n'existe pas!",
             MessageType.Create,
@@ -1203,6 +1235,8 @@ export class CreateComponent implements OnInit {
             true
           );
           this.error = true;
+          controls.pt_site.setValue(null)
+          document.getElementById("pt_vend").focus();
         } else {
           this.error = false;
         }
@@ -1216,7 +1250,7 @@ export class CreateComponent implements OnInit {
     const loc_loc = controls.pt_loc.value;
     const loc_site = controls.pt_site.value;
 
-    this.locationService.getBy({ loc_loc, loc_site }).subscribe(
+    this.locationService.getByOne({ loc_loc, loc_site }).subscribe(
       (res: any) => {
         const { data } = res;
 
@@ -1229,6 +1263,8 @@ export class CreateComponent implements OnInit {
             true
           );
           this.error = true;
+          controls.pt_loc.setValue(null)
+          document.getElementById("pt_loc").focus();
         } else {
           this.error = false;
         }

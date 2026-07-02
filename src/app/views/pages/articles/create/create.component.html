@@ -59,7 +59,7 @@
 
                                         <div class="input-group input-group-sm">
 
-                                            <input type="text" formControlName="pt_um"
+                                            <input type="text" formControlName="pt_um" id="pt_um"
                                                 [className]="form1.controls['pt_um'].errors && (form1.controls['pt_um'].dirty || form1.controls['pt_um'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 (change)="changeUm()" aria-describedby="basic-addon2">
                                             <div class="input-group-append">
@@ -91,7 +91,7 @@
 
                                             <input type="text"
                                                 [className]="form1.controls['pt_prod_line'].errors && (form1.controls['pt_prod_line'].dirty || form1.controls['pt_prod_line'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                (change)="changePl()" formControlName="pt_prod_line"
+                                                (change)="changePl()" formControlName="pt_prod_line" id="pt_prod_line"
                                                 aria-describedby="basic-addon2">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)=openpl(contentpl)>
@@ -160,7 +160,7 @@
                                         <label class="form-group ">Forme Géometrique:</label>
                                         <div class="input-group input-group-sm">
 
-                                            <input type="text" class="form-control form-control-solid"
+                                            <input type="text" class="form-control form-control-solid" id="pt_dsgn_grp"
                                                 formControlName="pt_dsgn_grp" aria-describedby="basic-addon2"
                                                 (change)="changeCode('pt_dsgn_grp')">
                                             <div class="input-group-append">
@@ -177,7 +177,7 @@
 
                                             <input type="text"
                                                 [className]="form1.controls['pt_status'].errors && (form1.controls['pt_status'].dirty || form1.controls['pt_status'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                (change)="changeCode('pt_status')" formControlName="pt_status"
+                                                (change)="changeCode('pt_status')" formControlName="pt_status" id="pt_status"
                                                 aria-describedby="basic-addon2">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)="open3(content,'pt_status')">
@@ -313,7 +313,7 @@
 
                                             <input type="text"
                                                 [className]="form1.controls['pt_site'].errors && (form1.controls['pt_site'].dirty || form1.controls['pt_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                (change)="changeSite()" formControlName="pt_site"
+                                                (change)="changeSite()" formControlName="pt_site" id="pt_site"
                                                 aria-describedby="basic-addon2">
                                             <div class="input-group-append">
                                                 <span class="input-group-text"
@@ -336,7 +336,7 @@
 
                                             <input type="text"
                                                 [className]="form1.controls['pt_loc'].errors && (form1.controls['pt_loc'].dirty || form1.controls['pt_loc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                (change)="changeLoc()" formControlName="pt_loc"
+                                                (change)="changeLoc()" formControlName="pt_loc" id="pt_loc"
                                                 aria-describedby="basic-addon2">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)="openloc(contentloc,'pt_loc')">
@@ -378,7 +378,7 @@
                                         <label class="form-group ">Status reception OA:</label>
                                         <div class="input-group input-group-sm">
 
-                                            <input type="text" class="form-control form-control-solid"
+                                            <input type="text" class="form-control form-control-solid" id="pt_rctpo_status"
                                                 formControlName="pt_rctpo_status" aria-describedby="basic-addon2" (change)="changeStatus('pt_rctpo_status')">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)="openstatus(contentstatus,'pt_rctpo_status')">
@@ -401,7 +401,7 @@
                                         <label class="form-group ">Status reception prod:</label>
                                         <div class="input-group input-group-sm">
 
-                                            <input type="text" class="form-control form-control-solid"
+                                            <input type="text" class="form-control form-control-solid" id="pt_rctwo_status"
                                                 formControlName="pt_rctwo_status" aria-describedby="basic-addon2" (change)="changeStatus('pt_rctwo_status')">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)="openstatus(contentstatus,'pt_rctwo_status')">
@@ -774,7 +774,7 @@
                                         <div class="input-group input-group-sm">
 
                                             <input type="text" class="form-control form-control-solid"
-                                                (change)="changeProvider()" formControlName="pt_vend"
+                                                (change)="changeProvider()" formControlName="pt_vend" id="pt_vend"
                                                 aria-describedby="basic-addon2">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)="openprov(contentprov)">

@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 
 import { User, UsersService, SiteService, ProjectService, EmployeService, LocationService, AffectEmpService } from "../../../../core/erp";
-import { MenuConfig } from "../../../../core/_config/menu.config";
+
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { Sensibilisation } from "../../../../core/erp";
 @Component({
@@ -57,7 +57,7 @@ export class SensibilisationComponent implements OnInit {
 
   constructor(config: NgbDropdownConfig, private userFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private projectService: ProjectService, private employeesService: EmployeService, private locationService: LocationService, private affectEmployees: AffectEmpService, private modalService: NgbModal) {
     config.autoClose = true;
-    console.log(new MenuConfig().defaults);
+  
   }
 
   ngOnInit(): void {
