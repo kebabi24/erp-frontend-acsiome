@@ -73,11 +73,17 @@ import { ListStatusComponent } from './list-status/list-status.component';
 import { EditStatusComponent } from './edit-status/edit-status.component'
 import { StatusMouvementComponent } from './status-mouvement/status-mouvement.component'
 import { CreateStrandardSpecificationComponent } from "./create-standard-specification/create-standard-specification.component"
-import { LocationFilterService } from "src/app/core/erp/_services/location-filter.service"
+import { LocationFilterService } from "src/app/core/erp/_services/location-filter.service";
+import { CreateSiteImmobilierComponent } from './create-site-immobilier/create-site-immobilier.component';
+import { CreateLocImmobilierComponent } from './create-loc-immobilier/create-loc-immobilier.component'
 const routes: Routes = [
   {
     path: 'create-site',
     component:   CreateSiteComponent
+  },
+   {
+    path: 'create-site-immobilier',
+    component:   CreateSiteImmobilierComponent
   },
   {
     path: 'create-standard-specification',
@@ -94,6 +100,10 @@ const routes: Routes = [
   {
     path: 'create-loc',
     component: CreateLocComponent
+  },
+   {
+    path: 'create-loc-immobilier',
+    component: CreateLocImmobilierComponent
   },
   {
     path: 'list-loc',
@@ -134,7 +144,9 @@ const routes: Routes = [
         ListStatusComponent,
         EditStatusComponent,
         CreateStrandardSpecificationComponent,
-        StatusMouvementComponent
+        StatusMouvementComponent,
+        CreateSiteImmobilierComponent,
+        CreateLocImmobilierComponent
     ],
     imports: [
         CommonModule,

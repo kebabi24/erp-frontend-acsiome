@@ -62,6 +62,8 @@ import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
 import { CreateInvoiceComponent } from './create-invoice/create-invoice.component';
 import { CreateDirectInvoiceComponent } from './create-direct-invoice/create-direct-invoice.component';
+import { CreateDirectInvoiceImmobilierComponent } from './create-direct-invoice-immobilier/create-direct-invoice-immobilier.component';
+
 import { PrintInvoiceComponent } from './print-invoice/print-invoice.component';
 import { PaymentPshComponent } from './payment-psh/payment-psh.component';
 import { UnblockSoComponent } from './unblock-so/unblock-so.component';
@@ -222,6 +224,10 @@ component: AttestationReservationComponent,
 
           {
               path: "create-direct-invoice",
+            component: CreateDirectInvoiceComponent,
+          },
+          {
+              path: "create-direct-invoice-immobilier",
             component: CreateDirectInvoiceComponent,
           },
           {
@@ -428,7 +434,8 @@ component: AttestationReservationComponent,
      PrintInvoiceSeqComponent,
      EditSoPlqComponent,
      ListSalesInvComponent,
-     ListSoEditImmobilierComponent, EditSoImmobilierComponent],
+     ListSoEditImmobilierComponent, EditSoImmobilierComponent,
+      CreateDirectInvoiceImmobilierComponent],
     imports: [
         CommonModule,
         HttpClientModule,
