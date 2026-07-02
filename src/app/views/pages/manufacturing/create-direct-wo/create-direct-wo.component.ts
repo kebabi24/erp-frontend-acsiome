@@ -448,16 +448,17 @@ export class CreateDirectWoComponent implements OnInit {
   reset() {
     const input = document.getElementById('submit') as HTMLInputElement | null;
           input.removeAttribute("disabled");
+          console.log("jere2")
     this.globalState = false
-    // this.validate = false
+     this.validate = false
     this.workOrder = new WorkOrder();
-    // this.createForm();
-    // this.getProductColors();
-    // this.getProductTypes();
-    // // this.dataset = [];
-    // // this.trdataset = [];
+    this.createForm();
+    this.getProductColors();
+    this.getProductTypes();
+     this.dataset = [];
+     this.trdataset = [];
 
-    // this.hasFormErrors = false;
+     this.hasFormErrors = false;
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigateByUrl("/manufacturing/create-direct-wo");
     });
@@ -504,7 +505,7 @@ export class CreateDirectWoComponent implements OnInit {
   getProductTypes() {
     this.codeService
       .getBy({
-        code_fldname: "pt_draw",
+        code_fldname: "pt_draw", code_user2:"BROYAGE"
       })
       .subscribe((response: any) => {
         const { data } = response;
@@ -741,6 +742,7 @@ export class CreateDirectWoComponent implements OnInit {
         this.dataset = []
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
+        this.reset()
         //    console.log(this.provider, po, this.dataset);
 
         // this.router.navigateByUrl("/");
@@ -805,8 +807,10 @@ export class CreateDirectWoComponent implements OnInit {
       },
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 500, false, false);
+        console.log("jere")
+        this.reset()
         this.loadingSubject.next(false);
-this.reset()
+
       
       }
     );
