@@ -343,7 +343,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         width: 80,
         filterable: false,
         type: FieldType.string, 
-        formatter: myCustomCheckboxFormatter,
+        
         editor: {
           model: Editors.singleSelect,
 
@@ -643,6 +643,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        formatter: Formatters.checkmark
       },
       
       // {
@@ -730,7 +731,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" id="print" >
                  <i class="flaticon2-printer" ></i>
                  
              </a>
@@ -739,29 +740,44 @@ export class PurchaseReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          const input = document.getElementById('print') as HTMLInputElement | null;
+          input?.setAttribute('disabled', '');
+
           this.printbuttonState = true;
           
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-            this.hasFormErrors = true;
+           // this.hasFormErrors = true;
             this.message = "veuillez remplir le N° de lot";
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
           
+            input.removeAttribute("disabled");
       
             return;
           }
           if (args.dataContext.tr_part == null || args.dataContext.tr_part == '') {
-            this.hasFormErrors = true;
+           // this.hasFormErrors = true;
             this.message = "veuillez selctionner l'article";
           
-      
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
+          
+            input.removeAttribute("disabled");
             return;
           }
           if (args.dataContext.tr_qty_loc == 0 ) {
-            this.hasFormErrors = true;
+           // this.hasFormErrors = true;
             this.message = "veuillez saisir le poids";
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
           
+            input.removeAttribute("disabled");
       
             return;
           }
@@ -818,7 +834,12 @@ export class PurchaseReceiptCabComponent implements OnInit {
                   },
                   (error) => {
                     this.message = "l'impression n'a pas été enregistrée";
-                    this.hasFormErrors = true;
+                   // this.hasFormErrors = true;
+                   this.playAudio()
+                   let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+                   element.click();
+                 
+                   input.removeAttribute("disabled");
                     return;
                   },
                   () => {
@@ -833,14 +854,24 @@ export class PurchaseReceiptCabComponent implements OnInit {
             
             } else {
             this.message = "veuillez choisir article et remplir le poids ";
-            this.hasFormErrors = true;
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
+          
+            input.removeAttribute("disabled");
+            //this.hasFormErrors = true;
             return;
           }
          
         }
         else {
           this.message = "Etiquette déjà imprimée ";
-          this.hasFormErrors = true;
+          this.playAudio()
+          let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+          element.click();
+        
+          input.removeAttribute("disabled");
+          //this.hasFormErrors = true;
           return;
         }
       }
@@ -1281,15 +1312,16 @@ export class PurchaseReceiptCabComponent implements OnInit {
           cmvid: "",
           tr_desc: this.dataset[i - 1].tr_desc,
           tr_batch: this.dataset[i - 1].tr_batch,
-          tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
+          //tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
           tr_um: this.dataset[i - 1].tr_um,
           tr_um_conv: this.dataset[i - 1].tr_um_conv,
-emballage : this.dataset[i - 1].emballage,
+          emballage : this.dataset[i - 1].emballage,
           tr_price: this.dataset[i - 1].tr_price,
           tr_site: this.dataset[i - 1].tr_site,
           tr_loc: this.dataset[i - 1].tr_loc,
           tr_serial: this.dataset[i - 1].tr_serial,
           tr_ref: null,
+          printed:false,
           tr_status: this.dataset[i - 1].tr_status,
           tr_expire: this.dataset[i - 1].tr_expire,
           qty: 0,
@@ -1315,7 +1347,6 @@ emballage : this.dataset[i - 1].emballage,
         tr_qty_loc: this.dataset[i - 1].tr_qty_loc * -1,
         tr_um: this.dataset[i - 1].tr_um,
         tr_um_conv: this.dataset[i - 1].tr_um_conv,
-
         tr_price: this.dataset[i - 1].tr_price,
         tr_site: this.dataset[i - 1].tr_site,
         tr_loc: this.dataset[i - 1].tr_loc,
@@ -1394,7 +1425,7 @@ if(loc == null){loc = item.loc}
       },
       {
         id: "pt_part",
-        name: "code ",
+        name: "Code ",
         field: "pt_part",
         sortable: true,
         filterable: true,
@@ -1402,20 +1433,18 @@ if(loc == null){loc = item.loc}
       },
       {
         id: "pt_model",
-        name: "réference",
+        name: "Réference",
         field: "pt_model",
-        minWidth: 350,
-        maxWidth: 350,
+       
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
         id: "pt_desc1",
-        name: "desc",
+        name: "Désignation",
         field: "pt_desc1",
-        minWidth: 350,
-        maxWidth: 350,
+        
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1491,7 +1520,7 @@ if(loc == null){loc = item.loc}
   }
   open4(content) {
     this.prepareGrid4();
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "xl" });
   }
   onAlertClose($event) {
     this.hasFormErrors = false;
@@ -1802,7 +1831,8 @@ if(loc == null){loc = item.loc}
         field: "ad_taxable",
         sortable: true,
         filterable: true,
-        type: FieldType.string,
+        type: FieldType.boolean,
+        formatter:Formatters.checkmark
       },
       {
         id: "ad_taxc",
@@ -2942,6 +2972,15 @@ changeLoc() {
     },
     (error) => console.log(error)
   );
+}
+playAudio(){
+  let audio = new Audio();
+  audio.src = "../../../assets/media/error/error.mp3";
+  audio.load();
+  audio.play();
+}
+openmsg(content) {
+  this.modalService.open(content, {backdrop: 'static',  size: "lg" });
 }
 }
 

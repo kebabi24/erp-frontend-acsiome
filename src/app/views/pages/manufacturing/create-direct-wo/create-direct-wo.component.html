@@ -127,20 +127,22 @@
               <div *ngIf="woForm.controls['wo_part'].errors && (woForm.controls['wo_part'].dirty || woForm.controls['wo_part'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
             </div>
           </div>
-          <div class="form-group col-4">
+          <div class="form-group col-3">
             <label class="form-group">Description: </label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-sm form-control-solid" formControlName="desc" />
             </div>
           </div>
           <div class="form-group col-2">
-            <label class="form-group">Poids Embalage:</label>
+            <label class="form-group">Poid Embalage:</label>
             <select class="form-control form-control-sm form-control-solid" formControlName="poids" id="idpoid" (change)="onChangePoids()">
               <option value=""></option>
               <option *ngFor="let elem of Poids" [value]="elem.code_cmmt">
                 {{elem.code_value}} {{elem.code_cmmt}}
               </option>
             </select>
+            <div *ngIf="woForm.controls['poids'].errors && (woForm.controls['poids'].dirty || woForm.controls['poids'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+         
           </div>
           <div class="form-group col-2">
             <label class="form-group">choix de l'imprimante</label>
@@ -152,7 +154,7 @@
             </div>
           </div>
 
-          <div class="form-group col-3">
+          <div class="form-group col-2">
             <label class="form-group">Démarrer:</label>
             <div class="input-group input-group-sm">
               <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()" [disabled]="globalState">Créer OF</button>

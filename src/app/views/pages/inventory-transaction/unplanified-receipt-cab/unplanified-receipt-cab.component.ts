@@ -342,7 +342,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         width: 80,
         filterable: false,
         type: FieldType.string,
-        formatter: myCustomCheckboxFormatter,
+        //formatter: myCustomCheckboxFormatter,
         editor: {
           model: Editors.singleSelect,
 
@@ -642,6 +642,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        formatter: Formatters.checkmark
       },
       
       // {
@@ -727,9 +728,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         field: "idprint",
         excludeFromHeaderMenu: true,
         formatter: (row, cell, value, columnDef, dataContext) => {
-          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below [disabled]="printbuttonState"
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" id="print" >
                  <i class="flaticon2-printer" ></i>
                  
              </a>
@@ -738,32 +739,58 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          const input = document.getElementById('print') as HTMLInputElement | null;
+          input?.setAttribute('disabled', '');
+
           this.printbuttonState = true;
-          
+          console.log("11111", args.dataContext.printed,this.printable)
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-            this.hasFormErrors = true;
+            //this.hasFormErrors = true;
             this.message = "veuillez remplir le N° de lot";
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
           
+            input.removeAttribute("disabled");
       
             return;
           }
           if (args.dataContext.tr_part == null || args.dataContext.tr_part == '') {
-            this.hasFormErrors = true;
+            //this.hasFormErrors = true;
             this.message = "veuillez selctionner l'article";
           
-      
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
+          
+            input.removeAttribute("disabled");
             return;
           }
           if (args.dataContext.tr_qty_loc == 0 ) {
-            this.hasFormErrors = true;
+          //  this.hasFormErrors = true;
             this.message = "veuillez saisir le poids";
           
-      
+            this.playAudio()
+            let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+            element.click();
+          
+            input.removeAttribute("disabled");
             return;
           }
+          if (args.dataContext.tr_qty_loc == null ) {
+            //  this.hasFormErrors = true;
+              this.message = "veuillez saisir le poids";
+            
+              this.playAudio()
+              let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+              element.click();
+            
+              input.removeAttribute("disabled");
+              return;
+            }
           if (args.dataContext.printed != true && this.printable == true){
           if (args.dataContext.tr_qty_loc != 0 && args.dataContext.tr_ref == null ) {
             // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
@@ -817,7 +844,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                   },
                   (error) => {
                     this.message = "l'impression n'a pas été enregistrée";
-                    this.hasFormErrors = true;
+                    this.playAudio()
+          let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+          element.click();
+          
+          input.removeAttribute("disabled");
+                    //this.hasFormErrors = true;
                     return;
                   },
                   () => {
@@ -832,14 +864,25 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             
             } else {
             this.message = "veuillez choisir article et remplir le poids ";
-            this.hasFormErrors = true;
+            this.playAudio()
+          let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+          element.click();
+          
+          input.removeAttribute("disabled");
+          //  this.hasFormErrors = true;
             return;
           }
          
         }
         else {
+          console.log( args.dataContext.printed,this.printable)
           this.message = "Etiquette déjà imprimée ";
-          this.hasFormErrors = true;
+          this.playAudio()
+          let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+          element.click();
+          
+          input.removeAttribute("disabled");
+          //this.hasFormErrors = true;
           return;
         }
       }
@@ -1224,18 +1267,19 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         {
           id: iddd,
           tr_line: iddd,
-          tr_part: "",
+          tr_part: null,
           cmvid: "",
-          tr_desc: "",
+          tr_desc: null,
           tr_qty_loc: 0,
-          tr_um: "",
+          tr_um: null,
           tr_price: 0,
-          tr_site: "",
-          tr_loc: "",
+          tr_site: null,
+          tr_loc: null,
           tr_serial: null,
           tr_ref: null,
           tr_status: null,
           tr_expire: null,
+          printed:false,
           qty: 0,
           qty_loc:0
         },
@@ -1266,10 +1310,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           tr_part: this.dataset[i - 1].tr_part,
           cmvid: "",
           tr_desc: this.dataset[i - 1].tr_desc,
-          tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
+          //tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
           tr_um: this.dataset[i - 1].tr_um,
           tr_um_conv: this.dataset[i - 1].tr_um_conv,
-emballage: this.dataset[i - 1].emballage,
+          emballage: this.dataset[i - 1].emballage,
           tr_price: this.dataset[i - 1].tr_price,
           tr_site: this.dataset[i - 1].tr_site,
           tr_loc: this.dataset[i - 1].tr_loc,
@@ -1277,6 +1321,7 @@ emballage: this.dataset[i - 1].emballage,
           tr_ref: null,
           tr_status: this.dataset[i - 1].tr_status,
           tr_expire: this.dataset[i - 1].tr_expire,
+          printed:false,
           qty: 0,
           qty_loc:0
         },
@@ -1374,7 +1419,7 @@ emballage: this.dataset[i - 1].emballage,
       },
       {
         id: "pt_part",
-        name: "code ",
+        name: "Code ",
         field: "pt_part",
         sortable: true,
         filterable: true,
@@ -1382,7 +1427,7 @@ emballage: this.dataset[i - 1].emballage,
       },
       {
         id: "pt_desc1",
-        name: "desc",
+        name: "Designation",
         field: "pt_desc1",
         minWidth: 350,
         maxWidth: 350,
@@ -1461,7 +1506,7 @@ emballage: this.dataset[i - 1].emballage,
   }
   open4(content) {
     this.prepareGrid4();
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "xl" });
   }
   onAlertClose($event) {
     this.hasFormErrors = false;
@@ -1991,7 +2036,8 @@ emballage: this.dataset[i - 1].emballage,
         field: "ad_taxable",
         sortable: true,
         filterable: true,
-        type: FieldType.string,
+        type: FieldType.boolean,
+        formatter:Formatters.checkmark
       },
       {
         id: "ad_taxc",
@@ -2000,6 +2046,7 @@ emballage: this.dataset[i - 1].emballage,
         sortable: true,
         filterable: true,
         type: FieldType.string,
+      
       },
     ];
 
@@ -2857,5 +2904,14 @@ prepareGrid5() {
 open5(content) {
   this.prepareGrid5();
   this.modalService.open(content, { size: "lg" });
+}
+playAudio(){
+  let audio = new Audio();
+  audio.src = "../../../assets/media/error/error.mp3";
+  audio.load();
+  audio.play();
+}
+openmsg(content) {
+  this.modalService.open(content, {backdrop: 'static',  size: "lg" });
 }
 }
