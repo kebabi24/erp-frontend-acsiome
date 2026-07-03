@@ -289,9 +289,9 @@ autorisation:boolean;
         field: "printid",
         excludeFromHeaderMenu: true,
         formatter: (row, cell, value, columnDef, dataContext) => {
-          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below[disabled]="printbuttonState"
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette"  id="print">
                  <i class="flaticon2-printer" ></i>
                  
              </a>
@@ -300,6 +300,9 @@ autorisation:boolean;
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          const input = document.getElementById('print') as HTMLInputElement | null;
+          input?.setAttribute('disabled', '');
+
           this.printbuttonState = true;
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
@@ -310,7 +313,7 @@ autorisation:boolean;
             (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type + ' QUALITE ' + reponse.data.pt_rev
                               this.miclaise = reponse.data.pt_article
                               this.color = reponse.data.pt_break_cat
-                              if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+                              if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_qty_loc != "" && args.dataContext.tr_qty_loc != 0 && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
                                 const controls = this.woForm.controls;
                                 this.printbuttonState = true;
                                 
@@ -363,19 +366,27 @@ autorisation:boolean;
                                     _tr.tr_site = controls.wo_site.value;
                                     this.trdataset = [];
                                 
-                                    if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
-                                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                                    // if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
+                                    //   this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
                                     
-                                      this.hasFormErrors = true;
-                                      this.message = "Verifier la Quantité";
+                                    // //  this.hasFormErrors = true;
+                                    //   this.message = "Verifier la Quantité";
+                                    //   this.playAudio()
+                                    //   let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+                                    //   element.click();
                                       
+                                    //   input.removeAttribute("disabled");
                                 
-                                      return;
-                                    }
+                                    //   return;
+                                    // }
                                     if (this.dataset.length == 0) {
-                                      this.hasFormErrors = true;
+                                      //this.hasFormErrors = true;
                                       this.message = "Verifier la liste des bobines";
-                                
+                                      this.playAudio()
+                                      let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+                                      element.click();
+                                      
+                                      input.removeAttribute("disabled");
                                       return;
                                     }
                                    
@@ -408,8 +419,13 @@ autorisation:boolean;
                                  
                                 );
                               } else {
-                                this.message = "etiquette déjà imprimée";
-                                      this.hasFormErrors = true;
+                                this.message = "Etiquette déjà imprimée";
+                                     // this.hasFormErrors = true;
+                                     this.playAudio()
+                                     let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+                                     element.click();
+                                     
+                                     input.removeAttribute("disabled");
                                       return;
                               }
                               
@@ -418,8 +434,13 @@ autorisation:boolean;
           )
           
         }
-        else { this.message = "etiquette déjà imprimée"; 
-          this.hasFormErrors = true;
+        else { this.message = "Etiquette déjà imprimée"; 
+         // this.hasFormErrors = true;
+         this.playAudio()
+         let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+         element.click();
+         
+         input.removeAttribute("disabled");
           return;}
       }
       },
@@ -441,15 +462,16 @@ autorisation:boolean;
         filterable: false,
         //type: FieldType.float,
       },
-      // {
-      //   id: "printed",
-      //   name: "imprimé",
-      //   field: "printed",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //   type: FieldType.string,
-      // },
+      {
+        id: "printed",
+        name: "imprimé",
+        field: "printed",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.boolean,
+        formatter: Formatters.checkmark
+      },
 
     
       {
@@ -634,21 +656,28 @@ autorisation:boolean;
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" id="print" disabled>
                  <i class="flaticon2-printer" ></i>
                  
              </a>
              `;
+          //  return `
+          //  <button type="button"  class="btn btn-success btn-sm mr-2" id="print">Valider</button>
+          //    `;
         },
         minWidth: 30,
         maxWidth: 30,
+       
         onCellClick: (e: Event, args: OnEventArgs) => {
+          console.log("hhhhhhhhhhhhhhhhh")
+          const input = document.getElementById('print') as HTMLInputElement | null;
+          input?.setAttribute('disabled', '');
           this.printbuttonState = true;
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if(this.printable == true && args.dataContext.sqprinted != true){
-          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null  && args.dataContext.tr_qty_loc != ""  && args.dataContext.tr_qty_loc != 0 && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.woForm.controls;
             this.printbuttonState = true;
             this.printable=false;
@@ -695,15 +724,19 @@ autorisation:boolean;
                 _tr.tr_user2 = controls.emp_shift.value;
                 this.trdataset = [];
             
-                if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
-                  this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: null, qty: args.dataContext.tr_qty_loc });
+                // if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
+                //   this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: null, qty: args.dataContext.tr_qty_loc });
                 
-                  this.hasFormErrors = true;
-                  this.message = "Verifier la Quantité";
-                
+                //   //this.hasFormErrors = true;
+                //   this.message = "Verifier la Quantité";
+                //   this.playAudio()
+                //   let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+                //   element.click();
+                  
+                //   input.removeAttribute("disabled");
             
-                  return;
-                }
+                //   return;
+                // }
                 // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
                 //   this.hasFormErrors = true;
                 //   this.message = "Veuillez remplir le N° de lot";
@@ -736,9 +769,9 @@ autorisation:boolean;
                 console.log(this.trdataset);
                 this.addSQ(this.trdataset, _tr);
 
-                this.labelService.addblob(_lb).subscribe((blob) => {
+              //  this.labelService.addblob(_lb).subscribe((blob) => {
                   Edelweiss.print3(lab);
-                });
+                //});
               },
               (error) => {
              
@@ -748,14 +781,24 @@ autorisation:boolean;
               }
             );
           } else {
-            this.message = "etiquette déjà imprimée";
-                  this.hasFormErrors = true;
+            this.message = "Etiquette déjà imprimée";
+               //   this.hasFormErrors = true;
+               this.playAudio()
+               let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+               element.click();
+               
+               input.removeAttribute("disabled");
                   return;
           }
         }
         else {
-          this.message = "etiquette déjà imprimée";
-                  this.hasFormErrors = true;
+          this.message = "Etiquette déjà imprimée";
+          this.playAudio()
+          let element: HTMLElement = document.getElementById("openmsg") as HTMLElement;
+          element.click();
+          
+          input.removeAttribute("disabled");
+                 // this.hasFormErrors = true;
                   return;
         }
       }
@@ -778,15 +821,16 @@ autorisation:boolean;
         filterable: false,
         //type: FieldType.float,
       },
-      // {
-      //   id: "sqprinted",
-      //   name: "imprimé",
-      //   field: "sqprinted",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //   type: FieldType.string,
-      // },
+      {
+        id: "sqprinted",
+        name: "imprimé",
+        field: "sqprinted",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.boolean,
+        formatter: Formatters.checkmark
+      },
       
       {
         id: "tr_program",
@@ -808,6 +852,7 @@ autorisation:boolean;
       enableRowSelection: true,
       enableAutoResize: true,
       autoHeight: false,
+     
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -822,7 +867,7 @@ autorisation:boolean;
 
     this.sqdataset = [];
   }
-
+  
   //ISS-UNP qrt * -1 w ttna7a men ld_det
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
@@ -1424,7 +1469,7 @@ wo_bo_chg:[this.workOrder.wo_bo_chg],
         this.loadingSubject.next(false);
       },
       () => {
-        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 5000, true, true);
         this.loadingSubject.next(false);
         //    console.log(this.provider, po, this.dataset);
 
@@ -3638,4 +3683,13 @@ this.ordre = "OF-" + item.wo_queue_eff;
   //   window.open(URL.createObjectURL(blob));
     
   // } 
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/media/error/error.mp3";
+    audio.load();
+    audio.play();
+  }
+  openmsg(content) {
+    this.modalService.open(content, {backdrop: 'static',  size: "lg" });
+  }
 }
