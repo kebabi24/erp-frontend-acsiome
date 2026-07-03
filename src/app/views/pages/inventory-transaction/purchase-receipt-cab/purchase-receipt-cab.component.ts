@@ -1201,10 +1201,10 @@ export class PurchaseReceiptCabComponent implements OnInit {
         this.loadingSubject.next(false);
       },
       () => {
-        this.labelService.addblob(lb).subscribe((blob) => {                 
+      //  this.labelService.addblob(lb).subscribe((blob) => {                 
           Edelweiss.print3(lab,this.currentPrinter);
           
-        });
+        //});
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       
@@ -1947,8 +1947,8 @@ let date = new Date()
     doc.text("Code Article", 25, 88.5);
     doc.line(45, 85, 45, 90);
     doc.text("Désignation", 67.5, 88.5);
-    doc.line(100, 85, 100, 90);
-    doc.text("QTE", 107, 88.5);
+    doc.line(103, 85, 103, 90);
+    doc.text("QTE", 108, 88.5);
     doc.line(120, 85, 120, 90);
     doc.text("UM", 123, 88.5);
     doc.line(130, 85, 130, 90);
@@ -2016,8 +2016,8 @@ let date = new Date()
         doc.text("Code Article", 25, 88.5);
         doc.line(45, 85, 45, 90);
         doc.text("Désignation", 67.5, 88.5);
-        doc.line(100, 85, 100, 90);
-        doc.text("QTE", 107, 88.5);
+        doc.line(103, 85, 103, 90);
+        doc.text("QTE", 108, 88.5);
         doc.line(120, 85, 120, 90);
         doc.text("UM", 123, 88.5);
         doc.line(130, 85, 130, 90);
@@ -2033,11 +2033,11 @@ let date = new Date()
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].tr_desc.length > 45) {
-        let desc1 = this.dataset[j].tr_desc.substring(45);
+      if (this.dataset[j].tr_desc.length > 32) {
+        let desc1 = this.dataset[j].tr_desc.substring(32);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].tr_desc.substring(0, 45 + ind);
-        let desc2 = this.dataset[j].tr_desc.substring(45 + ind);
+        desc1 = this.dataset[j].tr_desc.substring(0, 32 + ind);
+        let desc2 = this.dataset[j].tr_desc.substring(32 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
@@ -2045,7 +2045,7 @@ let date = new Date()
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
+        doc.line(103, i - 5, 103, i);
         doc.text(String(this.dataset[j].tr_qty_loc), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
@@ -2067,7 +2067,7 @@ let date = new Date()
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
         doc.line(45, i - 5, 45, i);
-        doc.line(100, i - 5, 100, i);
+        doc.line(103, i - 5, 103, i);
         doc.line(120, i - 5, 120, i);
         doc.line(130, i - 5, 130, i);
         doc.line(150, i - 5, 150, i);
@@ -2084,7 +2084,7 @@ let date = new Date()
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(this.dataset[j].tr_desc, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
+        doc.line(103, i - 5, 103, i);
         doc.text(String(this.dataset[j].tr_qty_loc), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);

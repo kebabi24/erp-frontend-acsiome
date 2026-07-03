@@ -419,6 +419,9 @@ export class RpBroyageComponent implements OnInit {
     const date1 = controls.date1.value
     ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
     : null;
+
+
+    console.log(start_time,end_time)
     if(site != null) {
     this.workOrderService.getBrRep({site,gamme,date,date1,start_time,end_time}).subscribe(
       (response: any) => {   

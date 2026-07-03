@@ -57,9 +57,9 @@
                         </div>
                     </div>    -->
                     
-                     <br/>
                     
-                    <div class="btn-group" role="group">
+                    
+                    <!--div class="btn-group" role="group">
                     
                     <button class="btn btn-sm btn-outline-secondary" data-test="scroll-bottom-btn" (click)="scrollGridBottom()">
                     <i class="fa fa-chevron-down"></i>
@@ -84,19 +84,19 @@
                                    data-test="toggle-pagination-grid2" />
                             
                         </div>
-                    </div>
+                    </div-->
                 </div>
                 
             <div class="row">
-                <span *ngIf="metrics" style="margin-right: 10px">
+                <!--span *ngIf="metrics" style="margin-right: 10px">
                     <b>Metrics:</b> {{metrics.itemCount}} of    {{metrics.totalItemCount}} items
-                  </span> 
+                  </span--> 
                   
                 <angular-slickgrid class="col-12"   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
                     [gridOptions]="gridOptions" [dataset]="dataset"
-                    (onRowCountChanged)="refreshMetrics($event.detail.eventData, $event.detail.args)">
-                    
+                   >
+                    <!-- (onRowCountChanged)="refreshMetrics($event.detail.eventData, $event.detail.args)"-->
                 </angular-slickgrid>
             </div>
         </form>

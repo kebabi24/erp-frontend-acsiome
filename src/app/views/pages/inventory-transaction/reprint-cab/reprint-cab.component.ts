@@ -221,7 +221,8 @@ export class ReprintCabComponent implements OnInit {
       let cabs : any;
       const _lb = new Label();
       this.labelService.getBy({ lb_ref: controls.ref.value }).subscribe(
-        (reponse: any) => (cabs = reponse.data.label, 
+        (reponse: any) => {
+        cabs = reponse.data.label, 
         _lb.lb__dec01 = cabs.lb__dec01,
         
         _lb.lb_site = cabs.lb_site,
@@ -242,13 +243,15 @@ export class ReprintCabComponent implements OnInit {
         _lb.lb_tel = cabs.lb_tel,
         _lb.lb_ref = cabs.lb_ref,
         _lb.lb__chr01 = cabs.lb__chr01,
-        this.labelService.addblob(_lb).subscribe((blob) => {                 
-          Edelweiss.print3(_lb,this.currentPrinter);
+        // this.labelService.addblob(_lb).subscribe((blob) => {       
+          
+        console.log(_lb)
+           Edelweiss.print3(_lb,this.currentPrinter);
           let tr = this.prepareIt();
           this.addIt(tr);
-        })
+        // })
         
-      ),
+        },
         (error) => {
           this.message = "veuillez verifier le code barre";
           this.isExist = true;

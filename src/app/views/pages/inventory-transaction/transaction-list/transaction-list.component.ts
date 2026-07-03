@@ -621,17 +621,17 @@ export class TransactionListComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
           
-            // filter: {
+            filter: {
 
               
-            //   // collectionAsync: this.elem,
-            //   collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+              // collectionAsync: this.elem,
+              collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
            
-            //   model: Filters.multipleSelect , operator: OperatorType.inContains
+              model: Filters.multipleSelect , operator: OperatorType.inContains
              
               
               
-            //  },
+             },
             // //filter: {model: Filters.multipleSelect , operator: OperatorType.contains },
             grouping: {
               getter: 'tr_type',
@@ -760,25 +760,25 @@ export class TransactionListComponent implements OnInit {
         autoHeight:false,
         
         enableAutoResize: true,
-        showCustomFooter: true, // display some metrics in the bottom custom footer
+        // showCustomFooter: true, // display some metrics in the bottom custom footer
         exportOptions: {
           sanitizeDataExport: true
         },
-        enablePagination: true,
-        pagination: {
-          pageSizes: [5, 10, 50,100,1000,50000,999999999],
-          pageSize: 100
-        },
-        presets: {
-          filters: [ 
+        // enablePagination: true,
+        // pagination: {
+        //   pageSizes: [5, 10, 50,100,1000,50000,999999999],
+        //   pageSize: 100
+        // },
+        // presets: {
+        //   filters: [ 
            
-          ],
-          sorters: [
+        //   ],
+        //   sorters: [
            
-          ],
-          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"last_modified_by",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:50},{columnId:"tr__chr01",width:50},{columnId:"tr__chr02",width:50},{columnId:"tr__chr03",width:50},{columnId:"tr_serial",width:50},{columnId:"tr_ref",width:50}, {columnId:"tr_um",width:50},{columnId:"tr_qty_loc",width:50}, {columnId:"tr__dec02",width:50},{columnId:"tr_status",width:50}, {columnId:"tr_rmks",width:50},{columnId:"tr_type",width:50},{columnId:"tr_so_job",width:50},{columnId:"tr_lot",width:50}, {columnId:"tr_nbr",width:50}]
+        //   ],
+        //   columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"last_modified_by",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:50},{columnId:"tr__chr01",width:50},{columnId:"tr__chr02",width:50},{columnId:"tr__chr03",width:50},{columnId:"tr_serial",width:50},{columnId:"tr_ref",width:50}, {columnId:"tr_um",width:50},{columnId:"tr_qty_loc",width:50}, {columnId:"tr__dec02",width:50},{columnId:"tr_status",width:50}, {columnId:"tr_rmks",width:50},{columnId:"tr_type",width:50},{columnId:"tr_so_job",width:50},{columnId:"tr_lot",width:50}, {columnId:"tr_nbr",width:50}]
           
-        },
+        // },
        
      
         gridMenu: {
@@ -814,17 +814,17 @@ export class TransactionListComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset = []
-    this.inventoryTransactionService.getAll().subscribe(
+    // this.inventoryTransactionService.getAll().subscribe(
       
-        (response: any) => {this.dataset = response.data
-          this.dataview.setItems(this.dataset)},
+    //     (response: any) => {this.dataset = response.data
+    //       this.dataview.setItems(this.dataset)},
         
-        (error) => {
-            this.dataset = []
-        },
-        () => {}
+    //     (error) => {
+    //         this.dataset = []
+    //     },
+    //     () => {}
         
-    )
+    // )
     
 }
 onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
@@ -911,7 +911,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       (res: any) => {
     
       //(response: any) => (this.dataset = response.data),
-      console.log(res.data.tr_gl_date)
+     // console.log(res.data.tr_gl_date)
       
       this.dataset  = res.data;
       this.dataview.setItems(this.dataset)

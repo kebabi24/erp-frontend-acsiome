@@ -593,9 +593,7 @@ var Edelweiss = (function () {
               .fontSize(12)
               .text('DATE: ' + lb.lb_date, 20, 58);
 
-          doc
-
-              .text('PRODUIT :' + lb.lb_desc, 20, 78)
+          doc.text('PRODUIT :' + lb.lb_desc, 20, 78)
               .font('Helvetica-Bold')
               .fontSize(12)
               .text('CODE :' + lb.lb_rmks, 20, 118)
