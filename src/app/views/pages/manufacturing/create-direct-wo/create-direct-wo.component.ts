@@ -124,6 +124,7 @@ export class CreateDirectWoComponent implements OnInit {
   validate:boolean = true;
   product_colors: any[] = [];
   product_types: any[] = [];
+  Poids: any[] = [];
   ok_types:boolean = false;
   prodqty:any;
   prodlot:any;
@@ -143,6 +144,7 @@ export class CreateDirectWoComponent implements OnInit {
   user1: any;
   user2: any;
   adduser: boolean = true;
+  poid:number
   constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService,private addressService: AddressService, private printerService: PrintersService, private http: HttpClient) {
     config.autoClose = true;
     
@@ -151,7 +153,8 @@ export class CreateDirectWoComponent implements OnInit {
       this.ro_rollup = response.data;
     });
     this.codeService.getBy({ code_fldname: "emp_shift" }).subscribe((response: any) => (this.emp_shift = response.data));
-
+    this.codeService.getBy({ code_fldname: "EMBALLAGE" }).subscribe((response: any) => (this.Poids = response.data));
+    
     this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -160,7 +163,13 @@ export class CreateDirectWoComponent implements OnInit {
     this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
   }
+  onChangePoids(){
+const controls = this.woForm.controls
+this.poid = Number(controls.poids.value)
 
+
+
+  }
   initGrid() {
     this.columnDefinitions = [
       {
@@ -373,7 +382,7 @@ export class CreateDirectWoComponent implements OnInit {
         this.domconfig = false;
       }
     );
-    this.seuil = 999999
+     this.seuil = 999999
     this.codeService.getByOne({ code_fldname: "LIMIT",code_value:'GLOBAL' }).subscribe(
       (reponse: any) => {
         if (reponse.data != null) {
@@ -416,8 +425,9 @@ export class CreateDirectWoComponent implements OnInit {
       emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial],
       printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
-      product_type: ["", Validators.required],
-      product_color: ["", Validators.required],
+      product_type: [null, Validators.required],
+      poids: [null, Validators.required],
+      product_color: [null, Validators.required],
     });
     const controls = this.woForm.controls;
     controls.wo_site.setValue(this.user.usrd_site);
@@ -546,7 +556,7 @@ export class CreateDirectWoComponent implements OnInit {
             return;
             
           } else {
-            this.codeService.getBy({code_fldname:'LIMIT',code_value:data[0].pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
+            
             console.log(data);
             controls.wo_part.setValue(data[0].pt_part);
             controls.desc.setValue(response.data[0].pt_desc1);
@@ -568,6 +578,7 @@ export class CreateDirectWoComponent implements OnInit {
             }
           }
         }
+        this.codeService.getByOne({code_fldname:'LIMIT',code_value:data[0].pt_draw}).subscribe((coderesp:any)=>{console.log(coderesp.data);this.seuil = Number(coderesp.data.code_cmmt)})
       });
   }
 
@@ -842,7 +853,15 @@ onChangeCust(){}
            
               this.globalState = false;
               return;
-            }}
+            }
+            if (controls.poids.value == null ||  controls.poids.value == ""){
+              this.hasFormErrors = true;
+              this.message = "veuillez choisir le poid de l'emballage";
+           
+              
+              return;
+            }
+          }
                  }
            } 
     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
@@ -1165,7 +1184,7 @@ onChangeCust(){}
 
     // fill the dataset with your data
 
-    this.itemsService.getProd({}).subscribe((response: any) => (this.items = response.data));
+    this.itemsService.getBy({  pt_dsgn_grp: "BROY",pt_drwg_loc: "INTERNE",}).subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {
     this.prepareGrid4();
@@ -1913,6 +1932,7 @@ onChangeCust(){}
   }
   onChangeqty(contentmsg) {
     
+    console.log("this.seuil",this.seuil)
     const controls = this.woForm.controls;
     const qty= Number(controls.wo_qty_chg.value)
     
@@ -1927,9 +1947,9 @@ onChangeCust(){}
     this.hasFormErrors = true;
     return;}
     else{
-      this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
-        controls.wo_qty_comp.setValue(controls.wo_qty_chg.value - poids)
-      })
+      //this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
+        controls.wo_qty_comp.setValue(controls.wo_qty_chg.value - this.poid)
+     // })
     }
     
     

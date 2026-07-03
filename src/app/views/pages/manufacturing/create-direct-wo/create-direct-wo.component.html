@@ -119,10 +119,10 @@
           <div class="form-group col-2">
             <label class="form-group">Produit:</label>
             <div class="input-group input-group-sm">
-              <input type="text" id="part" [className]="woForm.controls['wo_part'].errors && (woForm.controls['wo_part'].dirty || woForm.controls['wo_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_part" (change)="onchangePart()" aria-describedby="basic-addon2" />
-              <div class="input-group-append">
+              <input type="text" id="part" [className]="woForm.controls['wo_part'].errors && (woForm.controls['wo_part'].dirty || woForm.controls['wo_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_part" disabled aria-describedby="basic-addon2" />
+              <!--div class="input-group-append">
                 <span class="input-group-text" (click)="open4(content4)"> <i class="text-dark-50 flaticon2-search"></i> </span>
-              </div>
+              </div-->
 
               <div *ngIf="woForm.controls['wo_part'].errors && (woForm.controls['wo_part'].dirty || woForm.controls['wo_part'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
             </div>
@@ -132,6 +132,15 @@
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-sm form-control-solid" formControlName="desc" />
             </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Poids Embalage:</label>
+            <select class="form-control form-control-sm form-control-solid" formControlName="poids" id="idpoid" (change)="onChangePoids()">
+              <option value=""></option>
+              <option *ngFor="let elem of Poids" [value]="elem.code_cmmt">
+                {{elem.code_value}} {{elem.code_cmmt}}
+              </option>
+            </select>
           </div>
           <div class="form-group col-2">
             <label class="form-group">choix de l'imprimante</label>
