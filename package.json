@@ -14,7 +14,30 @@
     "e2e": "ng e2e",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "rtl": "webpack",
-    "pack": "electron-packager . PrimaGlaces --platform=win32 --arch=x64 asar=true"
+    "pack": "electron-packager . Edelweiss --platform=win32 --arch=x64 asar=true",
+    "electron:build": "ng build --configuration production --base-href ./ && electron-builder"
+  },
+  "build": {
+    "appId": "Edelweiss",
+    "productName": "Edelweiss",
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "!node_modules/**/*",
+      "!src/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "private": true,
   "dependencies": {
@@ -67,6 +90,7 @@
     "cordova": "^12.0.0",
     "core-js": "3.6.5",
     "dayjs": "^1.11.3",
+    "electron-builder": "^22.3.2",
     "electron-pos-printer": "github:naxsoumo/electron-pos-printer",
     "excel-builder-webpacker": "^2.1.7",
     "file-saver": "^2.0.5",
@@ -121,18 +145,18 @@
     "@angular/material": "9.2.1",
     "@angular/material-moment-adapter": "9.2.1",
     "@ngrx/schematics": "9.1.0",
-    "@types/jquery": "3.5.1",
     "@types/blob-stream": "^0.1.33",
     "@types/chartist": "0.9.47",
     "@types/file-saver": "^2.0.7",
     "@types/googlemaps": "3.39.12",
     "@types/jasmine": "3.5.0",
     "@types/jasminewd2": "2.0.3",
+    "@types/jquery": "3.5.1",
     "@types/node": "^10.17.60",
     "@types/object-path": "0.11.0",
     "codelyzer": "5.2.2",
     "css-loader": "^3.4.2",
-    "electron": "^9.1.0",
+    "electron": "^9.4.4",
     "electron-packager": "^17.1.1",
     "electron-wix-msi": "^5.0.0",
     "html-webpack-plugin": "^5.2.0",

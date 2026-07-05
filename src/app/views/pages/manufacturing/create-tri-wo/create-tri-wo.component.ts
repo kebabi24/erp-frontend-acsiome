@@ -587,7 +587,7 @@ export class CreateTriWoComponent implements OnInit {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             let idpal;
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
-            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
+            this.labelService.update({lb_actif : true},idpal).subscribe((res:any) =>{})
             this.angularGrid.gridService.deleteItem(args.dataContext);
             
           }

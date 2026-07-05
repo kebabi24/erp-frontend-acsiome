@@ -843,12 +843,12 @@ export class PurchaseReceiptColorantComponent implements OnInit {
                    input.removeAttribute("disabled");
                     return;
                   },
-                  () => {
+    //               () => {
                     
-    }
+    // }
                   
                 );
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_chg,qty_loc: args.dataContext.tr_qty_loc, printed:true })
+                // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_chg,qty_loc: args.dataContext.tr_qty_loc, printed:true })
                               
               }
             });
@@ -1207,7 +1207,7 @@ export class PurchaseReceiptColorantComponent implements OnInit {
           
         //});
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
-        this.loadingSubject.next(false);
+       // this.loadingSubject.next(false);
       
         
       }

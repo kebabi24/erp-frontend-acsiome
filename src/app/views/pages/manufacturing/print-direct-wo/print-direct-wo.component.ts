@@ -1562,7 +1562,7 @@ export class PrintDirectWoComponent implements OnInit {
                               this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat,code_desc:'TOUS' }).subscribe((rescode: any) => {
                                 console.log(rescode);
                                 if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true || respopart.data.pt_draw == 'PERTE') {
-                                  this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
+                                  this.labelService.update({lb_actif : false}, respopal.data.id).subscribe((res:any) =>{console.log('update label')})
                                   this.gridService.addItem(
                                     {
                                       id: this.dataset.length + 1,

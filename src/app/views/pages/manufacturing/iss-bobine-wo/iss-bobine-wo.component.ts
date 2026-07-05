@@ -316,7 +316,7 @@ export class IssBobineWoComponent implements OnInit {
             let idpal;
             let total = paiqty + prfqty + sqlqty + orgqty
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
-            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
+            this.labelService.update({lb_actif : true}, idpal).subscribe((res:any) =>{})
             this.itemsService.getByOne({pt_part: args.dataContext.tr_part  }).subscribe(
               (respopart: any) => {
                 console.log(respopart.data)
@@ -2845,7 +2845,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                                                             this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{
                                                               if (res.data != null) {idpal = res.data.id
                                                               console.log(idpal)
-                                                              this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
+                                                              this.labelService.update({lb_actif : false}, idpal).subscribe((res:any) =>{})
                                                               }
                                                             })
                                                             this.gridService.addItem(
@@ -2915,7 +2915,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                       this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{
                         if (res.data != null) {idpal = res.data.id
                         console.log(idpal)
-                        this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
+                        this.labelService.update({lb_actif : false},idpal).subscribe((res:any) =>{})
                         }
                       })
                       this.gridService.addItem(

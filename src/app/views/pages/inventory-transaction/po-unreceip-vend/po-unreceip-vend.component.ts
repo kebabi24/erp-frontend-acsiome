@@ -668,7 +668,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
       }  else {
         this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {this.idpal = res.data.id}})
         console.log(this.idpal)
-        this.labelService.update({lb_actif : false},{id: this.idpal}).subscribe((res:any) =>{})
+        this.labelService.update({lb_actif : false},this.idpal).subscribe((res:any) =>{})
        
      this.gridService.addItem(
       { 

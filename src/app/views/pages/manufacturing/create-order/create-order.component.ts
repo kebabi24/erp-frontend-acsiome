@@ -93,6 +93,7 @@ export class CreateOrderComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+  ofs: any[];
   creation : boolean ;
   user: any;
   alertWarning: any;
@@ -183,7 +184,7 @@ export class CreateOrderComponent implements OnInit {
     private codeService: CodeService,
   ) {
     config.autoClose = true;
-    this.initGrid();
+    
   }
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -512,6 +513,7 @@ export class CreateOrderComponent implements OnInit {
         type: FieldType.dateTimeShortIso,
         editor: {
           model: Editors.date,
+          
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           
@@ -902,6 +904,9 @@ export class CreateOrderComponent implements OnInit {
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      enableAutoResize: true,
+      enableExcelExport:true,
+      enableExcelCopyBuffer: true,
       // enableRowMoveManager:true,
       formatterOptions: {
         
@@ -933,7 +938,7 @@ export class CreateOrderComponent implements OnInit {
      this.docs = data; 
      if(response.data.length != 0){this.exist = true} 
     });
-
+    this.initGrid();
   }
 
   //create form
@@ -1086,24 +1091,26 @@ export class CreateOrderComponent implements OnInit {
   onChangeprogram() {
     const controls = this.woForm.controls
     this.dataset = [];
+    this.ofs = [];
     let version = 1;
     let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
     if (controls.wo_so_job.value == ''|| controls.wo_so_job.value == null ){
            
               this.workOrderService.getBy({wo_routing:controls.wo_routing.value,wo_ord_date:ofdate}).subscribe(
                 (res: any) => {        
-                  this.dataset  = res.data;
+                  this.ofs  = res.data;
+                  console.log("res.data",res.data)
                   this.creation = false;
                    
                   
                   let j = 0;
-                  for (let item of this.dataset){j = j + 1;
+                  for (let item of this.ofs){j = j + 1;
                     var maxObj = null;
                     var iddd = 0;
                     var qtyoh = 0;
                     
-                  if (this.dataset.length > 0) {
-                    maxObj = this.dataset.reduce((accumulator, current) => {
+                  if (this.ofs.length > 0) {
+                    maxObj = this.ofs.reduce((accumulator, current) => {
                       return accumulator.id > current.id ? accumulator : current;
                     });
           
@@ -1169,7 +1176,7 @@ export class CreateOrderComponent implements OnInit {
               wo_so_job: controls.wo_so_job.value,wo_routing: controls.wo_routing.value
         })
         .subscribe((response: any) => {
-            
+          console.log("res.data",response.data)
             const { data } = response;
             if (!data) {
               controls.wo_so_job.setValue("")
@@ -1182,17 +1189,17 @@ export class CreateOrderComponent implements OnInit {
             else{
               this.workOrderService.getBy({wo_so_job:controls.wo_so_job.value}).subscribe(
                 (res: any) => {        
-                  this.dataset  = res.data;
+                  this.ofs  = res.data;
                   
                   if(res.data != null){version = Number(res.data.wo_rev) + 1, controls.wo_rev.setValue(version)}
                   this.creation = false;
                   let j = 0;
-                  for (let item of this.dataset){j = j + 1;
+                  for (let item of this.ofs){j = j + 1;
                     var maxObj = null;
                     var iddd = 0;
       
-                    if (this.dataset.length > 0) {
-                      maxObj = this.dataset.reduce((accumulator, current) => {
+                    if (this.ofs.length > 0) {
+                      maxObj = this.ofs.reduce((accumulator, current) => {
                         return accumulator.id > current.id ? accumulator : current;
                       });
                       
@@ -1259,23 +1266,24 @@ export class CreateOrderComponent implements OnInit {
   onChangeDate() {
     const controls = this.woForm.controls
     this.dataset = [];
+    this.ofs = [];
     let version = 1;
     let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
     if (controls.wo_so_job.value == ''|| controls.wo_so_job.value == null ){
     
               this.workOrderService.getBy({wo_routing:controls.wo_routing.value,wo_ord_date:ofdate}).subscribe(
                 (res: any) => {        
-                  this.dataset  = res.data;
+                  this.ofs  = res.data;
                   this.creation = false;
                    
                   
                   let j = 0;
-                  for (let item of this.dataset){j = j + 1;
+                  for (let item of this.ofs){j = j + 1;
                     var maxObj = null;
                     var iddd = 0;
       
-                  if (this.dataset.length > 0) {
-                    maxObj = this.dataset.reduce((accumulator, current) => {
+                  if (this.ofs.length > 0) {
+                    maxObj = this.ofs.reduce((accumulator, current) => {
                       return accumulator.id > current.id ? accumulator : current;
                     });
           
@@ -1349,17 +1357,17 @@ export class CreateOrderComponent implements OnInit {
             else{
               this.workOrderService.getBy({wo_so_job:controls.wo_so_job.value}).subscribe(
                 (res: any) => {        
-                  this.dataset  = res.data;
+                  this.ofs  = res.data;
                   this.creation = false;
                   if(res.data != null){version = Number(res.data.wo_rev) + 1, controls.wo_rev.setValue(version)}
                   
                   let j = 0;
-                  for (let item of this.dataset){j = j + 1;
+                  for (let item of this.ofs){j = j + 1;
                     var maxObj = null;
                     var iddd = 0;
       
-                    if (this.dataset.length > 0) {
-                      maxObj = this.dataset.reduce((accumulator, current) => {
+                    if (this.ofs.length > 0) {
+                      maxObj = this.ofs.reduce((accumulator, current) => {
                         return accumulator.id > current.id ? accumulator : current;
                       });
                       

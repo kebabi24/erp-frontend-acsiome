@@ -222,7 +222,7 @@ export class BobineIssueComponent implements OnInit {
             if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
               let idpal;
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
-            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
+            this.labelService.update({lb_actif : true},idpal).subscribe((res:any) =>{})
               this.angularGrid.gridService.deleteItem(args.dataContext);
             }
           },
@@ -2196,7 +2196,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
               this.sct = respo.data
               console.log(this.sct)
               this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
-              this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
+              this.labelService.update({lb_actif : false},idpal).subscribe((res:any) =>{})
               const timedate = new Date().toLocaleTimeString();
           this.gridService.addItem(
             { 
