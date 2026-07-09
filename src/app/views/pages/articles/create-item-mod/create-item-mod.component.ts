@@ -1031,7 +1031,7 @@ onAlertClose($event) {
    */
   addItem(item: Item, sct1: CostSimulation, sct2: CostSimulation) {
     this.loadingSubject.next(true);
-    this.itemService.add(item).subscribe(
+    this.itemService.addModel(item).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(

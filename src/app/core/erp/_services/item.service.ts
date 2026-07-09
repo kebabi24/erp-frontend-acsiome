@@ -28,6 +28,12 @@ export class ItemService {
         const headers = { "Content-Type": "multipart/form-data" }; // Set the Content-Type header to multipart/form-data
         return this.http.post(API_URL, data);
     }
+    public addModel(item: any) {
+       const httpHeaders = this.httpUtils.getHTTPHeaders()
+       return this.http.post(API_URL+'/model', item, { headers: httpHeaders })
+      
+      
+    }
     public alter(data: any) {
         // const httpHeaders = this.httpUtils.getHTTPHeaders()
         // return this.http.post(API_URL, item, { headers: httpHeaders })

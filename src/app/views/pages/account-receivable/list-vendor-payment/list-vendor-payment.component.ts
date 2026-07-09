@@ -19,7 +19,7 @@ import {
   GroupTotalFormatters,
   SortDirectionNumber,
   Sorters,
- 
+  MultipleSelectOption,
 } from "angular-slickgrid"
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -83,6 +83,7 @@ export class ListVendorPaymentComponent implements OnInit {
   role:any;
   data: any[] = []
   MntCheque : Number
+  MntVirement: Number
   MntDep : Number
   constructor(
       private activatedRoute: ActivatedRoute,
@@ -244,6 +245,50 @@ export class ListVendorPaymentComponent implements OnInit {
             grouping: {
               getter: 'bkh_bank',
               formatter: (g) => `Caisse: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                new Aggregators.Sum('bkh_amt'),  
+              new Aggregators.Sum('bkh_2000'),
+              new Aggregators.Sum('bkh_1000'),
+              new Aggregators.Sum('bkh_0500'),
+              new Aggregators.Sum('bkh_0200'),    
+              new Aggregators.Sum('bkh_p200'),    
+              new Aggregators.Sum('bkh_p100'),
+              new Aggregators.Sum('bkh_p050'),
+              new Aggregators.Sum('bkh_p020'),
+              new Aggregators.Sum('bkh_p010'),
+              new Aggregators.Sum('bkh_p005'),
+              new Aggregators.Sum('bkh_bon'),
+              new Aggregators.Sum('bkh_cheque'),             
+              
+              ],
+                aggregateCollapsed: false,
+                collapsed: false,
+              }
+            
+          },
+          {
+            id: "bkh_terms",
+            name: "Mode Paiement",
+            field: "bkh_terms",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {
+              collection: [  { value: 'CODPM1', label: 'ESPECE' }, { value: 'CODPM2', label: 'VIREMENT' },{ value: 'CODPM3', label: 'CHEQUE' } ],
+              model: Filters.multipleSelect,
+       
+              // you can add "multiple-select" plugin options like styling the first row
+              filterOptions: {
+                 offsetLeft: 14,
+                 width: 100
+              } as MultipleSelectOption,
+       
+              // you can also add an optional placeholder
+              placeholder: 'choose an option'
+          },
+            grouping: {
+              getter: 'bkh_terms',
+              formatter: (g) => `Mode Paiement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 new Aggregators.Sum('bkh_amt'),  
               new Aggregators.Sum('bkh_2000'),
@@ -715,8 +760,9 @@ export class ListVendorPaymentComponent implements OnInit {
       (response: any) => {   
         this.data = response.data.bkhs
         this.MntCheque = Number(response.data.cheque)
+        this.MntVirement = Number(response.data.virement)
         this.MntDep = Number(response.data.depence)
-       console.log(this.MntCheque,this.MntDep)
+       console.log(this.MntCheque,this.MntDep,this.MntVirement)
       this.printpdf2()  
          },
       (error) => {
@@ -851,7 +897,7 @@ console.log(this.data)
           let ttec = replaceAll(ttecq,","," ")
 
            
-let tes =  Number(total)  - Number(this.MntCheque)
+let tes =  Number(total)  - Number(this.MntCheque) - Number(this.MntVirement)
            let ttes =  String(  Number(tes).toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -883,6 +929,18 @@ let tes =  Number(total)  - Number(this.MntCheque)
 
 
           let ttdepence = replaceAll(ttdep,","," ")
+
+          console.log("this.MntVirement",this.MntVirement)
+          let ttvir =  String(  Number(this.MntVirement).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+
+
+
+          let ttvirement = replaceAll(ttvir,","," ")
+
 
           let ttg = Number(total) - Number(this.MntDep)
           let ttge =  String(  Number(ttg).toLocaleString("en-US", {
@@ -928,10 +986,18 @@ let tes =  Number(total)  - Number(this.MntCheque)
 
             doc.line(30, i - 5, 30, i);
            
-           // doc.line(40, i - 5, 40, i);
-            doc.text("Total Espece/ cheque", 35, i - 1);
+            doc.text("Recette Virement", 35, i - 1);
             doc.line(70, i - 5, 70, i);
-            doc.text(ttecq, 108, i - 1,{ align: "right" });
+            doc.text(ttvirement, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+            doc.line(30, i, 110, i);
+            i = i + 5;
+
+            doc.line(30, i - 5, 30, i);
+           // doc.line(40, i - 5, 40, i);
+            doc.text("Total ES/CH/VIR", 35, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(ttec, 108, i - 1,{ align: "right" });
             doc.line(110, i - 5, 110, i);
             doc.line(30, i, 110, i);
             i = i + 5;

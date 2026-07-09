@@ -54,7 +54,10 @@ if (value=="D"){
   styleUrls: ['./list-wo.component.scss']
 })
 export class ListWoComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  domain : any
+  user: any
   // slick grid
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
@@ -62,23 +65,67 @@ export class ListWoComponent implements OnInit {
   columnDefinitions1: Column[] = []
   gridOptions1: GridOption = {}
   dataset1: any[] = []
-
+  woForm: FormGroup;
+  
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+  gridObj: any;
+  angularGrid: AngularGridInstance;
+  
+  grid1: any;
+  gridService1: GridService;
+  dataview1: any;
   gridObj1: any;
   angularGrid1: AngularGridInstance;
+  
   constructor(
       private activatedRoute: ActivatedRoute,
+      private woFB: FormBuilder,
       private router: Router,
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private workOrderService: WorkOrderService
   ) {
-      this.prepareGrid()
-      this.prepareGrid1()
+     
   }
 
   ngOnInit(): void {
-  }
 
+    this.loading$ = this.loadingSubject.asObservable();
+    this.loadingSubject.next(false);
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    this.createForm();
+    this.prepareGrid1()
+    this.prepareGrid()
+      //this.prepareGrid1()
+      this.wolist()
+
+
+   
+    
+  }
+  createForm() {
+    const date = new Date ;
+    date.setDate(date.getDate() - 2);
+    const date1 = new Date;
+    this.woForm = this.woFB.group({
+    
+      date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      date1: [{
+        year:date1.getFullYear(),
+        month: date1.getMonth()+1,
+        day: date1.getDate()
+      }],
+      
+    
+    });
+  }
   prepareGrid() {
       this.columnDefinitions = [
           {
@@ -161,7 +208,7 @@ export class ListWoComponent implements OnInit {
             name: "Ordre",
             field: "wo_queue_eff",
             sortable: true,
-            width: 50,
+            width: 60,
             filterable: true,
            
            
@@ -171,24 +218,24 @@ export class ListWoComponent implements OnInit {
             name: "Article",
             field: "wo_part",
             sortable: true,
-            minWidth: 150,
+            minWidth: 180,
             filterable: true,
            
            
           },
           {
             id: "wo_ref",
-            name: "dimension",
+            name: "Dimension",
             field: "wo_ref",
             sortable: true,
-            minWidth: 150,
+            minWidth: 100,
             filterable: true,
            
            
           },
           {
             id: "wo_batch",
-            name: "couleur",
+            name: "Couleur",
             field: "wo_batch",
             sortable: true,
             minWidth: 150,
@@ -199,7 +246,7 @@ export class ListWoComponent implements OnInit {
          
           {
             id: "wo_grade",
-            name: "cilicone",
+            name: "Cilicone",
             field: "wo_grade",
             sortable: true,
             minWidth: 150,
@@ -425,25 +472,43 @@ export class ListWoComponent implements OnInit {
         ];
 
       this.gridOptions = {
-          enableSorting: true,
-          enableCellNavigation: true,
-          enableExcelCopyBuffer: true,
-          enableFiltering: true,
-          autoEdit: false,
-          autoHeight: false,
-          frozenColumn: 0,
-          frozenBottom: true,
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        // frozenColumn: 0,
+        // frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
       }
 
       // fill the dataset with your data
       this.dataset = []
-      this.workOrderService.getByextrusion({wo_routing:'U1'}).subscribe(
-          (response: any) => (this.dataset = response.data),
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
+      // this.workOrderService.getByextrusion({wo_routing:'U1'}).subscribe(
+      //     (response: any) => (this.dataset = response.data),
+      //     (error) => {
+      //         this.dataset = []
+      //     },
+      //     () => {}
+      // )
   }
   prepareGrid1() {
     this.columnDefinitions1 = [
@@ -594,8 +659,8 @@ export class ListWoComponent implements OnInit {
       enableFiltering: true,
       autoEdit: false,
       autoHeight: false,
-      frozenColumn: 0,
-      frozenBottom: true,
+      // frozenColumn: 0,
+      // frozenBottom: true,
       enableRowSelection: true,
       enableCheckboxSelector: true,
       checkboxSelector: {
@@ -618,30 +683,37 @@ export class ListWoComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset1 = []
-    this.workOrderService.getPrograms({wo_routing:'U1'}).subscribe(
-        (response: any) => (this.dataset1 = response.data),
-        (error) => {
-            this.dataset1 = []
-        },
-        () => {}
-    )
+   
 }
 angularGridReady1(angularGrid: AngularGridInstance) {
-    this.angularGrid1 = angularGrid;
-    this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {};
+  this.angularGrid1 = angularGrid;
+  this.grid1= angularGrid.slickGrid; // grid object
+  this.dataview1 = angularGrid.dataView;
+  this.gridService1 = angularGrid.gridService;
   }
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.grid= angularGrid.slickGrid; // grid object
+    this.dataview = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
+    }
 handleSelectedRowsChanged1(e, args) {
   
   
   
-  if (Array.isArray(args.rows) && this.gridObj1) {
+  if (Array.isArray(args.rows) && this.grid1) {
     args.rows.map((idx) => {
-      const item = this.gridObj1.getDataItem(idx);
+      const item = this.grid1.getDataItem(idx);
       console.log(item)
        
       this.dataset = []
       this.workOrderService.getBy({wo_routing:'U1',wo_so_job:item.wo_so_job}).subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataview.setItems(this.dataset);
+            
+             },
           (error) => {
               this.dataset = []
           },
@@ -651,5 +723,83 @@ handleSelectedRowsChanged1(e, args) {
     
   })
  }
+}
+
+
+
+
+wolist(){
+  const controls = this.woForm.controls
+  
+  this.dataset = []
+  const date = controls.date.value
+  ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+  : null;
+
+  const date1 = controls.date1.value
+  ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+  : null;
+  // const wo_type = 'BR'
+  // let obj= {wo_type,date,date1}
+//   this.inventoryTransactionService.getByDate(obj).subscribe(
+//     (res: any) => {
+  
+//     //(response: any) => (this.dataset = response.data),
+//    // console.log(res.data.tr_gl_date)
+    
+//     this.dataset  = res.data;
+//     this.dataview.setItems(this.dataset)
+    
+//   //this.dataset = res.data
+//   this.loadingSubject.next(false) 
+// })
+
+// this.workOrderService.getPrograms(obj).subscribe(
+//   (response: any) => {this.dataset1 = response.data
+//     this.dataview1.setItems(this.dataset1)
+//   },
+//   (error) => {
+//       this.dataset1 = []
+//   },
+//   () => {}
+// )
+
+// this.workOrderService.getPrograms({wo_routing:'U1'}).subscribe(
+//   (response: any) => (this.dataset1 = response.data),
+//   (error) => {
+//       this.dataset1 = []
+//   },
+//   () => {}
+// )
+const wo_routing='U1'
+  let obj1 = {wo_routing,date,date1}
+this.workOrderService.getPrograms(obj1).subscribe(
+  (response: any) => {   
+    this.dataset1 = response.data
+   console.log(this.dataset)
+   this.dataview1.setItems(this.dataset1);
+    
+     },
+  (error) => {
+      this.dataset1 = []
+  },
+  () => {}
+)
+
+
+
+  let obj2 = {wo_routing,date,date1}
+this.workOrderService.getByextrusion(obj2).subscribe(
+  (response: any) => {   
+    this.dataset = response.data
+   console.log(this.dataset)
+   this.dataview.setItems(this.dataset);
+    
+     },
+  (error) => {
+      this.dataset = []
+  },
+  () => {}
+)
 }
 }

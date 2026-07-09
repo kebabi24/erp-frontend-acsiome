@@ -139,6 +139,87 @@
           </div>
 
      </div>
+
+
+
+
+     <div class="row">
+  
+      <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+        <div class="number-card number-card-content1">
+          <h1 class="number-card-number">{{Prod_amt_LOTUS}} DA</h1>
+          <div class="number-card-dollars">PRODUCTION P/COMPTE GRAND LOTUS</div>
+          <div class="number-card-divider"></div>
+          <div class="number-card-progress-wrapper">
+            <div class="tagline number-card-currency"></div>
+            
+          </div>
+        </div>
+      </div>
+
+    
+      <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+        <div class="number-card number-card-content1">
+          <h1 class="number-card-number">{{Prod_qty_LOTUS}} UN</h1>
+          <div class="number-card-dollars">QTE PRODUCTION P/COMPTE GRAND LOTUS</div>
+          <div class="number-card-divider"></div>
+          <div class="number-card-progress-wrapper">
+            <div class="tagline number-card-currency"></div>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+        <div class="number-card number-card-content1">
+          <h1 class="number-card-number">{{Prod_amt_MG}} DA</h1>
+          <div class="number-card-dollars">PRODUCTION P/COMPTE MAGIC GLACES</div>
+          <div class="number-card-divider"></div>
+          <div class="number-card-progress-wrapper">
+            <div class="tagline number-card-currency"></div>
+            
+          </div>
+        </div>
+      </div>
+
+    
+      <div class="form-group col-3" > <!--"col-sm-6 col-xl-2 mb-xl-7"-->
+        <div class="number-card number-card-content1">
+          <h1 class="number-card-number">{{Prod_qty_MG}} UN</h1>
+          <div class="number-card-dollars">QTE PRODUCTION P/COMPTE MAGIC GLACES</div>
+          <div class="number-card-divider"></div>
+          <div class="number-card-progress-wrapper">
+            <div class="tagline number-card-currency"></div>
+            
+          </div>
+        </div>
+      </div>
+
+   </div>
+   <div class="row">
+
+      
+
+    <div class="col-xl-6">
+      <kt-portlet [class]="'kt-portlet--height-fluid'">
+        <kt-portlet-header [title]="'CA par Entité '">
+        </kt-portlet-header>
+        <kt-portlet-body>
+          <div id="chartdivN5" style="width: 100%; height: 350px"></div>
+        </kt-portlet-body>
+      </kt-portlet>
+    </div>
+    <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'QTE par Entité '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN6" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+    </div>
+ </div>
+
      <div class="row">
         <div class="col-xl-6">
             <kt-portlet [class]="'kt-portlet--height-fluid'">
@@ -183,6 +264,66 @@
             </kt-portlet>
         </div>
      </div>
+     <div class="row">
+      <div class="col-xl-6">
+      <table class="table">
+        <thead>
+            <tr class="table-info">
+                <th scope="col">CREMES GLACEES</th>
+                <th scope="col">Nombre Cartons</th>
+                <th scope="col">Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-active">
+                <th scope="row">Production Propre PrimaGlaces</th>
+                <td>{{Prod_qty}}</td>
+                <td>{{Prod_amt}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Production Reçu Grand Lotus</th>
+                <td>{{AQLotus}}</td>
+                <td>{{AALotus}}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="row">Production Reçu Magic Glaces</th>
+                <td>{{AQMagic}}</td>
+                <td>{{AAMagic}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Production Reçu RAMD Food</th>
+                <td>{{AQRam}}</td>
+                <td>{{AARam}}</td>
+            </tr>
+            <tr class="table-success">
+                <th scope="row">TOTAL Production + S/TRAITEE</th>
+                <td>{{TQP}}</td>
+                <td>{{TAP}}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="row">PRODUCTION P/COMPTE GRAND LOTUS</th>
+                <td>{{PQLotus}}</td>
+                <td>{{PALotus}}</td>
+            </tr>
+            <tr >
+                <th scope="row">PRODUCTION P/COMPTE MAGIC GLACES</th>
+                <td>{{PQMg}}</td>
+                <td>{{PAMg}}</td>
+            </tr>
+            <tr class="table-success">
+                <th scope="row">TOTAL PRODUCTION POUR COMPTE</th>
+                <td>{{TQPP}}</td>
+                <td>{{TAPP}}</td>
+            </tr>
+            <tr class="table-warning">
+                <th scope="row">BISCUIT RECEPTION PROD GRAND LOTUS</th>
+                <td>{{QG}}</td>
+                <td>{{AG}}</td>
+            </tr>
+        </tbody>
+    </table>
+     </div>
+    </div>
 
     </kt-portlet-body>
   </kt-portlet>

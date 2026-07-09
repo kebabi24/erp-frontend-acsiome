@@ -1205,13 +1205,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.hasFormErrors = true;
         return;
         
-        this.loadingSubject.next(false);
+        // this.loadingSubject.next(false);
       },
       () => {
-        this.labelService.addblob(lb).subscribe((blob) => {                 
+        // this.labelService.addblob(lb).subscribe((blob) => {                 
           Edelweiss.print3(lab,this.currentPrinter);
           
-        });
+        // });
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
       //  this.loadingSubject.next(false);
       

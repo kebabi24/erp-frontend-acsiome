@@ -1198,7 +1198,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         this.hasFormErrors = true;
         return;
         
-        this.loadingSubject.next(false);
+       // this.loadingSubject.next(false);
       },
       () => {
       //  this.labelService.addblob(lb).subscribe((blob) => {                 

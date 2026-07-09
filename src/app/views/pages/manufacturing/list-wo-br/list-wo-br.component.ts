@@ -54,7 +54,10 @@ if (value=="D"){
   styleUrls: ['./list-wo-br.component.scss']
 })
 export class ListWoBrComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  domain : any
+  user: any
   // slick grid
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
@@ -63,22 +66,67 @@ export class ListWoBrComponent implements OnInit {
   gridOptions1: GridOption = {}
   dataset1: any[] = []
 
+  grid1: any;
+  gridService1: GridService;
+  dataview1: any;
   gridObj1: any;
   angularGrid1: AngularGridInstance;
+
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+  gridObj: any;
+  angularGrid: AngularGridInstance;
+  woForm: FormGroup;
+
+  mvangularGrid: AngularGridInstance;
+  mvgrid: any;
+  mvgridService: GridService;
+  mvdataView: any;
   constructor(
       private activatedRoute: ActivatedRoute,
+      private woFB: FormBuilder,
       private router: Router,
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private workOrderService: WorkOrderService
   ) {
-      this.prepareGrid()
-      this.prepareGrid1()
+      // this.prepareGrid()
+      // this.prepareGrid1()
   }
 
   ngOnInit(): void {
+    this.loading$ = this.loadingSubject.asObservable();
+    this.loadingSubject.next(false);
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    this.createForm();
+    this.prepareGrid()
+      //this.prepareGrid1()
+      this.wolist()
+
   }
 
+  createForm() {
+    const date = new Date ;
+    date.setDate(date.getDate() - 2);
+    const date1 = new Date;
+    this.woForm = this.woFB.group({
+    
+      date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      date1: [{
+        year:date1.getFullYear(),
+        month: date1.getMonth()+1,
+        day: date1.getDate()
+      }],
+      
+    
+    });
+  }
   prepareGrid() {
       this.columnDefinitions = [
           {
@@ -425,25 +473,64 @@ export class ListWoBrComponent implements OnInit {
         ];
 
       this.gridOptions = {
-          enableSorting: true,
-          enableCellNavigation: true,
-          enableExcelCopyBuffer: true,
-          enableFiltering: true,
-          autoEdit: false,
-          autoHeight: false,
-          frozenColumn: 0,
-          frozenBottom: true,
+        enableFiltering: true,
+        enableAutoResize: true,
+       
+        enableSorting: true,
+        enableExcelExport:true,
+        enableExcelCopyBuffer: true,
+        exportOptions: {
+          sanitizeDataExport: true
+        },
+       
+        
+       
+        excelExportOptions: {
+          filename: 'my-export',
+          sanitizeDataExport: true,
+         
+          columnHeaderStyle: {
+            font: { color: 'FFFFFFFF' },
+            fill: { type: 'pattern', patternType: 'solid', fgColor: 'FF4a6c91' }
+          }
+        },
+        
+        //enableRowSelection: true,
+        enableCellNavigation: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+       // multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
+       
+        formatterOptions: {
+        
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+        },
       }
 
       // fill the dataset with your data
       this.dataset = []
-      this.workOrderService.getBybroyage({wo_routing:'BROYAGE'}).subscribe(
-          (response: any) => (this.dataset = response.data),
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
+     
   }
   prepareGrid1() {
     this.columnDefinitions1 = [
@@ -618,17 +705,27 @@ export class ListWoBrComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset1 = []
-    this.workOrderService.getPrograms({wo_type:'BR'}).subscribe(
-        (response: any) => (this.dataset1 = response.data),
-        (error) => {
-            this.dataset1 = []
-        },
-        () => {}
-    )
+   
 }
+
+angularGridReady(angularGrid: AngularGridInstance) {
+  
+ 
+  this.angularGrid = angularGrid;
+  this.grid= angularGrid.slickGrid; // grid object
+  this.dataview = angularGrid.dataView;
+  this.gridService = angularGrid.gridService;
+
+  
+}
+
 angularGridReady1(angularGrid: AngularGridInstance) {
-    this.angularGrid1 = angularGrid;
+  
     this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {};
+    this.angularGrid1 = angularGrid;
+    this.grid1= angularGrid.slickGrid; // grid object
+    this.dataview1 = angularGrid.dataView;
+    this.gridService1 = angularGrid.gridService;
   }
 handleSelectedRowsChanged1(e, args) {
   
@@ -652,5 +749,58 @@ handleSelectedRowsChanged1(e, args) {
   })
  }
 }
+
+wolist(){
+  const controls = this.woForm.controls
+  
+  this.dataset = []
+  const date = controls.date.value
+  ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+  : null;
+
+  const date1 = controls.date1.value
+  ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+  : null;
+  const wo_type = 'BR'
+  let obj= {wo_type,date,date1}
+//   this.inventoryTransactionService.getByDate(obj).subscribe(
+//     (res: any) => {
+  
+//     //(response: any) => (this.dataset = response.data),
+//    // console.log(res.data.tr_gl_date)
+    
+//     this.dataset  = res.data;
+//     this.dataview.setItems(this.dataset)
+    
+//   //this.dataset = res.data
+//   this.loadingSubject.next(false) 
+// })
+
+// this.workOrderService.getPrograms(obj).subscribe(
+//   (response: any) => {this.dataset1 = response.data
+//     this.dataview1.setItems(this.dataset1)
+//   },
+//   (error) => {
+//       this.dataset1 = []
+//   },
+//   () => {}
+// )
+
+const wo_routing ='BROYAGE'
+  let obj2 = {wo_routing,date,date1}
+this.workOrderService.getBybroyage(obj2).subscribe(
+  (response: any) => {   
+    this.dataset = response.data
+   console.log(this.dataset)
+   this.dataview.setItems(this.dataset);
+    
+     },
+  (error) => {
+      this.dataset = []
+  },
+  () => {}
+)
+}
+
 }
 

@@ -72,6 +72,7 @@ export class MfgDashboardComponent implements OnInit {
 
  Gachat : any = []
  GAtype : any = []
+ GPtype : any = []
  
 
  
@@ -98,10 +99,33 @@ export class MfgDashboardComponent implements OnInit {
  Achat_qty : any
 GProd_amt:any
 GProd_qty: any
+ProdamtMG: any
+ProdqtyMG: any
+ProdamtLOTUS: any
+ProdqtyLOTUS: any
 
+Prod_amt_MG : any
+Prod_amt_LOTUS : any
+Prod_qty_MG : any
+Prod_qty_LOTUS : any
  //private chart: am4charts.XYChart;
 
-
+AALotus: any = 0
+AAMagic : any = 0
+AQLotus : any = 0
+AQMagic: any = 0
+AARam: any = 0
+AQRam:any = 0
+PALotus: any = 0
+PQLotus: any = 0
+PAMg: any = 0
+PQMg: any = 0
+TAP:any=0
+TQP: any=0
+AG: any = 0
+QG: any = 0
+TAPP:any=0
+TQPP: any=0
  constructor(
    private zone: NgZone,
    private fb: FormBuilder,
@@ -178,6 +202,14 @@ updateData(){
         this.Achatqty = res.data.Achat_qty
         this.Gachat = res.data.Gachat
         this.GAtype = res.data.GAtype
+        this.GPtype = res.data.GPtype
+
+        this.ProdamtMG = res.data.Prod_amt_MG
+        this.ProdqtyMG = res.data.Prod_qty_MG
+
+        this.ProdamtLOTUS = res.data.Prod_amt_LOTUS
+        this.ProdqtyLOTUS = res.data.Prod_qty_LOTUS
+
         let gprodamt = Number(res.data.Prod_amt) + Number(res.data.Achat_amt)
         let gprodqty = Number(res.data.Prod_qty) + Number(res.data.Achat_qty)
         console.log(res.data)
@@ -216,12 +248,84 @@ updateData(){
           maximumFractionDigits: 2,
         }))
         this.Achat_qty = replaceAll(aqty,","," ")
+
+
+        let pamtmg =  String(  Number(this.ProdamtMG).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        this.Prod_amt_MG = replaceAll(pamtmg,","," ")
+
+        let pamtlotus =  String(  Number(this.ProdamtLOTUS).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        this.Prod_amt_LOTUS = replaceAll(pamtlotus,","," ")
+
+        let pqtymg =  String(  Number(this.ProdqtyMG).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        this.Prod_qty_MG = replaceAll(pqtymg,","," ")
+
+        let pqtylotus =  String(  Number(this.ProdqtyLOTUS).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        this.Prod_qty_LOTUS = replaceAll(pqtylotus,","," ")
+
+for (let a of this.Gachat) {
+if(a.tr_addr =="C0000002") {
+  this.AALotus = Number.parseFloat(a.amt).toFixed(2);
+  this.AQLotus = a.qty
+}else {
+  if(a.tr_addr =="C0000009") {
+  this.AAMagic =  Number.parseFloat(a.amt).toFixed(2);
+  this.AQMagic = a.qty
+  } else {
+    this.AARam =  Number.parseFloat(a.amt).toFixed(2);
+    this.AQRam = a.qty
+
+  }
+}
+console.log(Number.parseFloat(this.Prod_amt).toFixed(2) , Number.parseFloat(this.AALotus).toFixed(2) , Number.parseFloat(this.AAMagic).toFixed(2) , Number.parseFloat(this.AARam).toFixed(2))
+this.TAP = Number.parseFloat(String(Number(this.Prodamt) + Number(this.AALotus) + Number(this.AAMagic) + Number(this.AARam))).toFixed(2)
+this.TQP = Number(this.Prodqty) + Number(this.AQLotus) + Number(this.AQMagic) + Number(this.AQRam)
+
+for (let a of this.GPtype) {
+  if(a.pt_rev =="LOTUS") {
+    this.PALotus =  Number.parseFloat(a.amt).toFixed(2);
+    this.PQLotus = a.qty
+  }else {
+   
+      this.PAMg =  Number.parseFloat(a.amt).toFixed(2);
+      this.PQMg = a.qty
+  
+    }
+  }
+}
+this.TAPP = Number(this.PALotus) + Number(this.PAMg) 
+this.TQPP = Number(this.PQLotus) + Number(this.PQMg)
+
+
+
+for (let g of this.GAtype) {
+
+  if (g.pt_part_type = '02') {
+
+    this.AG = Number.parseFloat(g.amt).toFixed(2);
+    this.QG =  g.qty
+  }
+}
+
         this.createCAVendchartPie()
         
         this.createQtyVendchartPie()
 
         this.createCATypechartPie()
         this.createQtyTypechartPie()
+        this.createCAProdchartPie()
+        this.createQtyProdchartPie()
         // this.qty_type_data = res.typegros
         // this.amt_type_data = res.typegros 
         // this.ddqty_type_data = res.typedd
@@ -554,4 +658,64 @@ chart.legend = new am4charts.Legend();
 
 }
 
+
+
+
+
+
+
+createCAProdchartPie(){
+  let chart = am4core.create("chartdivN5", am4charts.PieChart);
+
+  // let chart = am4core.create("chartdivN5", am4charts.PieChart3D);
+  chart.data = this.GPtype;
+  
+// Add and configure Series
+chart.radius = am4core.percent(70);
+chart.innerRadius = am4core.percent(40);
+chart.startAngle = 180;
+chart.endAngle = 360;  
+
+let series = chart.series.push(new am4charts.PieSeries());
+series.dataFields.value = "amt";
+series.dataFields.category = "code_cmmt";
+
+series.slices.template.cornerRadius = 10;
+series.slices.template.innerCornerRadius = 7;
+series.slices.template.draggable = true;
+series.slices.template.inert = true;
+series.alignLabels = false;
+
+series.hiddenState.properties.startAngle = 90;
+series.hiddenState.properties.endAngle = 90;
+
+chart.legend = new am4charts.Legend();
+}
+createQtyProdchartPie(){
+  let chart = am4core.create("chartdivN6", am4charts.PieChart);
+
+  // let chart = am4core.create("chartdivN5", am4charts.PieChart3D);
+  chart.data = this.GPtype;
+  
+// Add and configure Series
+chart.radius = am4core.percent(70);
+chart.innerRadius = am4core.percent(40);
+chart.startAngle = 180;
+chart.endAngle = 360;  
+
+let series = chart.series.push(new am4charts.PieSeries());
+series.dataFields.value = "qty";
+series.dataFields.category = "code_cmmt";
+
+series.slices.template.cornerRadius = 10;
+series.slices.template.innerCornerRadius = 7;
+series.slices.template.draggable = true;
+series.slices.template.inert = true;
+series.alignLabels = false;
+
+series.hiddenState.properties.startAngle = 90;
+series.hiddenState.properties.endAngle = 90;
+
+chart.legend = new am4charts.Legend();
+}
 }

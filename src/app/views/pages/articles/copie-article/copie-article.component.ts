@@ -447,6 +447,7 @@ export class CopieArticleComponent implements OnInit {
         // pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
         pt_group: [this.itemEdit.pt_group],
         pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
+        pt_rev: [this.itemEdit.pt_rev],
         // pt_drwg_size: [this.itemEdit.pt_drwg_size],
         // pt_promo: [this.itemEdit.pt_promo],
         // pt_break_cat: [this.itemEdit.pt_break_cat],
@@ -541,7 +542,7 @@ export class CopieArticleComponent implements OnInit {
         int01: [this.itemEdit.int01 ],
         int02: [this.itemEdit.int02 ],
         pt_promo: [this.itemEdit.pt_promo],
-        pt_rev: [this.itemEdit.pt_rev],
+        
         pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
         pt_net_wt: [this.itemEdit.pt_net_wt],
         pt_net_wt_um: [this.itemEdit.pt_net_wt_um],
@@ -743,7 +744,7 @@ console.log(response.data)
     _item.pt_part_type = controls1.pt_part_type.value;
     _item.pt_draw = controls1.pt_draw.value;
     _item.pt_status = controls1.pt_status.value;
-    _item.pt_rev = controls5.pt_rev.value;
+    _item.pt_rev = controls1.pt_rev.value;
     _item.pt_dsgn_grp = controls5.pt_dsgn_grp.value;
     _item.pt_group = controls1.pt_group.value;
     _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
