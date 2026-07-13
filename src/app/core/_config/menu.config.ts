@@ -876,7 +876,7 @@ export class MenuConfig {
 
             {
               title: "Consultation Stocks ",
-              page: "/inventory-transaction/inventory-list",
+              page: "/inventory-transaction/inventory-list-edel",
             },
             
             

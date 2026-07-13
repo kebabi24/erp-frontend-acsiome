@@ -85,6 +85,12 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 
 
 export class ExWoPrintComponent implements OnInit {
+
+
+  dateModel: Date = new Date();
+
+  stringDateModel: string = new Date().toString();
+  
     inventoryTransaction: InventoryTransaction;
     trForm: FormGroup;
     hasFormErrors = false;
@@ -222,7 +228,7 @@ export class ExWoPrintComponent implements OnInit {
       const date = new Date()
 
       this.trForm = this.trFB.group({
-        tr_lot: [this.inventoryTransaction.tr_lot],
+        //tr_lot: [this.inventoryTransaction.tr_lot],
         tr_effdate: [{
           year:date.getFullYear(),
           month: date.getMonth()+1,
@@ -235,14 +241,14 @@ export class ExWoPrintComponent implements OnInit {
           day: date.getDate()
         }],
         end_time:[''],
-        tr_rmks: [this.inventoryTransaction.tr_rmks],    
+      //  tr_rmks: [this.inventoryTransaction.tr_rmks],    
         //tr_site:  [this.inventoryTransaction.tr_site],
-        tr_site:  [this.user.usrd_site],
-        tr_loc: [this.inventoryTransaction.tr_loc],
-        tr_ref_site: [this.user.usrd_site],
-        tr_ref_loc: [this.inventoryTransaction.tr_ref_loc],
-        ref: [null],
-        print:[true],
+        // tr_site:  [this.user.usrd_site],
+        // tr_loc: [this.inventoryTransaction.tr_loc],
+        // tr_ref_site: [this.user.usrd_site],
+        // tr_ref_loc: [this.inventoryTransaction.tr_ref_loc],
+        // ref: [null],
+        // print:[true],
        
       
     })  
@@ -281,43 +287,43 @@ export class ExWoPrintComponent implements OnInit {
           return;
         }
     
-        if (!this.dataset.length) {
-          this.message = "La liste des article ne peut pas etre vide";
-          this.hasFormErrors = true;
+        // if (!this.dataset.length) {
+        //   this.message = "La liste des article ne peut pas etre vide";
+        //   this.hasFormErrors = true;
     
-          return;
-        }
+        //   return;
+        // }
 
 
-        for (var i = 0; i < this.dataset.length; i++) {
-          console.log(this.dataset[i]  )
-         if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null  ) {
-          this.message = "L' article ne peut pas etre vide";
-          this.hasFormErrors = true;
-          return;
+        // for (var i = 0; i < this.dataset.length; i++) {
+        //   console.log(this.dataset[i]  )
+        //  if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null  ) {
+        //   this.message = "L' article ne peut pas etre vide";
+        //   this.hasFormErrors = true;
+        //   return;
      
-         }
+        //  }
          
-         if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null  ) {
-          this.message = "L' UM ne peut pas etre vide";
-          this.hasFormErrors = true;
-          return;
+        //  if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null  ) {
+        //   this.message = "L' UM ne peut pas etre vide";
+        //   this.hasFormErrors = true;
+        //   return;
      
-         }
-         if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null  ) {
-          this.message = "Le Status ne peut pas etre vide";
-          this.hasFormErrors = true;
-          return;
+        //  }
+        //  if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null  ) {
+        //   this.message = "Le Status ne peut pas etre vide";
+        //   this.hasFormErrors = true;
+        //   return;
      
-         }
-         if (this.dataset[i].tr_qty_loc == 0 ) {
-          this.message = "La Quantite ne peut pas etre 0";
-          this.hasFormErrors = true;
-          return;
+        //  }
+        //  if (this.dataset[i].tr_qty_loc == 0 ) {
+        //   this.message = "La Quantite ne peut pas etre 0";
+        //   this.hasFormErrors = true;
+        //   return;
      
-         }
+        //  }
   
-        }
+        // }
         const date1 = controls.tr_effdate.value
         ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
         : null;
@@ -325,7 +331,7 @@ export class ExWoPrintComponent implements OnInit {
         ? `${controls.tr_effdate2.value.year}/${controls.tr_effdate2.value.month}/${controls.tr_effdate2.value.day}`
         : null;
         if (controls.print.value == true) {this.printpdf(date1,date2)};
-        this.router.navigateByUrl("/");
+        // this.router.navigateByUrl("/");
 
       }
     

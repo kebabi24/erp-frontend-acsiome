@@ -35,6 +35,10 @@ export class LocationDetailService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })
     }
+    public getAllEdel() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL+'/edel', { headers: httpHeaders })
+    }
     public getOne(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })

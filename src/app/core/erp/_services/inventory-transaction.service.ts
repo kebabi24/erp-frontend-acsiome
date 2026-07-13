@@ -133,6 +133,10 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findtrdate', data, { headers: httpHeaders })
     }
+    public getByDateTr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findtrdateTr', data, { headers: httpHeaders })
+    }
     public getByDateAddr(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findtrdateaddr', data, { headers: httpHeaders })
