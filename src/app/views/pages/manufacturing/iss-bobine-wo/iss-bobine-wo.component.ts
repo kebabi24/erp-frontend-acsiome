@@ -1390,6 +1390,11 @@ export class IssBobineWoComponent implements OnInit {
   }
   // save data
   onSubmit() {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+
+
+    input?.setAttribute('disabled', '');
+    
     this.hasFormErrors = false;
     const controls = this.woForm.controls;
     /** check form */
@@ -1670,7 +1675,10 @@ export class IssBobineWoComponent implements OnInit {
           );
           this.loadingSubject.next(false);
       
-     
+          const input = document.getElementById('submit') as HTMLInputElement | null;
+
+          input.removeAttribute("disabled");
+      
         this.router.navigateByUrl("/");
         }
       );

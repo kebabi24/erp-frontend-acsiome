@@ -978,7 +978,7 @@ export class EditTransactionListComponent implements OnInit {
                     _lb.lb__dec01 = cabs.lb__dec01,
                     
                     _lb.lb_site = cabs.lb_site,
-                    _lb.lb_rmks = cabs.lb_rmks,
+                    _lb.lb_rmks = (cabs.lb_rmks!= null) ? cabs.lb_rmks : "",
                     _lb.lb_loc = cabs.lb_loc,
                     _lb.lb_part = args.dataContext.tr_part,
                     _lb.lb_nbr = cabs.lb_nbr, //this.trnbr
@@ -987,7 +987,7 @@ export class EditTransactionListComponent implements OnInit {
                     _lb.lb_qty = args.dataContext.tr_qty_loc,
                     _lb.lb_um = cabs.lb_um,
                     _lb.lb_ld_status = cabs.lb_ld_status,
-                    _lb.lb_desc = args.dataContext.desc,
+                    _lb.lb_desc = args.dataContext.tr_desc,
                     _lb.lb_printer = this.PathPrinter,
                     _lb.lb_cust = args.dataContext.tr_addr,
                     _lb.lb_grp = cabs.lb_Grp,
@@ -996,7 +996,7 @@ export class EditTransactionListComponent implements OnInit {
                     _lb.lb_ref = cabs.lb_ref,
                     _lb.lb__chr01 = cabs.lb__chr01,
     
-                //    this.labelService.addblob(_lb).subscribe((blob) => {                 
+                //  this.labelService.addblob(_lb).subscribe((blob) => {                 
                       Edelweiss.print3(_lb,this.currentPrinter)
                   //  })
                     

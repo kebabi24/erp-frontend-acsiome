@@ -885,7 +885,11 @@ export class BobineIssueComponent implements OnInit {
     }
     // save data
     onSubmit() {
-      this.globalState = true;
+      const input = document.getElementById('submit') as HTMLInputElement | null;
+
+
+      input?.setAttribute('disabled', '');
+      
       this.hasFormErrors = false;
       const controls = this.trForm.controls;
       
@@ -1075,6 +1079,9 @@ export class BobineIssueComponent implements OnInit {
      *
      */
     goBack() {
+      const input = document.getElementById('submit') as HTMLInputElement | null;
+
+      input.removeAttribute("disabled");
       this.loadingSubject.next(false);
       const url = `/`;
       this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
